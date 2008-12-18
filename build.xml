@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<project name="flix_engine_cli" default="archive">
+
+	<!-- Properties -->
+	<property name="src.dir" location="src" />
+	<property name="test.src.dir" location="test" />
+	<property name="build.dir" location="build/classes" />
+	<property name="dist.dir" location="dist" />
+
+	<path id="classpath.base">
+	</path>
+	<path id="classpath.test">
+		<pathelement location="${ant.home}/lib/junit.jar" />
+		<pathelement location="${build.dir}" />
+		<path refid="classpath.base" />
+	</path>
+
+
+	<!-- Set up the output directories -->
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!-- Compile -->
+	<target name="compile" depends="init">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" />
+	</target>
+
+	<!-- JAR (archive) -->
+	<target name="archive" depends="compile">
+		<jar destfile="${dist.dir}/flix_engine_cli.jar" basedir="${build.dir}" />
+	</target>
+
+	<!-- Cleanup -->
+	<target name="clean" depends="init">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<!-- Is JUnit installed where we can find it? -->
+	<target name="JUNIT">
+		<available classname="junit.framework.TestCase" property="junit.present" />
+	</target>
+
+	<!-- Compile tests -->
+	<target name="compile-test" depends="compile,JUNIT">
+		<javac srcdir="${test.src.dir}" destdir="${build.dir}">
+			<classpath refid="classpath.test" />
+			<include name="**/*.java" />
+		</javac>
+	</target>
+
+	<!-- Run tests -->
+	<target name="test" depends="compile-test">
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath refid="classpath.test" />
+			<formatter type="brief" usefile="false" />
+			<batchtest fork="yes">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Test*.java" />
+					<exclude name="**/FilterBuilderTest.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+</project>
