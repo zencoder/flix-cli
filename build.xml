@@ -52,6 +52,9 @@
 	</target>
 
 	<!-- Run tests -->
+	<!-- NOTE: You need to have flixengine running or these test will fail.
+	           Sure, it'd be better to use mocks to fake out the backend API,
+	           but for now just turn the thing on. [JDL] -->
 	<target name="test" depends="compile-test">
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath refid="classpath.test" />
@@ -59,7 +62,7 @@
 			<batchtest fork="yes">
 				<fileset dir="${test.src.dir}">
 					<include name="**/*Test*.java" />
-					<exclude name="**/FilterBuilderTest.java" />
+					<exclude name="**/FilterBuilderTestHelper.java" />
 				</fileset>
 			</batchtest>
 		</junit>

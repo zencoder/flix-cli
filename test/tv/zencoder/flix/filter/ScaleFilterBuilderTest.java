@@ -8,17 +8,24 @@ import org.junit.Test;
 import com.on2.flix.Filter;
 import com.on2.flix.flixengine2_internalConstants;
 
-public class ScaleFilterBuilderTest extends FilterBuilderTest {
+public class ScaleFilterBuilderTest {
 
+	private FilterBuilderTestHelper fbtHelper;
+	
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
-		filterBuilder = new ScaleFilterBuilder();
+		fbtHelper = new FilterBuilderTestHelper();
+		fbtHelper.setUp(new ScaleFilterBuilder());
+	}
+	
+	public void tearDown() throws Exception {
+		fbtHelper.tearDown();
+		fbtHelper = null;
 	}
 
 	@Test
 	public void testApplyFilter() {
-		Filter filter = filterBuilder.applyFilter(flix, "480x320");
+		Filter filter = fbtHelper.getFilterBuilder().applyFilter(fbtHelper.getFlix(), "480x320");
 		try {
 			assertEquals(new Double(480), new Double(filter.getParam(flixengine2_internalConstants.FE2_SCALE_WIDTH)));
 			assertEquals(new Double(320), new Double(filter.getParam(flixengine2_internalConstants.FE2_SCALE_HEIGHT)));
