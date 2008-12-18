@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 import tv.zencoder.flix.filter.FilterBuilder;
+import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 
 import com.on2.flix.Codec;
@@ -76,8 +77,8 @@ public class FooDriver {
 //			filter.setParam(lookupInternalConstant(flix, "FE2_SCALE_WIDTH"), 480.0);
 //			filter.setParam(lookupInternalConstant(flix, "FE2_SCALE_HEIGHT"), 320.0);
 			 
-		    FilterBuilder fb = new ScaleFilterBuilder();
-		    fb.applyFilter(flix, "foo");
+		    (new ScaleFilterBuilder()).applyFilter(flix, "foo");
+		    (new FramerateFilterBuilder()).applyFilter(flix, "15.0");
 		    
 			
 			/*Add the vp6 codec. Though it is the default, you must add it in order

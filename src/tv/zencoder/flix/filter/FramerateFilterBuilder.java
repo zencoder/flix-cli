@@ -18,7 +18,7 @@ import com.on2.flix.flixengine2_internalConstants;
  * Example 2: "2d"
  * This means "1/2 the framerate of the original"
  * 
- * @author jdl
+ * @author	jdl
  *
  */
 public class FramerateFilterBuilder implements FilterBuilder {
@@ -30,16 +30,16 @@ public class FramerateFilterBuilder implements FilterBuilder {
 	/* (non-Javadoc)
 	 * @see tv.zencoder.flix.filter.FilterBuilder#applyFilter(com.on2.flix.FlixEngine2, java.lang.String)
 	 */
-	public FlixEngine2 applyFilter(FlixEngine2 flix, String options) {
+	public Filter applyFilter(FlixEngine2 flix, String options) {
+		Filter filter = null;
 		try {
-	        Filter filter = new Filter(flix, flixengine2_internalConstants.FE2_FILTER_FRAMERATE);
+	        filter = new Filter(flix, flixengine2_internalConstants.FE2_FILTER_FRAMERATE);
 	        filter.add();
 	        filter.setParam(flixengine2_internalConstants.FE2_FRAMERATE_FPS, Double.parseDouble(options));
 	    } catch (FlixException e) {
 	        //
 	    }
-	    
-		return flix;
+	    return filter;
 	}
 
 }
