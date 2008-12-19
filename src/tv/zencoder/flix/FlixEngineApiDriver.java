@@ -3,9 +3,10 @@ package tv.zencoder.flix;
 import java.io.File;
 import java.lang.reflect.Field;
 
-import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
@@ -13,27 +14,75 @@ import org.apache.commons.cli.ParseException;
 
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
+import tv.zencoder.flix.util.LogWrapper;
 
-import com.on2.flix.Codec;
-import com.on2.flix.FE2_VideoBitrateControls;
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
-import com.on2.flix.Muxer;
 import com.on2.flix.flixengine2_internalConstants;
-import com.on2.flix.on2sc;
 
 public class FlixEngineApiDriver {
 
+	private static LogWrapper log = LogWrapper.getInstance();
+	
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
-		// CL Options
+
+		/* Process the command line */
+		Options options = defineCommandLineOptions();
+       	CommandLine line = parseCommandLine(options, args);
+       	
 		
-//		Option framerate = 
+       	/* Connect to Flix Engine */
+       	FlixEngine2 flix;
+		log.debug("FlixEngineApiDriver.main(): Connecting to Flix...");
 		
+        // rpc timeout in seconds,
+        // 0=use default (25s)
+		final int timeout_s = 0; 
+		flix = new FlixEngine2("localhost", timeout_s);
+		try {
+			flix.Connect();
+		
+			/* Setup the flix object, based on the passed in options. */
+			applyCommandLineOptions(flix, line, options);
+			
+			// debug
+			printFlixEngineInfo();
+			
+			
+			/* Process the file */
+			flix.Encode();
+		    boolean ier;
+		    do {
+		        ier = flix.IsEncoderRunning();
+		        log.info("FlixEngineApiDriver.main(): \rEncoding..." + flix.encoding_status_PercentComplete() + "%  ");
+		        try {Thread.sleep(1000);}
+		        catch(InterruptedException e) {}
+		    } while(ier);
+		    log.info("FlixEngineApiDriver.main(): Done!");
+		    
+		    printEncoderStatus(flix);
+			
+			/* Cleanup */
+			flix.Destroy();
+		} catch (FlixException e) {
+			log.error("FlixEngineApiDriver.main(): Caught a Flix exception. e=" + e.getLocalizedMessage());
+		}
+	}
+
+	
+	/**
+	 * Defines the command line options that are available.
+	 * @return	populated Options object
+	 */
+	@SuppressWarnings("static-access")
+	private static Options defineCommandLineOptions() {
 		Options options = new Options();
+		
+		options.addOption(new Option( "help", "print this message"));
+		
 		options.addOption(OptionBuilder.withArgName("fps")
 				                       .hasArg()
 				                       .withDescription("sets the framerate")
@@ -42,136 +91,98 @@ public class FlixEngineApiDriver {
 						               .hasArg()
 						               .withDescription("sets the output video size")
 						               .create("s"));
-		
-		CommandLineParser parser = new BasicParser();
+		options.addOption(OptionBuilder.withArgName("filename")
+						               .hasArg()
+						               .withDescription("sets the input file (use an absolute path)")
+						               .create("i"));
+		options.addOption(OptionBuilder.withArgName("filename")
+						               .hasArg()
+						               .withDescription("sets the output file (use an absolute path)")
+						               .create("o"));
+		return options;
+	}
+	
+	
+	/**
+ 	 * Parse the command line, triggering the appropriate actions as switches are found.
+ 	 * 
+	 * @param options	The Options object that defines what the command line is supposed
+	 * 					to "look" like.
+	 * @param args		The array of arguments that were passed into the application on the
+	 *                  command line.
+	 */
+    private static CommandLine parseCommandLine(Options options, String[] args) {
+    	CommandLineParser parser = new GnuParser();
+    	CommandLine line = null;
 		try {
-			CommandLine line = parser.parse( options, args );
-			
-			if(line.hasOption("r") ) {
-			    // initialise the member variable
-			    System.out.println(line.getOptionValue("r"));
-			}
-			
-			if(line.hasOption("s") ) {
-			    // initialise the member variable
-			    System.out.println(line.getOptionValue("s"));
-			}
-			
+			line = parser.parse(options, args);
 		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			// TODO: This should probably be thrown upwards.
+			log.error("FlixEngineApiSriver.parseCommandLine(): Failed to parse the command line. e=" + e1.getLocalizedMessage());
+		}
+		return line;
+    }
+
+    /**
+     * Once the command line has been parsed, we need to configure the flix object based on the
+     * desired options.
+     * 
+     * @param flix
+     * @param line
+     * @param options
+     */
+    private static void applyCommandLineOptions(FlixEngine2 flix, CommandLine line, Options options) throws FlixException {
+		/* Help */
+    	if(line.hasOption("help")) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "zencoder_flixengine.sh", options);
+		}
+    	
+    	/* Input file */
+    	if (line.hasOption("i")) {
+    		String value = line.getOptionValue("i");
+		    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting input file: " + value);
+		    File f = new File(value);
+		    if(!f.isAbsolute()) {
+		        log.warn("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
+		    }
+
+		    flix.SetInputFile(value);
+	
+	        log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Input File");
+	        log.debug("FlixEngineApiDriver.applyCommandLineOptions():   Width: " + flix.video_options_GetSourceWidth());
+	        log.debug("FlixEngineApiDriver.applyCommandLineOptions():   Height:   " + flix.video_options_GetSourceHeight());
+	        log.debug("FlixEngineApiDriver.applyCommandLineOptions():   Duration: " + flix.GetSourceDuration());
+    	}
+    	
+    	/* Output File */
+    	if (line.hasOption("o")) {
+    		String value = line.getOptionValue("o");
+		    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting output file: " + value);
+		    
+		    File f = new File(value);
+		    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + value);
+		    if(!f.isAbsolute()) {
+		        log.warn("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
+		    }
+		    flix.SetOutputFile(value);
+    	}
+    	
+    	/* Framerate */
+		if(line.hasOption("r") ) {
+			String value = line.getOptionValue("r");
+		    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting framerate: " + value);
+		    (new FramerateFilterBuilder()).applyFilter(flix, value);
 		}
 		
-		
-		FlixEngine2 flix;
-		
-		System.out.println("Using library path: "+
-		                   System.getProperty("java.library.path"));
-		System.out.println("\nFlix Engine client library v"+
-		                   FlixEngine2.Version());
-		System.out.println(FlixEngine2.Copyright()+"\n");
-		
-//		if(args.length < 2) {
-//		    System.out.println("usage: java cli_encode <infile> <outfile>\n");
-//		    System.out.println(
-//		       "NOTE cli_encode uses libflixengine2.so which is a client\n"+
-//		       "NOTE side rpc library. All paths must be accessible to the\n"+
-//		       "NOTE server side, i.e., flixd, thus relative paths will most\n"+
-//		       "NOTE likely give undesired results. The same can be said\n"+
-//		       "NOTE for clients running on different machines.");
-//		    System.exit(-1);
-//		}
-		
-		System.out.println("Connecting to Flix...");
-		final int timeout_s = 0; //rpc timeout in seconds,
-		                         //0=use default (25s)
-		flix = new FlixEngine2("localhost", timeout_s);
-//		try {
-//		    flix.Connect();
-//		
-//		    File f = new File(args[0]);
-//		    System.out.println("Input file  : "+args[0]);
-//		    if(!f.isAbsolute())
-//		        System.out.println("WARNING: path to input file is not absolute");
-//		    flix.SetInputFile(args[0]);
-//		
-//		    //input file information
-//		    System.out.println(
-//		        "              Width:    "+flix.video_options_GetSourceWidth()+"\n"+
-//		        "              Height:   "+flix.video_options_GetSourceHeight()+"\n"+
-//		        "              Duration: "+flix.GetSourceDuration());
-//		
-//		    f = new File(args[1]);
-//		    System.out.println("Output file : "+args[1]);
-//		    if(!f.isAbsolute())
-//		        System.out.println("WARNING: path to output file is not absolute");
-//		    flix.SetOutputFile(args[1]);
-//
-//		    /*
-//                Options may be set and codecs/filters/muxers may be added prior to Encode()
-//            */
-//
-//			/* Add the scale filter */
-////		    Filter filter = new Filter(flix, lookupInternalConstant(flix, "FE2_FILTER_SCALE"));
-////			filter.add();
-////			
-////			filter.setParam(lookupInternalConstant(flix, "FE2_SCALE_WIDTH"), 480.0);
-////			filter.setParam(lookupInternalConstant(flix, "FE2_SCALE_HEIGHT"), 320.0);
-//			 
-//		    (new ScaleFilterBuilder()).applyFilter(flix, "foo");
-//		    (new FramerateFilterBuilder()).applyFilter(flix, "15.0");
-//		    
-//			
-//			/*Add the vp6 codec. Though it is the default, you must add it in order
-//			  to modify its settings */
-//			Codec codec = new Codec(flix, lookupInternalConstant(flix, "FE2_CODEC_VP6"));
-//			codec.add();
-//			
-//			codec.setParam(flixengine2_internalConstants.FE2_VP6_RC_MODE, FE2_VideoBitrateControls.VBR_1PASSControl.swigValue());
-//
-//			/*Use the FLV muxer (default) */
-//			Muxer muxer = new Muxer(flix, flixengine2_internalConstants.FE2_MUXER_FLV);
-//			muxer.add();
-//            
-//			System.out.println();
-//		    flix.Encode();
-//		
-//		    boolean ier;
-//		    do {
-//		        ier = flix.IsEncoderRunning();
-//		        System.out.print("\rEncoding..." +
-//		            flix.encoding_status_PercentComplete() + "%  ");
-//		        try {Thread.sleep(1000);}
-//		        catch(InterruptedException e) {}
-//		    } while(ier);
-//		    System.out.println("Done!");
-//		    printEncoderStatus(flix);
-//		
-//		    flix.Destroy();
-//		} catch (FlixException e) {
-//		    System.out.println("Flix call failed: "+e);
-//		    e.printStackTrace();
-//		
-//		    //if e == ON2_NET_ERROR Flix2_Errno will return the specific
-//		    //rpc error encountered as flixerrno along with the client lib's errno value
-//		    try {
-//		        long[] flixerr = flix.Errno();
-//		        System.out.println("\tFlixEngine2.Errno: "+
-//		            (e.equals(on2sc.ON2_NET_ERROR)?
-//		             "rpcerr":"flixerrno")+": "+flixerr[0]+
-//		            " syserrno:"+flixerr[1]);
-//		    } catch (FlixException ex) {}
-//		} catch (NoSuchFieldException e) {
-//			System.out.println("NoSuchFieldException: " + e);
-//		} catch (IllegalArgumentException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} 
-	}
-
+		/* Video dimensions */
+		if(line.hasOption("s") ) {
+		    String value = line.getOptionValue("s");
+		    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting dimensions: " + value);
+		    (new ScaleFilterBuilder()).applyFilter(flix, value);
+		}
+    }
+	
 	private static void printEncoderStatus(final FlixEngine2 flix)
 	{
 	    try {
@@ -184,9 +195,16 @@ public class FlixEngineApiDriver {
 	    } catch (FlixException e) {}
 	}
 
-	private static String lookupInternalConstant(FlixEngine2 flix, String filterName) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		Field filterConstantField = flixengine2_internalConstants.class.getDeclaredField(filterName);
-		return (String) filterConstantField.get(flix);
+	/**
+	 * Dumps out some basic info about the Flix Engine installation.
+	 *
+	 */
+	private static void printFlixEngineInfo() {
+		log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Using library path: " + System.getProperty("java.library.path"));
+		log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Flix Engine client library v" + FlixEngine2.Version());
+		log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
 	}
+	
+	
 	
 }
