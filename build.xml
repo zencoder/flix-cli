@@ -29,7 +29,7 @@
 
 	<!-- Compile -->
 	<target name="compile" depends="init">
-		<javac srcdir="${src.dir}" destdir="${build.dir}">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" debug="on">
 			<classpath refid="classpath.test" />
 			<include name="**/*.java" />
 		</javac>
@@ -59,7 +59,7 @@
 
 	<!-- Compile tests -->
 	<target name="compile-test" depends="compile,JUNIT">
-		<javac srcdir="${test.src.dir}" destdir="${build.dir}">
+		<javac srcdir="${test.src.dir}" destdir="${build.dir}" debug="on">
 			<classpath refid="classpath.test" />
 			<include name="**/*.java" />
 		</javac>
