@@ -3,6 +3,9 @@ package tv.zencoder.flix.filter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+
 import com.on2.flix.Filter;
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
@@ -18,7 +21,7 @@ import com.on2.flix.flixengine2_internalConstants;
  */
 public class ScaleFilterBuilder implements FilterBuilder {
 
-    protected static final Pattern p = Pattern.compile("(\\d+)x(\\d+)");
+    protected static final Pattern widthHeightPattern = Pattern.compile("(\\d+)x(\\d+)");
 
     public ScaleFilterBuilder() {
 	super();
@@ -55,8 +58,24 @@ public class ScaleFilterBuilder implements FilterBuilder {
      * @return	The value at the dimension position in the options.
      */
     protected double getDimension(String options, int dimensionPosition) {
-	Matcher m = p.matcher(options);
+	Matcher m = widthHeightPattern.matcher(options);
 	m.matches();
 	return Double.parseDouble(m.group(dimensionPosition));
+    }
+
+    public String getFriendlyName() {
+	return "Scale Filter Builder (-" + getSwitch() + ")";
+    }
+
+    @SuppressWarnings("static-access")
+    public Option getOption() {
+	return OptionBuilder.withArgName("wxh")
+			    .hasArg()
+            		    .withDescription("sets the output video size (480x360)")
+            		    .create(getSwitch());
+    }
+
+    public String getSwitch() {
+	return "s";
     }
 }

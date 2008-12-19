@@ -1,6 +1,9 @@
 package tv.zencoder.flix;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -12,6 +15,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
+import tv.zencoder.flix.filter.FilterBuilder;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 import tv.zencoder.flix.util.LogWrapper;
@@ -20,13 +24,14 @@ import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
 
 public class FlixEngineApiDriver {
-
     private static LogWrapper log = LogWrapper.getInstance();
-
+    private static List<FilterBuilder> filterBuilders = null;
+    
     /**
      * @param args
      */
     public static void main(String[] args) {
+	populateFilterBuilders();
 
 	/* Process the command line */
 	Options options = defineCommandLineOptions();
@@ -66,23 +71,13 @@ public class FlixEngineApiDriver {
 		.withDescription("sets the output file (use an absolute path)")
 		.create("o"));
 
-	// deinterlace
-	options.addOption(OptionBuilder.withArgName("a|b|d")
-		.hasArg()
-		.withDescription("deinterlace mode (a)adaptive, (b)1:2:1 blur, (d)drop field")
-		.create("deinterlace"));
 
-	// r
-	options.addOption(OptionBuilder.withArgName("fps")
-		.hasArg()
-		.withDescription("sets the framerate")
-		.create("r"));
+	/* Filters */
+	Iterator<FilterBuilder> fbIterator = filterBuilders.iterator();
+	while (fbIterator.hasNext()) {
+	    options.addOption(fbIterator.next().getOption());
+	}
 
-	// s
-	options.addOption(OptionBuilder.withArgName("wxh")
-		.hasArg()
-		.withDescription("sets the output video size")
-		.create("s"));
 	return options;
     }
 
@@ -145,26 +140,16 @@ public class FlixEngineApiDriver {
 	    }
 	    flix.SetOutputFile(value);
 	}
-
-	/* Deinterlace */
-	if (line.hasOption("deinterlace")) {
-	    String value = line.getOptionValue("deinterlace");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting deinterlace mode: " + value);
-	    (new DeinterlaceFilterBuilder()).applyFilter(flix, value);
-	}
-
-	/* Framerate */
-	if (line.hasOption("r") ) {
-	    String value = line.getOptionValue("r");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting framerate: " + value);
-	    (new FramerateFilterBuilder()).applyFilter(flix, value);
-	}
-
-	/* Video dimensions */
-	if (line.hasOption("s") ) {
-	    String value = line.getOptionValue("s");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting dimensions: " + value);
-	    (new ScaleFilterBuilder()).applyFilter(flix, value);
+	
+	/* Filters */
+	Iterator<FilterBuilder> fbIterator = filterBuilders.iterator();
+	while (fbIterator.hasNext()) {
+	    FilterBuilder fb = fbIterator.next();
+	    if (line.hasOption(fb.getSwitch())) {
+		String optionArgument = line.getOptionValue(fb.getSwitch());
+		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
+		fb.applyFilter(flix, optionArgument);
+	    }
 	}
     }
 
@@ -236,6 +221,17 @@ public class FlixEngineApiDriver {
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
     }
 
-
+    /**
+     * Populates the list of filter builders.
+     * 
+     * Note: This approach is OK since we're just dealing with 
+     *       dozens of filters, not thousands. [JDL]
+     */
+    private static void populateFilterBuilders() {
+	filterBuilders = new ArrayList<FilterBuilder>();
+	filterBuilders.add(new DeinterlaceFilterBuilder());
+	filterBuilders.add(new FramerateFilterBuilder());
+	filterBuilders.add(new ScaleFilterBuilder());
+    }
 
 }

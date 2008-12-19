@@ -1,5 +1,8 @@
 package tv.zencoder.flix.filter;
 
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.Filter;
@@ -53,6 +56,22 @@ public class DeinterlaceFilterBuilder implements FilterBuilder {
 	    //
 	}
 	return filter;
+    }
+
+    public String getFriendlyName() {
+	return "Deinterlace Filter Builder (-" + getSwitch() + ")";
+    }
+
+    @SuppressWarnings("static-access")
+    public Option getOption() {
+	return OptionBuilder.withArgName("a|b|d")
+                            .hasArg()
+                            .withDescription("deinterlace mode (a)adaptive, (b)1:2:1 blur, (d)drop field")
+                            .create(getSwitch());
+    }
+
+    public String getSwitch() {
+	return "deinterlace";
     }
 
 }
