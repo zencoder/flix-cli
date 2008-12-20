@@ -5,9 +5,11 @@ package tv.zencoder.flix.util;
  * switch over to a real log system without having to refactor all of the 
  * code.
  * <p>
- * Example usage:
- * LogWrapper log = LogWrapper.getInstance();
+ * Example usage:<br>
+ * <code>
+ * LogWrapper log = LogWrapper.getInstance();<br>
  * log.debug("foo");
+ * </code>
  * <p>
  * debug, info, warn, and error are handled in a simplistic way, but it should suffice.
  * LogWrapper.setLogLevel() can be used to control which messages are output at runtime.  
