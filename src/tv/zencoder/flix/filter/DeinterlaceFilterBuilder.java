@@ -13,7 +13,7 @@ import com.on2.flix.flixengine2_internalConstants;
 
 /**
  * Deinterlaces the video pictures.
- * 
+ * <p>
  * The options set which type of deinterlacing to perform.
  * a - adaptive
  * b - 1:2:1 blur

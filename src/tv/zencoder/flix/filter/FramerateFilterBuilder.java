@@ -13,14 +13,14 @@ import com.on2.flix.flixengine2_internalConstants;
 
 /**
  * Creates a framerate filter.  
- * 
+ * <p>
  * This can either be a straight FPS or a (TODO: integer followed by "d"
  * meaning "decimate."  This is the amount that the original framerate will
  * be divided by.)
- * 
+ * <p>
  * Example 1: "15.0"
  * This means "15.0 FPS"
- * 
+ * <p>
  * Example 2: "2d"
  * This means "1/2 the framerate of the original"
  * 

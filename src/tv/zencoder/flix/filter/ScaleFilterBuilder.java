@@ -13,7 +13,7 @@ import com.on2.flix.flixengine2_internalConstants;
 
 /**
  * Creates a scale filter.  
- * 
+ * <p>
  * The options are of the form "wxh" such as "480x360".
 
  * @author	jdl

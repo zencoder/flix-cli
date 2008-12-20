@@ -23,6 +23,13 @@ import tv.zencoder.flix.util.LogWrapper;
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
 
+/**
+ * Main access point to the app.  Parses the command line, configures flix engine, and
+ * triggers the video transcode.
+ * 
+ * @author jdl
+ *
+ */
 public class FlixEngineApiDriver {
     private static LogWrapper log = LogWrapper.getInstance();
     private static List<FilterBuilder> filterBuilders = null;
