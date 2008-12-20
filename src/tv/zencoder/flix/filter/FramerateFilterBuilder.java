@@ -27,8 +27,7 @@ import com.on2.flix.flixengine2_internalConstants;
  * @author	jdl
  *
  */
-public class FramerateFilterBuilder implements FilterBuilder {
-
+public class FramerateFilterBuilder extends FilterBuilderBase {
     // Looks for a number followed by "d" which would indicate "decimate".
     protected static final Pattern decimatePattern = Pattern.compile("^([0-9]+)d");
     
@@ -72,6 +71,10 @@ public class FramerateFilterBuilder implements FilterBuilder {
 
     public String getSwitch() {
 	return "r";
+    }
+    
+    public boolean isPrimaryOption() {
+	return true;
     }
 
 }

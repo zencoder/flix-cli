@@ -3,5 +3,5 @@ dist
 .project
 .classpath
 .externalToolBuilders
-
+.settings
 

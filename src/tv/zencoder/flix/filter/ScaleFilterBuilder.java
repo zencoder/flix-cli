@@ -23,8 +23,7 @@ import com.on2.flix.flixengine2_internalConstants;
  * @author	jdl
  *
  */
-public class ScaleFilterBuilder implements FilterBuilder {
-
+public class ScaleFilterBuilder extends FilterBuilderBase {
     /**
      * Pattern to recognize "wxh" such as "240x160".
      */
@@ -140,5 +139,9 @@ public class ScaleFilterBuilder implements FilterBuilder {
 
     public String getSwitch() {
 	return "s";
+    }
+    
+    public boolean isPrimaryOption() {
+	return true;
     }
 }

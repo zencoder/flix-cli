@@ -3,8 +3,6 @@ package tv.zencoder.flix.filter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.util.LogWrapper;
-
 import com.on2.flix.Filter;
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
@@ -22,8 +20,7 @@ import com.on2.flix.flixengine2_internalConstants;
  * @author jdl
  *
  */
-public class DeinterlaceFilterBuilder implements FilterBuilder {
-    LogWrapper log = LogWrapper.getInstance();
+public class DeinterlaceFilterBuilder extends FilterBuilderBase {
 
     public DeinterlaceFilterBuilder() {
 	super();
@@ -74,4 +71,7 @@ public class DeinterlaceFilterBuilder implements FilterBuilder {
 	return "deinterlace";
     }
 
+    public boolean isPrimaryOption() {
+	return true;
+    }
 }
