@@ -3,6 +3,7 @@ package tv.zencoder.flix.filter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +20,7 @@ public class FramerateFilterBuilderTest {
 	fbtHelper.setUp(new FramerateFilterBuilder());
     }
 
+    @After
     public void tearDown() throws Exception {
 	fbtHelper.tearDown();
 	fbtHelper = null;
@@ -27,7 +29,7 @@ public class FramerateFilterBuilderTest {
 
     @Test
     public void testApplyFilter() {
-	Filter filter = fbtHelper.getFilterBuilder().applyFilter(fbtHelper.getFlix(), "25");
+	Filter filter = fbtHelper.applyFilter("25");
 	try {
 	    double fps = filter.getParam(flixengine2_internalConstants.FE2_FRAMERATE_FPS);
 	    assertEquals(new Double(25.0), new Double(fps));

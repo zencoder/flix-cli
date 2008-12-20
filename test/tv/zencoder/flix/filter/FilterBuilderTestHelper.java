@@ -1,7 +1,9 @@
 package tv.zencoder.flix.filter;
 
+import org.junit.After;
 import org.junit.Before;
 
+import com.on2.flix.Filter;
 import com.on2.flix.FlixEngine2;
 
 /**
@@ -21,12 +23,21 @@ public class FilterBuilderTestHelper {
 	flix.Connect();
     }
 
+    @After
     public void tearDown() throws Exception {
 	flix.Destroy();
 	flix = null;
 	filterBuilder = null;
     }
 
+    /**
+     * Runs the <code>applyFilter()</code> method of the builder.
+     * @return	Filter
+     */
+    public Filter applyFilter(String options) {
+	return getFilterBuilder().applyFilter(getFlix(), options);
+    }
+    
     public FilterBuilder getFilterBuilder() {
 	return filterBuilder;
     }

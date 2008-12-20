@@ -4,6 +4,7 @@ package tv.zencoder.flix.filter;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +26,7 @@ public class DeinterlaceFilterBuilderTest {
 	fbtHelper.setUp(new DeinterlaceFilterBuilder());
     }
 
+    @After
     public void tearDown() throws Exception {
 	fbtHelper.tearDown();
 	fbtHelper = null;
@@ -39,7 +41,7 @@ public class DeinterlaceFilterBuilderTest {
     }
 
     private void checkDeinterlaceType(String filterOptions, Double expectedValue) {
-	Filter filter = fbtHelper.getFilterBuilder().applyFilter(fbtHelper.getFlix(), filterOptions);
+	Filter filter = fbtHelper.applyFilter(filterOptions);
 	try {
 	    double val = filter.getParam(flixengine2_internalConstants.FE2_ADAPTIVE_DEINTERLACE_MODE);
 	    assertEquals(expectedValue, new Double(val));
