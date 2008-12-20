@@ -1,5 +1,9 @@
 package tv.zencoder.flix.filter;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,8 +25,50 @@ import com.on2.flix.flixengine2_internalConstants;
  */
 public class ScaleFilterBuilder implements FilterBuilder {
 
+    /**
+     * Pattern to recognize "wxh" such as "240x160".
+     */
     protected static final Pattern widthHeightPattern = Pattern.compile("(\\d+)x(\\d+)");
-
+    
+    /**
+     * Shortcuts for sizes that can be set on the command line.  If we see any of these, we simply
+     * substitute the wxh value.  These are compatible with ffmpeg.
+     */
+    protected static Map<String, String> scaleShortcuts;
+    static {
+        Map<String, String> map = new TreeMap<String, String>();
+        map.put("sqcif",  "128x96");
+        map.put("qcif",   "176x144"); 
+        map.put("cif",    "352x288"); 
+        map.put("4cif",   "704x576");
+        map.put("qqvga",  "160x120"); 
+        map.put("qvga",   "320x240"); 
+        map.put("vga",    "640x480");
+        map.put("svga",   "800x600"); 
+        map.put("xga",    "1024x768");
+        map.put("uxga",   "1600x1200");
+        map.put("qxga",   "2048x1536");
+        map.put("sxga",   "1280x1024");
+        map.put("qsxga",  "2560x2048");
+        map.put("hsxga",  "5120x4096");
+        map.put("wvga",   "852x480");
+        map.put("wxga",   "1366x768");
+        map.put("wsxga",  "1600x1024");
+        map.put("wuxga",  "1920x1200");
+        map.put("woxga",  "2560x1600");
+        map.put("wqsxga", "3200x2048");
+        map.put("wquxga", "3840x2400");
+        map.put("whsxga", "6400x4096");
+        map.put("whuxga", "7680x4800");
+        map.put("cga",    "320x200");
+        map.put("ega",    "640x350");
+        map.put("hd480",  "852x480");
+        map.put("hd720",  "1280x720");
+        map.put("hd1080", "1920x1080");
+        scaleShortcuts = Collections.unmodifiableMap(map);
+    }
+    
+    
     public ScaleFilterBuilder() {
 	super();
     }
@@ -32,6 +78,12 @@ public class ScaleFilterBuilder implements FilterBuilder {
      */
     public Filter applyFilter(FlixEngine2 flix, String options) {
 	Filter filter = null;
+	
+	// Check to see if the user is supplying one of the shortcut sizes.
+	if (scaleShortcuts.containsKey(options)) {
+	    options = scaleShortcuts.get(options);
+	}
+	
 	try {
 	    filter = new Filter(flix, flixengine2_internalConstants.FE2_FILTER_SCALE);
 	    filter.add();
@@ -69,9 +121,20 @@ public class ScaleFilterBuilder implements FilterBuilder {
 
     @SuppressWarnings("static-access")
     public Option getOption() {
+	
+	StringBuffer msg = new StringBuffer("Sets the output video size. ");
+	msg.append("Enter a width and height in the form of 'wxh' or use one of the following shortcuts. ");
+	msg.append("(These are compatible with ffmpeg.)\n");
+	Iterator<String> keyIter = scaleShortcuts.keySet().iterator();
+	while (keyIter.hasNext()) {
+	    String key = keyIter.next();
+	    msg.append("  " + key + ":\t" + scaleShortcuts.get(key) + "\n");
+	}
+	msg.append("\n");
+	
 	return OptionBuilder.withArgName("wxh")
 			    .hasArg()
-            		    .withDescription("sets the output video size (480x360)")
+            		    .withDescription(msg.toString())
             		    .create(getSwitch());
     }
 
