@@ -15,6 +15,7 @@ import org.apache.commons.cli.ParseException;
 import tv.zencoder.flix.cli.OptionHandler;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
 import tv.zencoder.flix.filter.FilterBuilder;
+import tv.zencoder.flix.filter.FilterModifier;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
@@ -51,6 +52,22 @@ public class CommandLineHelper {
 	    }
 	}
 	return instance;
+    }
+    
+    /**
+     * Populates the list of filter builders.
+     * 
+     * Note: This approach is OK since we're just dealing with 
+     *       dozens of filters, not thousands. [JDL]
+     */
+    private void populateParentFilterBuilders() {
+	// Only add the primary filter builders here. Let the constructor for those with 
+	// children take care of adding those.
+	filterBuilders = new ArrayList<FilterBuilder>();
+	filterBuilders.add(new DeinterlaceFilterBuilder());
+	filterBuilders.add(new FramerateFilterBuilder());
+	filterBuilders.add(new ScaleFilterBuilder());
+	filterBuilders.add(new BchsFilterBuilder());
     }
     
     /**
@@ -94,40 +111,6 @@ public class CommandLineHelper {
     }
     
     /**
-     * Populates the list of filter builders.
-     * 
-     * Note: This approach is OK since we're just dealing with 
-     *       dozens of filters, not thousands. [JDL]
-     */
-    private void populateParentFilterBuilders() {
-	// Only add the primary filter builders here. Let the constructor for those with 
-	// children take care of adding those.
-	filterBuilders = new ArrayList<FilterBuilder>();
-	filterBuilders.add(new DeinterlaceFilterBuilder());
-	filterBuilders.add(new FramerateFilterBuilder());
-	filterBuilders.add(new ScaleFilterBuilder());
-	filterBuilders.add(new BchsFilterBuilder());
-	
-	// If any of these filter builders built their own children, make sure those get added.
-	List<FilterBuilder> childrenToBeAdded = new ArrayList<FilterBuilder>();
-	Iterator<FilterBuilder> fbIter = filterBuilders.iterator();
-	while (fbIter.hasNext()) {
-	    FilterBuilder fb = fbIter.next();
-	    if (fb.children().size() > 0) {
-		Iterator<FilterBuilder> childIter = fb.children().iterator();
-		while (childIter.hasNext()) {
-		    FilterBuilder child = childIter.next();
-		    childrenToBeAdded.add(child);
-		}
-	    }
-	}
-	
-	if (childrenToBeAdded.size() > 0) {
-	    filterBuilders.addAll(childrenToBeAdded);
-	}
-    }
-
-    /**
      * Defines the command line options that are available.
      * @return	populated Options object
      */
@@ -148,11 +131,20 @@ public class CommandLineHelper {
 		.withDescription("sets the output file (use an absolute path)")
 		.create("o"));
 
-
+	
 	/* Filters */
 	Iterator<FilterBuilder> fbIterator = getFilterBuilders().iterator();
 	while (fbIterator.hasNext()) {
-	    options.addOption(fbIterator.next().getOption());
+	    FilterBuilder fb = fbIterator.next();
+	    options.addOption(fb.getOption());
+	    
+	    // If this builder has any children, we want to add them to the options list.
+	    if (fb.children() != null && fb.children().size() > 0) {
+		Iterator<FilterModifier> childIter = fb.children().iterator();
+		while (childIter.hasNext()) {
+		    options.addOption(childIter.next().getOption());
+		}
+	    }
 	}
 
 	return options;

@@ -11,9 +11,9 @@ import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
 
 /**
- * Brightness, Contrast, Hue, Saturation filter builder.
  * This is a parent builder that will check for the existance of any of the four 
- * particular types of specific filters mentioned above.
+ * particular types of its children: Brightness, Contrast, Hue, and/or Saturation 
+ * filter builders.
  * 
  * @author jdl
  *
@@ -46,7 +46,7 @@ public class BchsFilterBuilder extends FilterBuilderBase {
 
     @SuppressWarnings("static-access")
     public Option getOption() {
-	return OptionBuilder.withDescription("required if setting brightness, contrast, hue, and/or saturation")
+	return OptionBuilder.withDescription("Turns on the BCHS filter. Configure with -brightness, -contrast, -hue, and/or -saturation options.")
                             .create(getSwitch());
     }
 

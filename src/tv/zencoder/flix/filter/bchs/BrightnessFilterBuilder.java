@@ -1,12 +1,13 @@
 package tv.zencoder.flix.filter.bchs;
 
+import java.util.List;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.filter.FilterBuilderBase;
+import tv.zencoder.flix.filter.FilterModifier;
 
 import com.on2.flix.Filter;
-import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
 
@@ -17,16 +18,12 @@ import com.on2.flix.flixengine2_internalConstants;
  * @author jdl
  *
  */
-public class BrightnessFilterBuilder extends FilterBuilderBase {
+public class BrightnessFilterBuilder implements FilterModifier {
 
     public BrightnessFilterBuilder() {
 	super();
     }
 
-    public Filter applyFilter(FlixEngine2 flix, String options) {
-	return null;
-    }
-    
     /** 
      * BchsFilterBuilder will call this when needed.
      */
@@ -52,5 +49,9 @@ public class BrightnessFilterBuilder extends FilterBuilderBase {
 
     public boolean isPrimaryOption() {
 	return false;
+    }
+
+    public List children() {
+	return null;
     }
 }

@@ -1,23 +1,20 @@
 package tv.zencoder.flix.filter.bchs;
 
+import java.util.List;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
+import tv.zencoder.flix.filter.FilterModifier;
+
 import com.on2.flix.Filter;
-import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
 
-import tv.zencoder.flix.filter.FilterBuilderBase;
-
-public class ContrastFilterBuilder extends FilterBuilderBase {
+public class ContrastFilterBuilder implements FilterModifier {
 
     public ContrastFilterBuilder() {
 	super();
-    }
-
-    public Filter applyFilter(FlixEngine2 flix, String options) {
-	return null;
     }
     
     /** 
@@ -47,4 +44,7 @@ public class ContrastFilterBuilder extends FilterBuilderBase {
 	return false;
     }
 
+    public List children() {
+	return null;
+    }
 }
