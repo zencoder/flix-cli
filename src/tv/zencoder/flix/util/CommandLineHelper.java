@@ -37,7 +37,7 @@ public class CommandLineHelper {
     
     private CommandLineHelper() {
 	super();
-	populateFilterBuilders();
+	populateParentFilterBuilders();
 	defineCommandLineOptions();
 	parseCommandLine();
     }
@@ -83,6 +83,9 @@ public class CommandLineHelper {
 
     /**
      * The command line args that were passed into the main() method for the app.
+     * <p>
+     * Calling this will also cause the command line to be re-parsed.
+     * 
      * @param args
      */
     public void setArgs(String[] args) {
@@ -96,7 +99,7 @@ public class CommandLineHelper {
      * Note: This approach is OK since we're just dealing with 
      *       dozens of filters, not thousands. [JDL]
      */
-    private void populateFilterBuilders() {
+    private void populateParentFilterBuilders() {
 	// Only add the primary filter builders here. Let the constructor for those with 
 	// children take care of adding those.
 	filterBuilders = new ArrayList<FilterBuilder>();

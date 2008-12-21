@@ -31,12 +31,11 @@ public class FlixEngineApiDriver {
     public static void main(String[] args) {
 	clHelper.setArgs(args);
 	CommandLine line = clHelper.getLine();
-	if ((line == null) || line.hasOption("help")) {
+	if ((line.getArgs().length == 0) || line.hasOption("help")) {
 	    /* Help */
-	    if(line.hasOption("help")) {
-		HelpFormatter formatter = new HelpFormatter();
-		formatter.printHelp("zencoder_flixengine.sh [options]", clHelper.getOptions());
-	    }
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.setWidth(200);
+            formatter.printHelp("zencoder_flixengine.sh [options]", clHelper.getOptions());	    
 	} else {
 	    configureFlixAndEncode();
 	}
