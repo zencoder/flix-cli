@@ -55,6 +55,7 @@ public class FlixEngineApiDriver {
 	final int timeout_s = 0; 
 	flix = new FlixEngine2("localhost", timeout_s);
 	try {
+	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Connecting to Flix Engine");
 	    flix.Connect();
 
 	    /* Setup the flix object, based on the passed in options. */
@@ -64,6 +65,7 @@ public class FlixEngineApiDriver {
 	    printFlixEngineInfo();
 
 	    /* Process the file */
+	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Starting the transcode.");
 	    flix.Encode();
 	    boolean ier;
 	    do {
@@ -77,6 +79,7 @@ public class FlixEngineApiDriver {
 	    printEncoderStatus(flix);
 
 	    /* Cleanup */
+	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Cleanup");
 	    flix.Destroy();
 	} catch (FlixException e) {
 	    log.error("FlixEngineApiDriver.main(): Caught a Flix exception. e=" + e.getLocalizedMessage());
