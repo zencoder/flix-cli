@@ -2,16 +2,17 @@ package tv.zencoder.flix.filter.bchs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.filter.FilterBuilderTestHelper;
+
 import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
-
-import tv.zencoder.flix.filter.FilterBuilderTestHelper;
-import tv.zencoder.flix.util.CommandLineHelper;
 
 public class BchsFilterBuilderTest {
     private FilterBuilderTestHelper fbtHelper;
@@ -29,11 +30,11 @@ public class BchsFilterBuilderTest {
     }
     
     @Test
-    public void testApplyFilter() {
+    public void testApply() {
 	// Set up a command line that should trigger children of the BchsFilterBuilder to also be executed.
 	CommandLineHelper.getInstance().setArgs(new String[] {"-bchs", "-brightness", "200", "-contrast", "-100", "-hue", "80", "-saturation", "50"});
 	
-	Filter filter = fbtHelper.applyFilter("");
+	Filter filter = fbtHelper.apply("");
 	try {
 	    // Check the values that should have come from the child builders (brightness, contrast, hue, and saturation)
 	    assertEquals(new Double(200),  new Double(filter.getParam(flixengine2_internalConstants.FE2_BCHS_BRIGHTNESS)));

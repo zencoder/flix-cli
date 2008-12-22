@@ -11,40 +11,33 @@ import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
 
-/**
- * Builds a brightness filter.  This is a child of the BchsFilterBuilder
- * which must be triggered if this filter builder is to run.
- * 
- * @author jdl
- *
- */
-public class BrightnessFilterBuilder implements FilterModifier {
+public class ContrastFilterModifier implements FilterModifier {
 
-    public BrightnessFilterBuilder() {
+    public ContrastFilterModifier() {
 	super();
     }
-
+    
     /** 
      * BchsFilterBuilder will call this when needed.
      */
     public void modifyFilter(Filter filter, String options) throws FlixException {
-	filter.setParam(flixengine2_internalConstants.FE2_BCHS_BRIGHTNESS, Double.parseDouble(options));
+	filter.setParam(flixengine2_internalConstants.FE2_BCHS_CONTRAST, Double.parseDouble(options));
     }
 
     public String getFriendlyName() {
-	return "Brightness Filter Builder";
+	return "Contrast Filter Builder";
     }
 
     @SuppressWarnings("static-access")
     public Option getOption() {
 	return OptionBuilder.withArgName("value")
                             .hasArg()
-                            .withDescription("Sets brightness in range of [-255,255].  You must also specify -bcsh.")
+                            .withDescription("Sets contrast in range of [-255,255].  You must also specify -bcsh.")
                             .create(getSwitch());
     }
-
+    
     public String getSwitch() {
-	return "brightness";
+	return "contrast";
     }
 
     public boolean isPrimaryOption() {

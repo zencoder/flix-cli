@@ -31,11 +31,11 @@ public class FilterBuilderTestHelper {
     }
 
     /**
-     * Runs the <code>applyFilter()</code> method of the builder.
+     * Runs the <code>apply()</code> method of the builder.
      * @return	Filter
      */
-    public Filter applyFilter(String options) {
-	return getFilterBuilder().applyFilter(getFlix(), options);
+    public Filter apply(String options) {
+	return getFilterBuilder().apply(getFlix(), options);
     }
     
     public FilterBuilder getFilterBuilder() {

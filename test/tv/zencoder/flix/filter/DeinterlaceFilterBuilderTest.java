@@ -34,14 +34,14 @@ public class DeinterlaceFilterBuilderTest {
 
 
     @Test
-    public void testApplyFilter() {
+    public void testApply() {
 	checkDeinterlaceType("a", new Double(deintmode_t.DEINTERLACE_ADAPTIVE.swigValue()));
 	checkDeinterlaceType("b", new Double(deintmode_t.DEINTERLACE_1_2_1_BLUR.swigValue()));
 	checkDeinterlaceType("d", new Double(deintmode_t.DEINTERLACE_DROP_FIELD.swigValue()));
     }
 
     private void checkDeinterlaceType(String filterOptions, Double expectedValue) {
-	Filter filter = fbtHelper.applyFilter(filterOptions);
+	Filter filter = fbtHelper.apply(filterOptions);
 	try {
 	    double val = filter.getParam(flixengine2_internalConstants.FE2_ADAPTIVE_DEINTERLACE_MODE);
 	    assertEquals(expectedValue, new Double(val));

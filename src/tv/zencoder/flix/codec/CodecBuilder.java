@@ -1,10 +1,11 @@
 package tv.zencoder.flix.codec;
 
+import java.util.List;
+
 import tv.zencoder.flix.cli.OptionHandler;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FlixEngine2;
-import com.on2.flix.FlixException;
 
 /**
  * Interface for codec builders.  There are several of these, but we should 
@@ -14,24 +15,31 @@ import com.on2.flix.FlixException;
  *
  */
 public interface CodecBuilder extends OptionHandler {
+    
     /** 
      * Given a FlixEngine2 object and an option String, which would have 
-     * most likely come directly from the command line, add a new codec
-     * to the FlixEngine2. 
+     * most likely come directly from the command line, add a new object
+     * to the FlixEngine2.  Depending on the particular builder, this could
+     * be a Filter, Codec, or Muxer object.
      * 
      * @param	flix	The FlixEngine2 object being configured.
-     * @param	options	A string representing the command line options for this codec
+     * @param	options	A string representing the command line options supplied
+     * 					with this particular switch.  For example if "-r 480x320" 
+     * 					is passed in, the builder responsible for this 
+     * 					would see "480x360" as its options.  The builder
+     *                  is responsible for generating the correct FlixEngine2
+     *                  parameters based on this string.
      */		
-    public Codec applyCodec(FlixEngine2 flix, String options);
+    public Codec apply(FlixEngine2 flix, String options);
     
     /**
-     * If we already have the Codec built, and just want to add a param to it, this
-     * allows us to do so.  This is mainly used by child builders, where the parent would
-     * have already created the Codec.
-     * 
-     * @param	codec
-     * @param	options	A string representing the command line options for this switch.
+     * List of CodecModifier objects which depend on this one as a parent.
      */
-    public void modifyCodec(Codec codec, String options) throws FlixException;
+    public List<CodecModifier> children();
     
+    /**
+     * Add a child modifier to this codec builder object.
+     */
+    public void addChild(CodecModifier child);
+   
 }

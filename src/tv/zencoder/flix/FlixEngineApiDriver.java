@@ -6,8 +6,9 @@ import java.util.Iterator;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 
+import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.codec.CodecBuilder;
 import tv.zencoder.flix.filter.FilterBuilder;
-import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.FlixEngine2;
@@ -31,7 +32,7 @@ public class FlixEngineApiDriver {
     public static void main(String[] args) {
 	clHelper.setArgs(args);
 	CommandLine line = clHelper.getLine();
-	if ((line.getArgs().length == 0) || line.hasOption("help")) {
+	if (args == null || args.length == 0 || line.hasOption("help")) {
 	    /* Help */
             HelpFormatter formatter = new HelpFormatter();
             formatter.setWidth(200);
@@ -122,18 +123,28 @@ public class FlixEngineApiDriver {
 	}
 	
 	/* Filters */
-	Iterator<FilterBuilder> fbIterator = clHelper.getFilterBuilders().iterator();
-	while (fbIterator.hasNext()) {
-	    FilterBuilder fb = fbIterator.next();
+	Iterator<FilterBuilder> fbIter = clHelper.getFilterBuilders().iterator();
+	while (fbIter.hasNext()) {
+	    FilterBuilder fb = fbIter.next();
 	    if (fb.isPrimaryOption() && line.hasOption(fb.getSwitch())) {
 		String optionArgument = line.getOptionValue(fb.getSwitch());
 		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
-		fb.applyFilter(flix, optionArgument);
+		fb.apply(flix, optionArgument);
+	    }
+	}
+	
+	/* Codecs */
+	Iterator<CodecBuilder> cbIter = clHelper.getCodecBuilders().iterator();
+	while (cbIter.hasNext()) {
+	    CodecBuilder cb = cbIter.next();
+	    if (cb.isPrimaryOption() && line.hasOption(cb.getSwitch())) {
+		String optionArgument = line.getOptionValue(cb.getSwitch());
+		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying codec builder '" + cb.getFriendlyName() + "' with option argument: " + optionArgument);
+		cb.apply(flix, optionArgument);
 	    }
 	}
     }
-
-    
+ 
     /**
      * Dumps basic info about the Flix encoder.
      * @param flix
@@ -144,7 +155,7 @@ public class FlixEngineApiDriver {
 	    System.out.println("\nEncoder Status");
 	    System.out.println(" FlixEngine2.GetEncoderState:" + flix.GetEncoderState());
 	    long[] flixerr = flix.Errno();
-	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0]+" syserrno:"+flixerr[1]);
+	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " syserrno:" + flixerr[1]);
 	} catch (FlixException e) {}
     }
 
@@ -157,7 +168,5 @@ public class FlixEngineApiDriver {
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Flix Engine client library v" + FlixEngine2.Version());
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
     }
-
-
 
 }

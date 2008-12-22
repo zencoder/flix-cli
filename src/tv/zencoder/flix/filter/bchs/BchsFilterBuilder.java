@@ -22,13 +22,13 @@ public class BchsFilterBuilder extends FilterBuilderBase {
 
     public BchsFilterBuilder() {
 	super();
-	addChild(new BrightnessFilterBuilder());
-	addChild(new ContrastFilterBuilder());
-	addChild(new HueFilterBUilder());
-	addChild(new SaturationFilterBuilder());
+	addChild(new BrightnessFilterModifier());
+	addChild(new ContrastFilterModifier());
+	addChild(new HueFilterModifier());
+	addChild(new SaturationFilterModifier());
     }
     
-    public Filter applyFilter(FlixEngine2 flix, String options) {
+    public Filter apply(FlixEngine2 flix, String options) {
 	Filter filter = null;
 	try {
     	    filter = new Filter(flix, flixengine2_internalConstants.FE2_FILTER_BCHS);

@@ -28,8 +28,8 @@ public class FramerateFilterBuilderTest {
 
 
     @Test
-    public void testApplyFilter() {
-	Filter filter = fbtHelper.applyFilter("25");
+    public void testApply() {
+	Filter filter = fbtHelper.apply("25");
 	try {
 	    double fps = filter.getParam(flixengine2_internalConstants.FE2_FRAMERATE_FPS);
 	    assertEquals(new Double(25.0), new Double(fps));

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import tv.zencoder.flix.util.CommandLineHelper;
+import tv.zencoder.flix.cli.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.Codec;
@@ -12,16 +12,13 @@ import com.on2.flix.FlixException;
 
 public abstract class CodecBuilderBase implements CodecBuilder {
     protected LogWrapper log = LogWrapper.getInstance();
-    protected List<CodecBuilder> children = new ArrayList<CodecBuilder>();
+    protected List<CodecModifier> children = new ArrayList<CodecModifier>();
  
-
-    public void modifyCodec(Codec codec, String options) throws FlixException {}
-    
-    public List<CodecBuilder> children() {
+    public List<CodecModifier> children() {
 	return children;
     }
     
-    public void addChild(CodecBuilder child) {
+    public void addChild(CodecModifier child) {
 	children.add(child);
     }
 
@@ -32,9 +29,9 @@ public abstract class CodecBuilderBase implements CodecBuilder {
     protected void applyChildBuilders(Codec codec) throws FlixException {
 	if (children().size() > 0) {
 	    CommandLineHelper clHelper = CommandLineHelper.getInstance();
-            Iterator<CodecBuilder> childIter = children().iterator();
+            Iterator<CodecModifier> childIter = children().iterator();
             while (childIter.hasNext()) {
-        	CodecBuilder child = childIter.next();
+        	CodecModifier child = childIter.next();
         
         	// Was this particular child called for on the command line?
         	if (clHelper.isOptionInUse(child)) {

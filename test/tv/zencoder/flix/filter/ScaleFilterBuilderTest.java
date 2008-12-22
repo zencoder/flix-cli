@@ -1,6 +1,7 @@
 package tv.zencoder.flix.filter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,8 +27,8 @@ public class ScaleFilterBuilderTest {
     }
 
     @Test
-    public void testApplyFilter() {
-	Filter filter = fbtHelper.applyFilter("480x320");
+    public void testApply() {
+	Filter filter = fbtHelper.apply("480x320");
 	try {
 	    assertEquals(new Double(480), new Double(filter.getParam(flixengine2_internalConstants.FE2_SCALE_WIDTH)));
 	    assertEquals(new Double(320), new Double(filter.getParam(flixengine2_internalConstants.FE2_SCALE_HEIGHT)));

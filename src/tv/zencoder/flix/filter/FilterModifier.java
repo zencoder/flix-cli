@@ -1,10 +1,15 @@
 package tv.zencoder.flix.filter;
 
+import tv.zencoder.flix.cli.OptionHandler;
+
 import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
 
-import tv.zencoder.flix.cli.OptionHandler;
-
+/**
+ * Typically a child of a FilterBuilder.  This supplies extra parameters to an already created filter.
+ * @author jdl
+ *
+ */
 public interface FilterModifier extends OptionHandler {
 
     /**

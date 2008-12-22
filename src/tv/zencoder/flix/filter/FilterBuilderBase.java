@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.util.LogWrapper;
+
 import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
-
-import tv.zencoder.flix.util.CommandLineHelper;
-import tv.zencoder.flix.util.LogWrapper;
 
 /**
  * Base class for filter builders that handles common methods, like children.
@@ -18,9 +18,7 @@ import tv.zencoder.flix.util.LogWrapper;
 public abstract class FilterBuilderBase implements FilterBuilder {
     protected LogWrapper log = LogWrapper.getInstance();
     protected List<FilterModifier> children = new ArrayList<FilterModifier>();
- 
-    public void modifyFilter(Filter filter, String options) throws FlixException {}
-    
+  
     public List<FilterModifier> children() {
 	return children;
     }
