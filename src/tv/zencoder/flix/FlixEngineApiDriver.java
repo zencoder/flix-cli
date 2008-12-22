@@ -9,6 +9,7 @@ import org.apache.commons.cli.HelpFormatter;
 import tv.zencoder.flix.cli.CommandLineHelper;
 import tv.zencoder.flix.codec.CodecBuilder;
 import tv.zencoder.flix.filter.FilterBuilder;
+import tv.zencoder.flix.muxer.MuxerBuilder;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.FlixEngine2;
@@ -144,6 +145,17 @@ public class FlixEngineApiDriver {
 		String optionArgument = line.getOptionValue(cb.getSwitch());
 		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying codec builder '" + cb.getFriendlyName() + "' with option argument: " + optionArgument);
 		cb.apply(flix, optionArgument);
+	    }
+	}
+	
+	/* Muxers */
+	Iterator<MuxerBuilder> mbIter = clHelper.getMuxerBuilders().iterator();
+	while (mbIter.hasNext()) {
+	    MuxerBuilder mb = mbIter.next();
+	    if (mb.isPrimaryOption() && line.hasOption(mb.getSwitch())) {
+		String optionArgument = line.getOptionValue(mb.getSwitch());
+		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying muxer builder '" + mb.getFriendlyName() + "' with option argument: " + optionArgument);
+		mb.apply(flix, optionArgument);
 	    }
 	}
     }

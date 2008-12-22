@@ -1,7 +1,6 @@
 package tv.zencoder.flix.codec;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -9,7 +8,8 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import tv.zencoder.flix.cli.CommandLineHelper;
-import tv.zencoder.flix.codec.config.VideoCodecConfig;
+import tv.zencoder.flix.util.StringUtil;
+import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FlixEngine2;
@@ -76,21 +76,9 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 
     @SuppressWarnings("static-access")
     public Option getOption() {
-	
-	// Use the codec names Map from above to generate a list of codecs that the user 
-	// can specify.
-	StringBuffer codecNames = new StringBuffer();
-	Iterator<String> codecNameIter = codecConfigs.keySet().iterator();
-	while (codecNameIter.hasNext()) {
-	    codecNames.append(codecNameIter.next());
-	    if (codecNameIter.hasNext()) {
-		codecNames.append(", ");
-	    }
-	}
-	
 	return OptionBuilder.withArgName("codec_name")
         		    .hasArg()
-                            .withDescription("Sets the video codec. Valid values include: " + codecNames.toString())
+                            .withDescription("Sets the video codec. Valid values include: " + StringUtil.mapKeysToString(codecConfigs, ","))
                             .create(getSwitch());
     }
 

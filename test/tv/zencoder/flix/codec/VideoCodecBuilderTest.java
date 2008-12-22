@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import tv.zencoder.flix.cli.CommandLineHelper;
-import tv.zencoder.flix.codec.config.VideoCodecConfig;
+import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
 

@@ -1,4 +1,4 @@
-package tv.zencoder.flix.codec.config;
+package tv.zencoder.flix.util;
 
 import com.on2.flix.flixengine2_internalConstants;
 

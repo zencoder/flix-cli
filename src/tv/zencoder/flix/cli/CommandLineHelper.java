@@ -12,17 +12,21 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import tv.zencoder.flix.codec.AudioCodecBuilder;
 import tv.zencoder.flix.codec.CodecBuilder;
 import tv.zencoder.flix.codec.CodecModifier;
 import tv.zencoder.flix.codec.VideoCodecBuilder;
-import tv.zencoder.flix.codec.config.VideoCodecConfig;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
 import tv.zencoder.flix.filter.FilterBuilder;
 import tv.zencoder.flix.filter.FilterModifier;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
+import tv.zencoder.flix.muxer.MuxerBuilder;
+import tv.zencoder.flix.muxer.MuxerModifier;
+import tv.zencoder.flix.muxer.VideoMuxerBuilder;
 import tv.zencoder.flix.util.LogWrapper;
+import tv.zencoder.flix.util.VideoCodecConfig;
 
 /**
  * Container for the Apache Commons CLI objects that we need to build.  Also supplies some
@@ -52,6 +56,9 @@ public class CommandLineHelper {
     // Handles building of Flix Codecs.
     private List<CodecBuilder> codecBuilders;
     
+    // Handles building of the Flix Muxers.
+    private List<MuxerBuilder> muxerBuilders;
+    
     // Stores the choice of video codecs.  This is here, because the codec modifiers
     // need to know which codec they're dealing with.
     private VideoCodecConfig chosenVideoCodec;
@@ -62,6 +69,7 @@ public class CommandLineHelper {
 	super();
 	populateParentFilterBuilders();
 	populateParentCodecBuilders();
+	populateParentMuxerBuilders();
 	defineCommandLineOptions();
 	parseCommandLine();
     }
@@ -101,6 +109,16 @@ public class CommandLineHelper {
         // Only add the primary codec builders here.
 	codecBuilders = new ArrayList<CodecBuilder>();
 	codecBuilders.add(new VideoCodecBuilder());
+	codecBuilders.add(new AudioCodecBuilder());
+    }
+    
+    
+    /**
+     * Populates the list of muxer builders.
+     */
+    private void populateParentMuxerBuilders() {
+	muxerBuilders = new ArrayList<MuxerBuilder>();
+	muxerBuilders.add(new VideoMuxerBuilder());
     }
     
     
@@ -166,6 +184,21 @@ public class CommandLineHelper {
 		}
 	    }
 	}
+	
+	/* Muxers */
+	Iterator<MuxerBuilder> mbIter = getMuxerBuilders().iterator();
+	while (mbIter.hasNext()) {
+	    MuxerBuilder mb = mbIter.next();
+	    options.addOption(mb.getOption());
+	    
+	    // And any children (muxer modifiers) that this builder may have.
+	    if (mb.children() != null && mb.children().size() > 0) {
+		Iterator<MuxerModifier> childIter = mb.children().iterator();
+		while (childIter.hasNext()) {
+		    options.addOption(childIter.next().getOption());
+		}
+	    }
+	}
 
 	return options;
     }
@@ -207,6 +240,17 @@ public class CommandLineHelper {
         return codecBuilders;
     }
 
+    /**
+     * Returns the list of parent muxer builders.  The child modifiers are not
+     * returned by this.  Each builder will return any available children via its
+     * <code>children()</code> method.
+     * 
+     * @return List<MuxerBuilder>
+     */
+    public List<MuxerBuilder> getMuxerBuilders() {
+        return muxerBuilders;
+    }
+    
     /**
      * Returns the Apache Commons CLI CommandLine, which is the object
      * that gets created after the command line is parsed.
