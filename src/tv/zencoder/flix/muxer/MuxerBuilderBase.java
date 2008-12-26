@@ -4,22 +4,26 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.cli.FlixBuilder;
+import tv.zencoder.flix.cli.FlixModifier;
+import tv.zencoder.flix.cli.OptionHandler;
+import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.FlixException;
 import com.on2.flix.Muxer;
 
-public abstract class MuxerBuilderBase implements MuxerBuilder {
+public abstract class MuxerBuilderBase implements FlixBuilder, OptionHandler {
     protected LogWrapper log = LogWrapper.getInstance();
     protected List<MuxerModifier> children = new ArrayList<MuxerModifier>();
+    protected Muxer muxer;
  
     public List<MuxerModifier> children() {
 	return children;
     }
     
-    public void addChild(MuxerModifier child) {
-	children.add(child);
+    public void addChild(FlixModifier child) {
+	children.add((MuxerModifier) child);
     }
 
     /**
@@ -41,6 +45,14 @@ public abstract class MuxerBuilderBase implements MuxerBuilder {
         	}
             }
 	}
+    }
+
+    public Muxer getMuxer() {
+        return muxer;
+    }
+
+    protected void setMuxer(Muxer muxer) {
+        this.muxer = muxer;
     }
     
     

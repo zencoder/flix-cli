@@ -35,8 +35,7 @@ public class VideoMuxerBuilder extends MuxerBuilderBase {
 	super();
     }
 
-    public Muxer apply(FlixEngine2 flix, String options) {
-	Muxer muxer = null;
+    public void apply(FlixEngine2 flix, String options) {
 	try {
 	    VideoMuxerConfig videoMuxerConfig = muxerConfigs.get(options);
 	    
@@ -54,7 +53,6 @@ public class VideoMuxerBuilder extends MuxerBuilderBase {
 	} catch (FlixException e) {
 	    //
 	}
-	return muxer;
     }
 
     public String getFriendlyName() {

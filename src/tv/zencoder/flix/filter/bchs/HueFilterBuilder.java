@@ -1,14 +1,11 @@
 package tv.zencoder.flix.filter.bchs;
 
-import java.util.List;
-
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.filter.FilterModifier;
+import tv.zencoder.flix.filter.FilterBuilderBase;
 
-import com.on2.flix.Filter;
-import com.on2.flix.FlixException;
+import com.on2.flix.FlixEngine2;
 import com.on2.flix.flixengine2_internalConstants;
 
 /**
@@ -18,17 +15,17 @@ import com.on2.flix.flixengine2_internalConstants;
  * @author jdl
  *
  */
-public class HueFilterModifier implements FilterModifier {
+public class HueFilterBuilder extends FilterBuilderBase {
 
-    public HueFilterModifier() {
+    public HueFilterBuilder() {
 	super();
     }
 
-    /** 
-     * BchsFilterBuilder will call this when needed.
+    /**
+     * Modifies the BCHS Filter.
      */
-    public void modifyFilter(Filter filter, String options) throws FlixException {
-	filter.setParam(flixengine2_internalConstants.FE2_BCHS_HUE, Double.parseDouble(options));
+    public void apply(FlixEngine2 flix, String options) {
+	(new BchsFilterHelper()).apply(flix, options, flixengine2_internalConstants.FE2_BCHS_HUE);
     }
     
     public String getFriendlyName() {
@@ -39,7 +36,7 @@ public class HueFilterModifier implements FilterModifier {
     public Option getOption() {
 	return OptionBuilder.withArgName("value")
                             .hasArg()
-                            .withDescription("Sets hue in range of [-180,180].  You must also specify -bcsh.")
+                            .withDescription("Sets hue in range of [-180,180].")
                             .create(getSwitch());
     }
 
@@ -48,10 +45,6 @@ public class HueFilterModifier implements FilterModifier {
     }
 
     public boolean isPrimaryOption() {
-	return false;
-    }
-
-    public List children() {
-	return null;
+	return true;
     }
 }

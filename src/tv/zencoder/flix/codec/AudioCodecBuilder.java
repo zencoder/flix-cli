@@ -34,8 +34,7 @@ public class AudioCodecBuilder extends CodecBuilderBase {
 	super();
     }
 
-    public Codec apply(FlixEngine2 flix, String options) {
-	Codec codec = null;
+    public void apply(FlixEngine2 flix, String options) {
 	try {
 	    AudioCodecConfig audioCodecConfig = codecConfigs.get(options);
 	    
@@ -53,7 +52,6 @@ public class AudioCodecBuilder extends CodecBuilderBase {
 	} catch (FlixException e) {
 	    //
 	}
-	return codec;
     }
 
     public String getFriendlyName() {

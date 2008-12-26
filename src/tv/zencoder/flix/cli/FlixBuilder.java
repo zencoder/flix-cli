@@ -1,19 +1,17 @@
-package tv.zencoder.flix.muxer;
+package tv.zencoder.flix.cli;
 
 import java.util.List;
 
-import tv.zencoder.flix.cli.OptionHandler;
-
 import com.on2.flix.FlixEngine2;
-import com.on2.flix.Muxer;
 
 /**
- * Interface for muxer builders.
+ * A builder of one of the underlying Flix objects that control the encoding.  These
+ * Flix objects include Filter, Codec, and Muxer.
  * 
  * @author jdl
  *
  */
-public interface MuxerBuilder extends OptionHandler {
+public interface FlixBuilder extends OptionHandler {
     /** 
      * Given a FlixEngine2 object and an option String, which would have 
      * most likely come directly from the command line, add a new object
@@ -28,15 +26,19 @@ public interface MuxerBuilder extends OptionHandler {
      *                  is responsible for generating the correct FlixEngine2
      *                  parameters based on this string.
      */		
-    public Muxer apply(FlixEngine2 flix, String options);
+    public void apply(FlixEngine2 flix, String options);
     
     /**
-     * List of MuxerModifier objects which depend on this one as a parent.
+     * A list of other builders that are dependent on this one.  A child builder
+     * is generally called by the parent builder.
+     * 
+     * @return	List
      */
-    public List<MuxerModifier> children();
+    public List children();
     
     /**
-     * Add a child modifier to this muxer builder object.
+     * Add a child to this builder object.  A child is an option that depends on this one.
      */
-    public void addChild(MuxerModifier child);
+    public void addChild(FlixModifier child);
+    
 }

@@ -4,22 +4,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.cli.FlixBuilder;
+import tv.zencoder.flix.cli.FlixModifier;
+import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FlixException;
 
-public abstract class CodecBuilderBase implements CodecBuilder {
+public abstract class CodecBuilderBase implements FlixBuilder {
     protected LogWrapper log = LogWrapper.getInstance();
     protected List<CodecModifier> children = new ArrayList<CodecModifier>();
+    protected Codec codec;
  
     public List<CodecModifier> children() {
 	return children;
     }
     
-    public void addChild(CodecModifier child) {
-	children.add(child);
+    public void addChild(FlixModifier child) {
+	children.add((CodecModifier) child);
     }
 
     /**
@@ -41,5 +44,13 @@ public abstract class CodecBuilderBase implements CodecBuilder {
         	}
             }
 	}
+    }
+
+    public Codec getCodec() {
+        return codec;
+    }
+
+    protected void setCodec(Codec codec) {
+        this.codec = codec;
     }
 }

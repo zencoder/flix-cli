@@ -2,14 +2,13 @@ package tv.zencoder.flix;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
-import tv.zencoder.flix.codec.CodecBuilder;
-import tv.zencoder.flix.filter.FilterBuilder;
-import tv.zencoder.flix.muxer.MuxerBuilder;
+import tv.zencoder.flix.cli.FlixBuilder;
+import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.FlixEngine2;
@@ -126,40 +125,31 @@ public class FlixEngineApiDriver {
 	    flix.SetOutputFile(value);
 	}
 	
-	/* Filters */
-	Iterator<FilterBuilder> fbIter = clHelper.getFilterBuilders().iterator();
+	/* Filters, Codecs, and Muxers */
+	applyBuilders(flix, clHelper.getFilterBuilders());
+	applyBuilders(flix, clHelper.getCodecBuilders());
+	applyBuilders(flix, clHelper.getMuxerBuilders());
+    }
+ 
+    /**
+     * Calls the apply() method for a list of builders.
+     * @param flix
+     * @param builderList
+     */
+    private static void applyBuilders(FlixEngine2 flix, List<FlixBuilder> builderList) {
+	CommandLine line = clHelper.getLine();
+	Iterator<FlixBuilder> fbIter = builderList.iterator();
 	while (fbIter.hasNext()) {
-	    FilterBuilder fb = fbIter.next();
+	    FlixBuilder fb = fbIter.next();
 	    if (fb.isPrimaryOption() && line.hasOption(fb.getSwitch())) {
 		String optionArgument = line.getOptionValue(fb.getSwitch());
-		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
+		log.debug("FlixEngineApiDriver.applyBuilders(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
 		fb.apply(flix, optionArgument);
 	    }
 	}
-	
-	/* Codecs */
-	Iterator<CodecBuilder> cbIter = clHelper.getCodecBuilders().iterator();
-	while (cbIter.hasNext()) {
-	    CodecBuilder cb = cbIter.next();
-	    if (cb.isPrimaryOption() && line.hasOption(cb.getSwitch())) {
-		String optionArgument = line.getOptionValue(cb.getSwitch());
-		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying codec builder '" + cb.getFriendlyName() + "' with option argument: " + optionArgument);
-		cb.apply(flix, optionArgument);
-	    }
-	}
-	
-	/* Muxers */
-	Iterator<MuxerBuilder> mbIter = clHelper.getMuxerBuilders().iterator();
-	while (mbIter.hasNext()) {
-	    MuxerBuilder mb = mbIter.next();
-	    if (mb.isPrimaryOption() && line.hasOption(mb.getSwitch())) {
-		String optionArgument = line.getOptionValue(mb.getSwitch());
-		log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Applying muxer builder '" + mb.getFriendlyName() + "' with option argument: " + optionArgument);
-		mb.apply(flix, optionArgument);
-	    }
-	}
     }
- 
+    
+    
     /**
      * Dumps basic info about the Flix encoder.
      * @param flix

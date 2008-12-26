@@ -5,8 +5,7 @@ import java.util.List;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
-
+import tv.zencoder.flix.util.CommandLineHelper;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FlixException;

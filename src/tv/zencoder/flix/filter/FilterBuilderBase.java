@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.cli.FlixBuilder;
+import tv.zencoder.flix.cli.FlixModifier;
+import tv.zencoder.flix.cli.OptionHandler;
+import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.Filter;
@@ -15,16 +18,17 @@ import com.on2.flix.FlixException;
  * @author jdl
  *
  */
-public abstract class FilterBuilderBase implements FilterBuilder {
+public abstract class FilterBuilderBase implements FlixBuilder, OptionHandler {
     protected LogWrapper log = LogWrapper.getInstance();
     protected List<FilterModifier> children = new ArrayList<FilterModifier>();
-  
+    protected Filter filter;
+    
     public List<FilterModifier> children() {
 	return children;
     }
 
-    public void addChild(FilterModifier child) {
-	children.add(child);
+    public void addChild(FlixModifier child) {
+	children.add((FilterModifier) child);
     }
     
     /**
@@ -42,9 +46,17 @@ public abstract class FilterBuilderBase implements FilterBuilder {
         	if (clHelper.isOptionInUse(child)) {
         	    String optionArgument = clHelper.getLine().getOptionValue(child.getSwitch());
         	    log.debug("FilterBuilderBase.applyChildBuilders(): Modifying filter with " + child.getFriendlyName() + " and option: " + optionArgument);
-        	    child.modifyFilter(filter, optionArgument);
+        	    child.apply(filter, optionArgument);
         	}
             }
 	}
+    }
+
+    public Filter getFilter() {
+        return filter;
+    }
+
+    protected void setFilter(Filter filter) {
+        this.filter = filter;
     }
 }

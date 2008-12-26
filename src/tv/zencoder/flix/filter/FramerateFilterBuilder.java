@@ -38,8 +38,7 @@ public class FramerateFilterBuilder extends FilterBuilderBase {
     /* (non-Javadoc)
      * @see tv.zencoder.flix.filter.FilterBuilder#applyFilter(com.on2.flix.FlixEngine2, java.lang.String)
      */
-    public Filter apply(FlixEngine2 flix, String options) {
-	Filter filter = null;
+    public void apply(FlixEngine2 flix, String options) {
 	try {
 	    filter = new Filter(flix, flixengine2_internalConstants.FE2_FILTER_FRAMERATE);
 	    filter.add();
@@ -54,7 +53,6 @@ public class FramerateFilterBuilder extends FilterBuilderBase {
 		filter.setParam(flixengine2_internalConstants.FE2_FRAMERATE_FPS, Double.parseDouble(options));
 	    }
 	} catch (FlixException e) {}
-	return filter;
     }
 
     public String getFriendlyName() {

@@ -29,8 +29,7 @@ public class DeinterlaceFilterBuilder extends FilterBuilderBase {
     /* (non-Javadoc)
      * @see tv.zencoder.flix.filter.FilterBuilder#applyFilter(com.on2.flix.FlixEngine2, java.lang.String)
      */
-    public Filter apply(FlixEngine2 flix, String options) {
-	Filter filter = null;
+    public void apply(FlixEngine2 flix, String options) {
 	try {
 	    deintmode_t deinterlaceType = null;
 	    if (options.equals("a")) {
@@ -52,7 +51,6 @@ public class DeinterlaceFilterBuilder extends FilterBuilderBase {
 	} catch (FlixException e) {
 	    //
 	}
-	return filter;
     }
 
     public String getFriendlyName() {

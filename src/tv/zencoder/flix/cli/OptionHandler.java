@@ -1,7 +1,5 @@
 package tv.zencoder.flix.cli;
 
-import java.util.List;
-
 import org.apache.commons.cli.Option;
 
 
@@ -41,12 +39,5 @@ public interface OptionHandler {
      * option on its own, or will another option look at this one if needed?
      */
     public boolean isPrimaryOption();
-    
-    /**
-     * List of other command line options which depend on this one.  Those should all return 
-     * <code>false</code> for <code>isPrimaryOption()</code>, and will be checked when this 
-     * option is detected.
-     */
-    public List children();
  
 }

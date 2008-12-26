@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import tv.zencoder.flix.BuilderTestHelper;
+
 import com.on2.flix.Filter;
 import com.on2.flix.deintmode_t;
 import com.on2.flix.flixengine2_internalConstants;
@@ -18,18 +20,18 @@ import com.on2.flix.flixengine2_internalConstants;
  */
 public class DeinterlaceFilterBuilderTest {
 
-    private FilterBuilderTestHelper fbtHelper;
+    private BuilderTestHelper btHelper;
 
     @Before
     public void setUp() throws Exception {
-	fbtHelper = new FilterBuilderTestHelper();
-	fbtHelper.setUp(new DeinterlaceFilterBuilder());
+	btHelper = new BuilderTestHelper();
+	btHelper.setUp(new DeinterlaceFilterBuilder());
     }
 
     @After
     public void tearDown() throws Exception {
-	fbtHelper.tearDown();
-	fbtHelper = null;
+	btHelper.tearDown();
+	btHelper = null;
     }
 
 
@@ -41,7 +43,8 @@ public class DeinterlaceFilterBuilderTest {
     }
 
     private void checkDeinterlaceType(String filterOptions, Double expectedValue) {
-	Filter filter = fbtHelper.apply(filterOptions);
+	btHelper.apply(filterOptions);
+	Filter filter = ((FilterBuilderBase) btHelper.getFlixBuilder()).getFilter();
 	try {
 	    double val = filter.getParam(flixengine2_internalConstants.FE2_ADAPTIVE_DEINTERLACE_MODE);
 	    assertEquals(expectedValue, new Double(val));

@@ -1,5 +1,6 @@
 package tv.zencoder.flix.codec;
 
+import tv.zencoder.flix.cli.FlixModifier;
 import tv.zencoder.flix.cli.OptionHandler;
 
 import com.on2.flix.Codec;
@@ -11,7 +12,7 @@ import com.on2.flix.FlixException;
  * @author jdl
  *
  */
-public interface CodecModifier extends OptionHandler {
+public interface CodecModifier extends FlixModifier, OptionHandler {
     /**
      * If we already have the Codec built, and just want to add a param to it, this
      * allows us to do so.  This is mainly used by child builders, where the parent would

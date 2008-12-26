@@ -1,4 +1,4 @@
-package tv.zencoder.flix.cli;
+package tv.zencoder.flix.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -12,21 +12,21 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import tv.zencoder.flix.cli.FlixBuilder;
+import tv.zencoder.flix.cli.OptionHandler;
 import tv.zencoder.flix.codec.AudioCodecBuilder;
-import tv.zencoder.flix.codec.CodecBuilder;
-import tv.zencoder.flix.codec.CodecModifier;
 import tv.zencoder.flix.codec.VideoCodecBuilder;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
-import tv.zencoder.flix.filter.FilterBuilder;
-import tv.zencoder.flix.filter.FilterModifier;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
-import tv.zencoder.flix.muxer.MuxerBuilder;
-import tv.zencoder.flix.muxer.MuxerModifier;
+import tv.zencoder.flix.filter.bchs.BrightnessFilterBuilder;
+import tv.zencoder.flix.filter.bchs.ContrastFilterBuilder;
+import tv.zencoder.flix.filter.bchs.HueFilterBuilder;
+import tv.zencoder.flix.filter.bchs.SaturationFilterBuilder;
 import tv.zencoder.flix.muxer.VideoMuxerBuilder;
-import tv.zencoder.flix.util.LogWrapper;
-import tv.zencoder.flix.util.VideoCodecConfig;
+
+import com.on2.flix.FlixEngine2;
 
 /**
  * Container for the Apache Commons CLI objects that we need to build.  Also supplies some
@@ -51,17 +51,22 @@ public class CommandLineHelper {
     private CommandLine line;
     
     // Handles building of Flix Filters.
-    private List<FilterBuilder> filterBuilders;
+    private List<FlixBuilder> filterBuilders;
     
     // Handles building of Flix Codecs.
-    private List<CodecBuilder> codecBuilders;
+    private List<FlixBuilder> codecBuilders;
     
     // Handles building of the Flix Muxers.
-    private List<MuxerBuilder> muxerBuilders;
+    private List<FlixBuilder> muxerBuilders;
     
     // Stores the choice of video codecs.  This is here, because the codec modifiers
     // need to know which codec they're dealing with.
     private VideoCodecConfig chosenVideoCodec;
+    
+    // The brightness, contrast, hue, and sturation filters all need this parent filter
+    // to be built first.  They should fetch it from here when needed, so that we only 
+    // have one BCHS filter created.
+    private BchsFilterBuilder bchsFilterBuilder;
     
     private static CommandLineHelper instance;
     
@@ -94,11 +99,14 @@ public class CommandLineHelper {
     private void populateParentFilterBuilders() {
 	// Only add the primary filter builders here. Let the constructor for those with 
 	// children take care of adding those.
-	filterBuilders = new ArrayList<FilterBuilder>();
+	filterBuilders = new ArrayList<FlixBuilder>();
 	filterBuilders.add(new DeinterlaceFilterBuilder());
 	filterBuilders.add(new FramerateFilterBuilder());
 	filterBuilders.add(new ScaleFilterBuilder());
-	filterBuilders.add(new BchsFilterBuilder());
+	filterBuilders.add(new BrightnessFilterBuilder());
+	filterBuilders.add(new ContrastFilterBuilder());
+	filterBuilders.add(new HueFilterBuilder());
+	filterBuilders.add(new SaturationFilterBuilder());
     }
     
     
@@ -107,7 +115,7 @@ public class CommandLineHelper {
      */
     private void populateParentCodecBuilders() {
         // Only add the primary codec builders here.
-	codecBuilders = new ArrayList<CodecBuilder>();
+	codecBuilders = new ArrayList<FlixBuilder>();
 	codecBuilders.add(new VideoCodecBuilder());
 	codecBuilders.add(new AudioCodecBuilder());
     }
@@ -117,7 +125,7 @@ public class CommandLineHelper {
      * Populates the list of muxer builders.
      */
     private void populateParentMuxerBuilders() {
-	muxerBuilders = new ArrayList<MuxerBuilder>();
+	muxerBuilders = new ArrayList<FlixBuilder>();
 	muxerBuilders.add(new VideoMuxerBuilder());
     }
     
@@ -155,50 +163,10 @@ public class CommandLineHelper {
 		.create("o"));
 
 	
-	/* Filters */
-	Iterator<FilterBuilder> fbIter = getFilterBuilders().iterator();
-	while (fbIter.hasNext()) {
-	    FilterBuilder fb = fbIter.next();
-	    options.addOption(fb.getOption());
-	    
-	    // If this builder has any children, we want to add them to the options list.
-	    if (fb.children() != null && fb.children().size() > 0) {
-		Iterator<FilterModifier> childIter = fb.children().iterator();
-		while (childIter.hasNext()) {
-		    options.addOption(childIter.next().getOption());
-		}
-	    }
-	}
-	
-	/* Codecs */
-	Iterator<CodecBuilder> cbIter = getCodecBuilders().iterator();
-	while (cbIter.hasNext()) {
-	    CodecBuilder cb = cbIter.next();
-	    options.addOption(cb.getOption());
-	    
-	    // And any children (codec modifiers) that this builder may have.
-	    if (cb.children() != null && cb.children().size() > 0) {
-		Iterator<CodecModifier> childIter = cb.children().iterator();
-		while (childIter.hasNext()) {
-		    options.addOption(childIter.next().getOption());
-		}
-	    }
-	}
-	
-	/* Muxers */
-	Iterator<MuxerBuilder> mbIter = getMuxerBuilders().iterator();
-	while (mbIter.hasNext()) {
-	    MuxerBuilder mb = mbIter.next();
-	    options.addOption(mb.getOption());
-	    
-	    // And any children (muxer modifiers) that this builder may have.
-	    if (mb.children() != null && mb.children().size() > 0) {
-		Iterator<MuxerModifier> childIter = mb.children().iterator();
-		while (childIter.hasNext()) {
-		    options.addOption(childIter.next().getOption());
-		}
-	    }
-	}
+	/*  Add the command line Options from the Filter, Codec, and Muxer builders. */
+	addBuilderOptions(options, getFilterBuilders());
+	addBuilderOptions(options, getCodecBuilders());
+	addBuilderOptions(options, getMuxerBuilders());
 
 	return options;
     }
@@ -219,13 +187,36 @@ public class CommandLineHelper {
     }
 
     /**
+     * Iterates over a list of FlixBuilders, and adds the command line Option to the Options
+     * list.
+     * 
+     * @param options
+     * @param builderList
+     */
+    private void addBuilderOptions(Options options, List<FlixBuilder> builderList) {
+	Iterator<FlixBuilder> fbIter = builderList.iterator();
+	while (fbIter.hasNext()) {
+	    FlixBuilder fb = fbIter.next();
+	    options.addOption(fb.getOption());
+	    
+	    // If this builder has any children, we want to add them to the options list.
+	    if (fb.children() != null && fb.children().size() > 0) {
+		Iterator childIter = fb.children().iterator();
+		while (childIter.hasNext()) {
+		    options.addOption(((OptionHandler) childIter.next()).getOption());
+		}
+	    }
+	}
+    }
+    
+    /**
      * Returns the list of parent filter builders.  The child modifiers are not
      * returned by this.  Each builder will return any available children via its
      * <code>children()</code> method.
      * 
-     * @return List<FilterBuilder>
+     * @return List<FlixBuilder>
      */
-    public List<FilterBuilder> getFilterBuilders() {
+    public List<FlixBuilder> getFilterBuilders() {
         return filterBuilders;
     }
     
@@ -234,9 +225,9 @@ public class CommandLineHelper {
      * returned by this.  Each builder will return any available children via its
      * <code>children()</code> method.
      * 
-     * @return List<CodecBuilder>
+     * @return List<FlixBuilder>
      */
-    public List<CodecBuilder> getCodecBuilders() {
+    public List<FlixBuilder> getCodecBuilders() {
         return codecBuilders;
     }
 
@@ -245,9 +236,9 @@ public class CommandLineHelper {
      * returned by this.  Each builder will return any available children via its
      * <code>children()</code> method.
      * 
-     * @return List<MuxerBuilder>
+     * @return List<FlixBuilder>
      */
-    public List<MuxerBuilder> getMuxerBuilders() {
+    public List<FlixBuilder> getMuxerBuilders() {
         return muxerBuilders;
     }
     
@@ -310,6 +301,19 @@ public class CommandLineHelper {
      */
     public void setChosenVideoCodec(VideoCodecConfig chosenVideoCodec) {
         this.chosenVideoCodec = chosenVideoCodec;
+    }
+
+    /**
+     * When the brightness, contrast, hue, and saturation filter builders need the BCHS filter
+     * builder, they should fetch it from here so that we only have one created.
+     * @return BchsFilterBuilder
+     */
+    public BchsFilterBuilder getBchsFilterBuilder(FlixEngine2 flix) {
+	if (bchsFilterBuilder == null) {
+	    bchsFilterBuilder = new BchsFilterBuilder();
+	    bchsFilterBuilder.apply(flix, "");
+	}
+        return bchsFilterBuilder;
     }
     
 }

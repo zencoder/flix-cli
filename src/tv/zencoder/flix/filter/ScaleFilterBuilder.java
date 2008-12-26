@@ -75,9 +75,8 @@ public class ScaleFilterBuilder extends FilterBuilderBase {
     /* (non-Javadoc)
      * @see tv.zencoder.flix.filter.FilterBuilder#applyFilter(com.on2.flix.FlixEngine2, java.lang.String)
      */
-    public Filter apply(FlixEngine2 flix, String options) {
-	Filter filter = null;
-	
+    public void apply(FlixEngine2 flix, String options) {
+
 	// Check to see if the user is supplying one of the shortcut sizes.
 	if (scaleShortcuts.containsKey(options)) {
 	    options = scaleShortcuts.get(options);
@@ -91,7 +90,6 @@ public class ScaleFilterBuilder extends FilterBuilderBase {
 	} catch (FlixException e) {
 	    //
 	}
-	return filter;
     }
 
     protected double getWidth(String options) {

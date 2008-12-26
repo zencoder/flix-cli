@@ -1,5 +1,6 @@
 package tv.zencoder.flix.filter;
 
+import tv.zencoder.flix.cli.FlixModifier;
 import tv.zencoder.flix.cli.OptionHandler;
 
 import com.on2.flix.Filter;
@@ -10,7 +11,7 @@ import com.on2.flix.FlixException;
  * @author jdl
  *
  */
-public interface FilterModifier extends OptionHandler {
+public interface FilterModifier extends FlixModifier, OptionHandler {
 
     /**
      * If we already have the Filter built, and just want to add a param to it, this
@@ -20,6 +21,6 @@ public interface FilterModifier extends OptionHandler {
      * @param	filter
      * @param	options	A string representing the command line options for this switch.
      */
-    public void modifyFilter(Filter filter, String options) throws FlixException;
+    public void apply(Filter filter, String options) throws FlixException;
     
 }

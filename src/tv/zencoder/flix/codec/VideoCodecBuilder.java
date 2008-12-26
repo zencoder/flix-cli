@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.StringUtil;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
@@ -45,8 +45,7 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	addChild(new VideoBitrateCodecModifier());
     }
 
-    public Codec apply(FlixEngine2 flix, String options) {
-	Codec codec = null;
+    public void apply(FlixEngine2 flix, String options) {
 	try {
 	    VideoCodecConfig videoCodecConfig = codecConfigs.get(options);
 	    
@@ -67,7 +66,6 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	} catch (FlixException e) {
 	    //
 	}
-	return codec;
     }
 
     public String getFriendlyName() {

@@ -8,25 +8,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import tv.zencoder.flix.cli.CommandLineHelper;
+import tv.zencoder.flix.BuilderTestHelper;
+import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
 
 public class VideoCodecBuilderTest {
 
-    private CodecBuilderTestHelper cbtHelper;
+    private BuilderTestHelper builderTestHelper;
 
     @Before
     public void setUp() throws Exception {
-	cbtHelper = new CodecBuilderTestHelper();
-	cbtHelper.setUp(new VideoCodecBuilder());
+	builderTestHelper = new BuilderTestHelper();
+	builderTestHelper.setUp(new VideoCodecBuilder());
     }
 
     @After
     public void tearDown() throws Exception {
-	cbtHelper.tearDown();
-	cbtHelper = null;
+	builderTestHelper.tearDown();
+	builderTestHelper = null;
     }
 
     @Test
@@ -44,7 +45,8 @@ public class VideoCodecBuilderTest {
     }
 
     private void checkCodecParams(String options, VideoCodecConfig videoCodecConfig) {
-	Codec codec = cbtHelper.apply(options);
+	builderTestHelper.apply(options);
+	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
 	try {
 	    double val = codec.getParam(videoCodecConfig.getFlixBitmapParamName());
 	    assertEquals(new Double(400), new Double(val));

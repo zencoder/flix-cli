@@ -92,8 +92,7 @@
 			<batchtest fork="yes">
 				<fileset dir="${test.src.dir}">
 					<include name="**/*Test*.java" />
-					<exclude name="**/FilterBuilderTestHelper.java" />
-					<exclude name="**/CodecBuilderTestHelper.java" />
+					<exclude name="**/BuilderTestHelper.java" />
 				</fileset>
 			</batchtest>
 		</junit>
