@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.util.CommandLineHelper;
+import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.StringUtil;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
@@ -50,7 +50,7 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	    VideoCodecConfig videoCodecConfig = codecConfigs.get(options);
 	    
 	    // Stash the chosen codec so that any modifiers can look up which code we're using.
-	    CommandLineHelper.getInstance().setChosenVideoCodec(videoCodecConfig);
+	    BuilderCache.getInstance().setChosenVideoCodec(videoCodecConfig);
 	    
 	    // Grab the String constant that Flix uses for this codec type.
 	    String flixCodecName = videoCodecConfig.getFlixCodecName();

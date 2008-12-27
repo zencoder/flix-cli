@@ -4,6 +4,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import tv.zencoder.flix.filter.FilterBuilderBase;
+import tv.zencoder.flix.util.BuilderCache;
 
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.flixengine2_internalConstants;
@@ -18,7 +19,7 @@ public class ContrastFilterBuilder extends FilterBuilderBase {
      * Modifies the BCHS Filter.
      */
     public void apply(FlixEngine2 flix, String options) {
-	(new BchsFilterHelper()).apply(flix, options, flixengine2_internalConstants.FE2_BCHS_CONTRAST);
+	modifyFilter(BuilderCache.getInstance().getBchsFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_BCHS_CONTRAST);
     }
 
 

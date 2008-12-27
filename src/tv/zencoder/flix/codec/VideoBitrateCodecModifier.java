@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import tv.zencoder.flix.util.CommandLineHelper;
+import tv.zencoder.flix.util.BuilderCache;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FlixException;
@@ -17,7 +17,7 @@ public class VideoBitrateCodecModifier implements CodecModifier {
     }
 
     public void modifyCodec(Codec codec, String options) throws FlixException {
-	codec.setParam(CommandLineHelper.getInstance().getChosenVideoCodec().getFlixBitmapParamName(), Double.parseDouble(options));
+	codec.setParam(BuilderCache.getInstance().getChosenVideoCodec().getFlixBitmapParamName(), Double.parseDouble(options));
     }
 
     public String getFriendlyName() {

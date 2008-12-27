@@ -52,6 +52,24 @@ public abstract class FilterBuilderBase implements FlixBuilder, OptionHandler {
 	}
     }
 
+    
+    /**
+     * Sets a given param-option (name-value) for a Filter.
+     * 
+     * @param filter
+     * @param options
+     * @param paramName
+     */
+    protected void modifyFilter(Filter filter, String options, String paramName) {
+	try {
+	    filter.setParam(paramName, Double.parseDouble(options));
+	} catch (NumberFormatException e) {
+	    log.debug("FilterBuilderBase.modifyFilter(): Failed to parse options into a Double. e=" + e.getLocalizedMessage());
+	} catch (FlixException e) {
+	    log.debug("FilterBuilderBase.modifyFilter(): Failed to modify the BCHS filter. e=" + e.getLocalizedMessage());
+	}
+    }
+    
     public Filter getFilter() {
         return filter;
     }

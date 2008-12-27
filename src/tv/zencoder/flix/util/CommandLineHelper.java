@@ -19,14 +19,15 @@ import tv.zencoder.flix.codec.VideoCodecBuilder;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
-import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BrightnessFilterBuilder;
 import tv.zencoder.flix.filter.bchs.ContrastFilterBuilder;
 import tv.zencoder.flix.filter.bchs.HueFilterBuilder;
 import tv.zencoder.flix.filter.bchs.SaturationFilterBuilder;
+import tv.zencoder.flix.filter.crop.CropBottomFilterBuilder;
+import tv.zencoder.flix.filter.crop.CropLeftFilterBuilder;
+import tv.zencoder.flix.filter.crop.CropRightFilterBuilder;
+import tv.zencoder.flix.filter.crop.CropTopFilterBuilder;
 import tv.zencoder.flix.muxer.VideoMuxerBuilder;
-
-import com.on2.flix.FlixEngine2;
 
 /**
  * Container for the Apache Commons CLI objects that we need to build.  Also supplies some
@@ -58,15 +59,6 @@ public class CommandLineHelper {
     
     // Handles building of the Flix Muxers.
     private List<FlixBuilder> muxerBuilders;
-    
-    // Stores the choice of video codecs.  This is here, because the codec modifiers
-    // need to know which codec they're dealing with.
-    private VideoCodecConfig chosenVideoCodec;
-    
-    // The brightness, contrast, hue, and sturation filters all need this parent filter
-    // to be built first.  They should fetch it from here when needed, so that we only 
-    // have one BCHS filter created.
-    private BchsFilterBuilder bchsFilterBuilder;
     
     private static CommandLineHelper instance;
     
@@ -107,6 +99,10 @@ public class CommandLineHelper {
 	filterBuilders.add(new ContrastFilterBuilder());
 	filterBuilders.add(new HueFilterBuilder());
 	filterBuilders.add(new SaturationFilterBuilder());
+	filterBuilders.add(new CropTopFilterBuilder());
+	filterBuilders.add(new CropRightFilterBuilder());
+	filterBuilders.add(new CropBottomFilterBuilder());
+	filterBuilders.add(new CropLeftFilterBuilder());
     }
     
     
@@ -281,39 +277,6 @@ public class CommandLineHelper {
      */
     public String[] getArgs() {
         return args;
-    }
-
-    /**
-     * Returns the video codec that we're working on.  Video codec modifiers
-     * need to know which specific codec they're trying to configure.
-     * 
-     * @return VideoCodecConfig
-     */
-    public VideoCodecConfig getChosenVideoCodec() {
-        return chosenVideoCodec;
-    }
-
-    /**
-     * When a VideoCodecBuilder decides on a particular codec, it should set that
-     * value here, so that codec modifiers will behave properly.
-     * 
-     * @param chosenVideoCodec
-     */
-    public void setChosenVideoCodec(VideoCodecConfig chosenVideoCodec) {
-        this.chosenVideoCodec = chosenVideoCodec;
-    }
-
-    /**
-     * When the brightness, contrast, hue, and saturation filter builders need the BCHS filter
-     * builder, they should fetch it from here so that we only have one created.
-     * @return BchsFilterBuilder
-     */
-    public BchsFilterBuilder getBchsFilterBuilder(FlixEngine2 flix) {
-	if (bchsFilterBuilder == null) {
-	    bchsFilterBuilder = new BchsFilterBuilder();
-	    bchsFilterBuilder.apply(flix, "");
-	}
-        return bchsFilterBuilder;
     }
     
 }

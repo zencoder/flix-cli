@@ -1,4 +1,5 @@
-package tv.zencoder.flix.filter.bchs;
+package tv.zencoder.flix.filter.crop;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -16,8 +17,9 @@ import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
 
-public class BchsFilterBuilderTest {
+public class CropFilterBuilderTest {
     private BuilderTestHelper btHelper;
+    
 
     @Before
     public void setUp() throws Exception {
@@ -30,15 +32,15 @@ public class BchsFilterBuilderTest {
 	btHelper.tearDown();
 	btHelper = null;
     }
-    
+
     @Test
     public void testApply() {
 	// Set up a command line that should trigger children of the BchsFilterBuilder to also be executed.
 	CommandLineHelper clHelper = CommandLineHelper.getInstance();
-	clHelper.setArgs(new String[] {"-brightness", "200", "-contrast", "-100", "-hue", "80", "-saturation", "50"});
+	clHelper.setArgs(new String[] {"-croptop", "200", "-cropright", "100", "-cropbottom", "400", "-cropleft", "50"});
 	
 	
-	FlixBuilder[] builders = {new BrightnessFilterBuilder(), new ContrastFilterBuilder(), new HueFilterBuilder(), new SaturationFilterBuilder()};
+	FlixBuilder[] builders = {new CropTopFilterBuilder(), new CropRightFilterBuilder(), new CropBottomFilterBuilder(), new CropLeftFilterBuilder()};
 	
 	for (int i = 0; i < builders.length; i++) {
 	    if (clHelper.isOptionInUse(builders[i])) {
@@ -47,17 +49,18 @@ public class BchsFilterBuilderTest {
     	    }
 	}
 	
-	Filter filter = BuilderCache.getInstance().getBchsFilterBuilder(btHelper.getFlix()).getFilter();
+	Filter filter = BuilderCache.getInstance().getCropFilterBuilder(btHelper.getFlix()).getFilter();
 	
 	try {
 	    // Check the values that should have come from the child builders (brightness, contrast, hue, and saturation)
-	    assertEquals(new Double(200),  new Double(filter.getParam(flixengine2_internalConstants.FE2_BCHS_BRIGHTNESS)));
-	    assertEquals(new Double(-100), new Double(filter.getParam(flixengine2_internalConstants.FE2_BCHS_CONTRAST)));
-	    assertEquals(new Double(80),   new Double(filter.getParam(flixengine2_internalConstants.FE2_BCHS_HUE)));
-	    assertEquals(new Double(50),   new Double(filter.getParam(flixengine2_internalConstants.FE2_BCHS_SATURATION)));
+	    assertEquals(new Double(200),  new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_TOP)));
+	    assertEquals(new Double(100),  new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_RIGHT)));
+	    assertEquals(new Double(400),  new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_BOTTOM)));
+	    assertEquals(new Double(50),   new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_LEFT)));
 	} catch (FlixException e) {
 	    fail();
 	    e.printStackTrace();
 	}
     }
+    
 }
