@@ -14,8 +14,8 @@ import org.apache.commons.cli.ParseException;
 
 import tv.zencoder.flix.cli.FlixBuilder;
 import tv.zencoder.flix.cli.OptionHandler;
-import tv.zencoder.flix.codec.AudioCodecBuilder;
-import tv.zencoder.flix.codec.VideoCodecBuilder;
+import tv.zencoder.flix.codec.audio.AudioCodecBuilder;
+import tv.zencoder.flix.codec.video.VideoCodecBuilder;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
 import tv.zencoder.flix.filter.DenoiseFilterBuilder;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;

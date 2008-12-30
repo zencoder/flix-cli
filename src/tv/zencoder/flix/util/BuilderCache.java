@@ -32,6 +32,9 @@ public class BuilderCache {
     // need to know which codec they're dealing with.
     private VideoCodecConfig chosenVideoCodec;
     
+    // Stores the choice of audio codecs.  This is here, because the codec modifiers
+    // need to know which codec they're dealing with.
+    private AudioCodecConfig chosenAudioCodec;
     
     
     private static BuilderCache instance;
@@ -49,27 +52,6 @@ public class BuilderCache {
     
     private BuilderCache() {
 	super();
-    }
-
-    
-    /**
-     * Returns the video codec that we're working on.  Video codec modifiers
-     * need to know which specific codec they're trying to configure.
-     * 
-     * @return VideoCodecConfig
-     */
-    public VideoCodecConfig getChosenVideoCodec() {
-        return chosenVideoCodec;
-    }
-
-    /**
-     * When a VideoCodecBuilder decides on a particular codec, it should set that
-     * value here, so that codec modifiers will behave properly.
-     * 
-     * @param chosenVideoCodec
-     */
-    public void setChosenVideoCodec(VideoCodecConfig chosenVideoCodec) {
-        this.chosenVideoCodec = chosenVideoCodec;
     }
 
     /**
@@ -108,4 +90,44 @@ public class BuilderCache {
 	}
         return cutFilterBuilder;
     }
+
+    /**
+     * Returns the video codec that we're working on.  Video codec modifiers
+     * need to know which specific codec they're trying to configure.
+     * 
+     * @return VideoCodecConfig
+     */
+    public VideoCodecConfig getChosenVideoCodec() {
+        return chosenVideoCodec;
+    }
+
+    /**
+     * When a VideoCodecBuilder decides on a particular codec, it should set that
+     * value here, so that codec modifiers will behave properly.
+     * 
+     * @param chosenVideoCodec
+     */
+    public void setChosenVideoCodec(VideoCodecConfig chosenVideoCodec) {
+        this.chosenVideoCodec = chosenVideoCodec;
+    }
+    
+    /**
+     * Returns the audio codec that we're workign with.
+     * 
+     * @return AudioCodecConfig
+     */
+    public AudioCodecConfig getChosenAudioCodec() {
+        return chosenAudioCodec;
+    }
+
+    /**
+     * When an AudioCodecBuilder decides on a particular codec, it should set that value here
+     * so that the modifiers can behave properly.
+     * 
+     * @param chosenAudioCodec
+     */
+    public void setChosenAudioCodec(AudioCodecConfig chosenAudioCodec) {
+        this.chosenAudioCodec = chosenAudioCodec;
+    }
+
 }

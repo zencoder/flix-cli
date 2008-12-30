@@ -1,4 +1,4 @@
-package tv.zencoder.flix.codec;
+package tv.zencoder.flix.codec.audio;
 
 import java.util.Collections;
 import java.util.Map;
@@ -7,7 +7,9 @@ import java.util.TreeMap;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
+import tv.zencoder.flix.codec.CodecBuilderBase;
 import tv.zencoder.flix.util.AudioCodecConfig;
+import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.StringUtil;
 
 import com.on2.flix.Codec;
@@ -24,19 +26,24 @@ public class AudioCodecBuilder extends CodecBuilderBase {
     protected static Map<String, AudioCodecConfig> codecConfigs;
     static {
         Map<String, AudioCodecConfig> map = new TreeMap<String, AudioCodecConfig>();
-        map.put("aac", AudioCodecConfig.AAC);
-        map.put("mp3", AudioCodecConfig.MP3);
+        map.put("aac",     AudioCodecConfig.AAC);
+        map.put("aacplus", AudioCodecConfig.AACPLUS);
+        map.put("mp3",     AudioCodecConfig.MP3);
         codecConfigs = Collections.unmodifiableMap(map);
     }
     
     
     public AudioCodecBuilder() {
 	super();
+	addChild(new AudioBitrateCodecModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {
 	try {
 	    AudioCodecConfig audioCodecConfig = codecConfigs.get(options);
+	    
+	    // Stash the chosen codec so that any modifiers can look up which code we're using.
+	    BuilderCache.getInstance().setChosenAudioCodec(audioCodecConfig);
 	    
 	    // Grab the String constant that Flix uses for this codec type.
 	    String flixCodecName = audioCodecConfig.getFlixCodecName();

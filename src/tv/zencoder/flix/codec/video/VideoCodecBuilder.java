@@ -1,4 +1,4 @@
-package tv.zencoder.flix.codec;
+package tv.zencoder.flix.codec.video;
 
 import java.util.Collections;
 import java.util.Map;
@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
+import tv.zencoder.flix.codec.CodecBuilderBase;
 import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.StringUtil;
 import tv.zencoder.flix.util.VideoCodecConfig;

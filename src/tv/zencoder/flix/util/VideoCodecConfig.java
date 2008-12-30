@@ -16,15 +16,15 @@ public enum VideoCodecConfig {
     H264(flixengine2_internalConstants.FE2_CODEC_H264, flixengine2_internalConstants.FE2_H264_BITRATE);
     
     private final String flixCodecName;
-    private final String flixBitmapParamName;
+    private final String flixBitrateParamName;
     
     private VideoCodecConfig(String flixCodecName, String flixBitmapParamName) {
 	this.flixCodecName = flixCodecName;
-	this.flixBitmapParamName = flixBitmapParamName;
+	this.flixBitrateParamName = flixBitmapParamName;
     }
     
-    public String getFlixBitmapParamName() {
-        return flixBitmapParamName;
+    public String getFlixBitrateParamName() {
+        return flixBitrateParamName;
     }
     public String getFlixCodecName() {
         return flixCodecName;
