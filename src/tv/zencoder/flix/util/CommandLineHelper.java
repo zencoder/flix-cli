@@ -32,6 +32,8 @@ import tv.zencoder.flix.filter.crop.CropRightFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropTopFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutStartFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutStopFilterBuilder;
+import tv.zencoder.flix.filter.resample.AudioResampleChannelsFilterBuilder;
+import tv.zencoder.flix.filter.resample.AudioResampleRateFilterBuilder;
 import tv.zencoder.flix.muxer.VideoMuxerBuilder;
 
 /**
@@ -122,6 +124,8 @@ public class CommandLineHelper {
 	// Audio Filters
 	filterBuilders.add(new HighpassFilterBuilder());
 	filterBuilders.add(new LowpassFilterBuilder());
+	filterBuilders.add(new AudioResampleChannelsFilterBuilder());
+	filterBuilders.add(new AudioResampleRateFilterBuilder());
     }
     
     

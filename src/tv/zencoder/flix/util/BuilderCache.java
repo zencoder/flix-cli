@@ -3,6 +3,7 @@ package tv.zencoder.flix.util;
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutFilterBuilder;
+import tv.zencoder.flix.filter.resample.AudioResampleFilterBuilder;
 
 import com.on2.flix.FlixEngine2;
 
@@ -27,6 +28,9 @@ public class BuilderCache {
     
     // Parent for CutStart and CutStop filter builders
     private CutFilterBuilder cutFilterBuilder;
+    
+    // Parent for the AudioResample filter builders.
+    private AudioResampleFilterBuilder audioResampleFilterBuilder;
     
     // Stores the choice of video codecs.  This is here, because the codec modifiers
     // need to know which codec they're dealing with.
@@ -92,6 +96,21 @@ public class BuilderCache {
     }
 
     /**
+     * Returns the parent AudioResampleFilterBuilder.
+     * @return AudioResampleFilterBuilder
+     */
+    public AudioResampleFilterBuilder getAudioResampleFilterBuilder(FlixEngine2 flix) {
+	if (audioResampleFilterBuilder == null) {
+	    audioResampleFilterBuilder = new AudioResampleFilterBuilder();
+	    audioResampleFilterBuilder.apply(flix, "");
+	}
+        return audioResampleFilterBuilder;
+    }
+
+ 
+    
+    
+    /**
      * Returns the video codec that we're working on.  Video codec modifiers
      * need to know which specific codec they're trying to configure.
      * 
@@ -129,5 +148,6 @@ public class BuilderCache {
     public void setChosenAudioCodec(AudioCodecConfig chosenAudioCodec) {
         this.chosenAudioCodec = chosenAudioCodec;
     }
+
 
 }
