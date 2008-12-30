@@ -17,6 +17,7 @@ import tv.zencoder.flix.cli.OptionHandler;
 import tv.zencoder.flix.codec.AudioCodecBuilder;
 import tv.zencoder.flix.codec.VideoCodecBuilder;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
+import tv.zencoder.flix.filter.DenoiseFilterBuilder;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BrightnessFilterBuilder;
@@ -94,17 +95,25 @@ public class CommandLineHelper {
 	// Only add the primary filter builders here. Let the constructor for those with 
 	// children take care of adding those.
 	filterBuilders = new ArrayList<FlixBuilder>();
+	
 	filterBuilders.add(new DeinterlaceFilterBuilder());
+	filterBuilders.add(new DenoiseFilterBuilder());
 	filterBuilders.add(new FramerateFilterBuilder());
 	filterBuilders.add(new ScaleFilterBuilder());
+
+	// BCHS
 	filterBuilders.add(new BrightnessFilterBuilder());
 	filterBuilders.add(new ContrastFilterBuilder());
 	filterBuilders.add(new HueFilterBuilder());
 	filterBuilders.add(new SaturationFilterBuilder());
+	
+	// Crop
 	filterBuilders.add(new CropTopFilterBuilder());
 	filterBuilders.add(new CropRightFilterBuilder());
 	filterBuilders.add(new CropBottomFilterBuilder());
 	filterBuilders.add(new CropLeftFilterBuilder());
+	
+	// Cut
 	filterBuilders.add(new CutStartFilterBuilder());
 	filterBuilders.add(new CutStopFilterBuilder());
     }
