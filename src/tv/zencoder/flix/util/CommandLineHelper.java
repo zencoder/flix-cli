@@ -19,6 +19,8 @@ import tv.zencoder.flix.codec.VideoCodecBuilder;
 import tv.zencoder.flix.filter.DeinterlaceFilterBuilder;
 import tv.zencoder.flix.filter.DenoiseFilterBuilder;
 import tv.zencoder.flix.filter.FramerateFilterBuilder;
+import tv.zencoder.flix.filter.HighpassFilterBuilder;
+import tv.zencoder.flix.filter.LowpassFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BrightnessFilterBuilder;
 import tv.zencoder.flix.filter.bchs.ContrastFilterBuilder;
@@ -116,6 +118,10 @@ public class CommandLineHelper {
 	// Cut
 	filterBuilders.add(new CutStartFilterBuilder());
 	filterBuilders.add(new CutStopFilterBuilder());
+	
+	// Audio Filters
+	filterBuilders.add(new HighpassFilterBuilder());
+	filterBuilders.add(new LowpassFilterBuilder());
     }
     
     
