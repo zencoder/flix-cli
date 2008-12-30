@@ -27,6 +27,8 @@ import tv.zencoder.flix.filter.crop.CropBottomFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropLeftFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropRightFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropTopFilterBuilder;
+import tv.zencoder.flix.filter.cut.CutStartFilterBuilder;
+import tv.zencoder.flix.filter.cut.CutStopFilterBuilder;
 import tv.zencoder.flix.muxer.VideoMuxerBuilder;
 
 /**
@@ -103,6 +105,8 @@ public class CommandLineHelper {
 	filterBuilders.add(new CropRightFilterBuilder());
 	filterBuilders.add(new CropBottomFilterBuilder());
 	filterBuilders.add(new CropLeftFilterBuilder());
+	filterBuilders.add(new CutStartFilterBuilder());
+	filterBuilders.add(new CutStopFilterBuilder());
     }
     
     

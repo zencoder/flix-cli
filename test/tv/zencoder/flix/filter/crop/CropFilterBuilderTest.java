@@ -35,7 +35,7 @@ public class CropFilterBuilderTest {
 
     @Test
     public void testApply() {
-	// Set up a command line that should trigger children of the BchsFilterBuilder to also be executed.
+	// Set up a command line that should trigger children of the CropFilterBuilder to also be executed.
 	CommandLineHelper clHelper = CommandLineHelper.getInstance();
 	clHelper.setArgs(new String[] {"-croptop", "200", "-cropright", "100", "-cropbottom", "400", "-cropleft", "50"});
 	

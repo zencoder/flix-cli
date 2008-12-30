@@ -2,6 +2,7 @@ package tv.zencoder.flix.util;
 
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropFilterBuilder;
+import tv.zencoder.flix.filter.cut.CutFilterBuilder;
 
 import com.on2.flix.FlixEngine2;
 
@@ -23,6 +24,9 @@ public class BuilderCache {
     
     // Top, Bottom, Left, and Right Crop filters all use this parent filter.
     private CropFilterBuilder cropFilterBuilder;
+    
+    // Parent for CutStart and CutStop filter builders
+    private CutFilterBuilder cutFilterBuilder;
     
     // Stores the choice of video codecs.  This is here, because the codec modifiers
     // need to know which codec they're dealing with.
@@ -93,4 +97,15 @@ public class BuilderCache {
         return cropFilterBuilder;
     }
     
+    /**
+     * Returns the parent CutFilterBuilder.
+     * @return CutFilterBuilder
+     */
+    public CutFilterBuilder getCutFilterBuilder(FlixEngine2 flix) {
+	if (cutFilterBuilder == null) {
+	    cutFilterBuilder = new CutFilterBuilder();
+	    cutFilterBuilder.apply(flix, "");
+	}
+        return cutFilterBuilder;
+    }
 }
