@@ -161,6 +161,12 @@ public class FlixEngineApiDriver {
 	    System.out.println(" FlixEngine2.GetEncoderState:" + flix.GetEncoderState());
 	    long[] flixerr = flix.Errno();
 	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " syserrno:" + flixerr[1]);
+	    
+	    if(flixerr[0] == 0 && flixerr[1] == 0) {
+		log.info("--SUCCESS--");
+	    } else {
+		log.info("--FAIL--");
+	    }
 	} catch (FlixException e) {}
     }
 
