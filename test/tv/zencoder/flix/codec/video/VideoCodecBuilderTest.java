@@ -16,6 +16,9 @@ import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FE2_CompressMode;
+import com.on2.flix.FlixException;
+import com.on2.flix.h264profile_t;
+import com.on2.flix.vp6profile_t;
 
 public class VideoCodecBuilderTest {
 
@@ -35,26 +38,38 @@ public class VideoCodecBuilderTest {
 
     @Test
     public void testVp6() {
-	// Set up a command line so that a bitrate is also set.
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best"});
-	checkCodecParams("vp6", VideoCodecConfig.VP6);
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s"});
+	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
+	
+	try {
+	    assertEquals(new Double(vp6profile_t.VP6_S.swigValue()), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixProfileParamName())));
+	} catch (FlixException e) {
+	    fail(e.getMessage());
+	    e.printStackTrace();
+	}
     }
     
     @Test
     public void testVp6a() {
-	// Set up a command line so that a bitrate is also set.
 	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best"});
 	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
     }
     
     @Test
     public void testH264() {
-	// Set up a command line so that a bitrate is also set.
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400"});
-	checkCodecParams("h264", VideoCodecConfig.H264);
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high"});
+	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
+	    
+	try {
+	    assertEquals(new Double(h264profile_t.HIGH_H264PROFILE.swigValue()), new Double(codec.getParam(VideoCodecConfig.H264.getFlixProfileParamName())));
+	} catch (FlixException e) {
+	    fail(e.getMessage());
+	    e.printStackTrace();
+	}
+
     }
 
-    private void checkCodecParams(String options, VideoCodecConfig videoCodecConfig) {
+    private Codec checkCodecParams(String options, VideoCodecConfig videoCodecConfig) {
 	builderTestHelper.apply(options);
 	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
 	try {
@@ -70,6 +85,7 @@ public class VideoCodecBuilderTest {
 	    fail(e.getMessage());
 	    e.printStackTrace();
 	}
+	return codec;
     }
 
 }
