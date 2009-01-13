@@ -41,6 +41,13 @@ public class VideoCodecBuilderTest {
     }
     
     @Test
+    public void testVp6a() {
+	// Set up a command line so that a bitrate is also set.
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best"});
+	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
+    }
+    
+    @Test
     public void testH264() {
 	// Set up a command line so that a bitrate is also set.
 	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400"});

@@ -16,7 +16,7 @@ public enum VideoCodecConfig {
 	
     VP6A(flixengine2_internalConstants.FE2_CODEC_VP6ALPHA,
 	 flixengine2_internalConstants.FE2_VP6A_ALPHA_BITRATE,
-	 null),
+	 flixengine2_internalConstants.FE2_VP6A_CXMODE),
     
     H263(flixengine2_internalConstants.FE2_CODEC_H263,
 	 flixengine2_internalConstants.FE2_H263_BITRATE,

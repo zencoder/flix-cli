@@ -46,7 +46,7 @@ public class CompressModeVideoCodecModifier extends Object implements CodecModif
     public Option getOption() {
 	return OptionBuilder.withArgName("good|best")
 	    		    .hasArg()
-	    		    .withDescription("Sets the video compress mode.  This currently only works with the VP6 codec.")
+	    		    .withDescription("Sets the video compress mode.  This currently only works with the VP6 and VP6A codecs.")
 	    		    .create(getSwitch());
     }
 
