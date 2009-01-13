@@ -40,6 +40,13 @@ public class AudioCodecBuilderTest {
     }
     
     @Test
+    public void testAacPlus() {
+	// Set up a command line so that a bitrate is also set.
+	CommandLineHelper.getInstance().setArgs(new String[] {"-ab", "128", "-a_parametric_stereo"});
+	checkCodecParams("aacplus", AudioCodecConfig.AACPLUS);
+    }
+    
+    @Test
     public void testMp3() {
 	// Set up a command line so that a bitrate is also set.
 	CommandLineHelper.getInstance().setArgs(new String[] {"-ab", "128"});
@@ -50,8 +57,13 @@ public class AudioCodecBuilderTest {
 	builderTestHelper.apply(options);
 	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
 	try {
-	    double val = codec.getParam(audioCodecConfig.getFlixBitrateParamName());
-	    assertEquals(new Double(128), new Double(val));
+	    // Check bitrate
+	    assertEquals(new Double(128), new Double(codec.getParam(audioCodecConfig.getFlixBitrateParamName())));
+	    
+	    // Check parametric stereo
+	    if (audioCodecConfig.getFlixParametricStereoParamName() != null) {
+		assertEquals(new Double(1.0), new Double(codec.getParam(audioCodecConfig.getFlixParametricStereoParamName())));
+	    }
 	} catch (Exception e) {
 	    fail(e.getMessage());
 	    e.printStackTrace();

@@ -16,6 +16,12 @@ import com.on2.flix.Codec;
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
 
+/**
+ * Sets the audio codec.
+ * 
+ * @author jdl
+ *
+ */
 public class AudioCodecBuilder extends CodecBuilderBase {
 
     /*
@@ -36,6 +42,7 @@ public class AudioCodecBuilder extends CodecBuilderBase {
     public AudioCodecBuilder() {
 	super();
 	addChild(new BitrateAudioCodecModifier());
+	addChild(new ParametricSteroAudioCodecModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {

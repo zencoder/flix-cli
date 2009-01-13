@@ -38,16 +38,6 @@ public class VideoCodecBuilderTest {
 	// Set up a command line so that a bitrate is also set.
 	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best"});
 	checkCodecParams("vp6", VideoCodecConfig.VP6);
-	
-	
-	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
-	try {
-	    double val = codec.getParam(VideoCodecConfig.VP6.getFlixCompressModeParamName());
-	    assertEquals(new Double(FE2_CompressMode.COMPRESSMODE_BEST.swigValue()), new Double(val));
-	} catch (Exception e) {
-	    fail(e.getMessage());
-	    e.printStackTrace();
-	}
     }
     
     @Test
@@ -61,8 +51,14 @@ public class VideoCodecBuilderTest {
 	builderTestHelper.apply(options);
 	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
 	try {
-	    double val = codec.getParam(videoCodecConfig.getFlixBitrateParamName());
-	    assertEquals(new Double(400), new Double(val));
+	    // Check bitrate
+	    assertEquals(new Double(400), new Double(codec.getParam(videoCodecConfig.getFlixBitrateParamName())));
+	    
+	    // Check compress mode
+	    if (videoCodecConfig.getFlixCompressModeParamName() != null) {
+		assertEquals(new Double(FE2_CompressMode.COMPRESSMODE_BEST.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixCompressModeParamName())));
+	    }
+	    
 	} catch (Exception e) {
 	    fail(e.getMessage());
 	    e.printStackTrace();
