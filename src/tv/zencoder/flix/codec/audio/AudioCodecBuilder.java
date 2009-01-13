@@ -35,7 +35,7 @@ public class AudioCodecBuilder extends CodecBuilderBase {
     
     public AudioCodecBuilder() {
 	super();
-	addChild(new AudioBitrateCodecModifier());
+	addChild(new BitrateAudioCodecModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {

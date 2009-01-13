@@ -17,9 +17,9 @@ import com.on2.flix.FlixException;
  * @author jdl
  *
  */
-public class AudioBitrateCodecModifier implements CodecModifier {
+public class BitrateAudioCodecModifier implements CodecModifier {
 
-    public AudioBitrateCodecModifier() {
+    public BitrateAudioCodecModifier() {
 	super();
     }
 
