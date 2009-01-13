@@ -15,6 +15,7 @@ import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
+import com.on2.flix.FE2_CompressMode;
 
 public class VideoCodecBuilderTest {
 
@@ -35,8 +36,18 @@ public class VideoCodecBuilderTest {
     @Test
     public void testVp6() {
 	// Set up a command line so that a bitrate is also set.
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best"});
 	checkCodecParams("vp6", VideoCodecConfig.VP6);
+	
+	
+	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
+	try {
+	    double val = codec.getParam(VideoCodecConfig.VP6.getFlixCompressModeParamName());
+	    assertEquals(new Double(FE2_CompressMode.COMPRESSMODE_BEST.swigValue()), new Double(val));
+	} catch (Exception e) {
+	    fail(e.getMessage());
+	    e.printStackTrace();
+	}
     }
     
     @Test

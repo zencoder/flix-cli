@@ -10,17 +10,31 @@ import com.on2.flix.flixengine2_internalConstants;
  *
  */
 public enum VideoCodecConfig {
-    VP6(flixengine2_internalConstants.FE2_CODEC_VP6, flixengine2_internalConstants.FE2_VP6_BITRATE),
-    VP6A(flixengine2_internalConstants.FE2_CODEC_VP6ALPHA, flixengine2_internalConstants.FE2_VP6A_ALPHA_BITRATE),
-    H263(flixengine2_internalConstants.FE2_CODEC_H263, flixengine2_internalConstants.FE2_H263_BITRATE),
-    H264(flixengine2_internalConstants.FE2_CODEC_H264, flixengine2_internalConstants.FE2_H264_BITRATE);
+    VP6(flixengine2_internalConstants.FE2_CODEC_VP6,
+	flixengine2_internalConstants.FE2_VP6_BITRATE,
+	flixengine2_internalConstants.FE2_VP6_CXMODE),
+	
+    VP6A(flixengine2_internalConstants.FE2_CODEC_VP6ALPHA,
+	 flixengine2_internalConstants.FE2_VP6A_ALPHA_BITRATE,
+	 null),
+    
+    H263(flixengine2_internalConstants.FE2_CODEC_H263,
+	 flixengine2_internalConstants.FE2_H263_BITRATE,
+	 null),
+    
+    H264(flixengine2_internalConstants.FE2_CODEC_H264,
+	 flixengine2_internalConstants.FE2_H264_BITRATE,
+	 null);
+    
     
     private final String flixCodecName;
     private final String flixBitrateParamName;
+    private final String flixCompressModeParamName;
     
-    private VideoCodecConfig(String flixCodecName, String flixBitmapParamName) {
+    private VideoCodecConfig(String flixCodecName, String flixBitmapParamName, String flixCompressModeParamName) {
 	this.flixCodecName = flixCodecName;
 	this.flixBitrateParamName = flixBitmapParamName;
+	this.flixCompressModeParamName = flixCompressModeParamName;
     }
     
     public String getFlixBitrateParamName() {
@@ -28,6 +42,9 @@ public enum VideoCodecConfig {
     }
     public String getFlixCodecName() {
         return flixCodecName;
+    }
+    public String getFlixCompressModeParamName() {
+	return flixCompressModeParamName;
     }
     
 }

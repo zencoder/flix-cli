@@ -43,7 +43,8 @@ public class VideoCodecBuilder extends CodecBuilderBase {
     
     public VideoCodecBuilder() {
 	super();
-	addChild(new VideoBitrateCodecModifier());
+	addChild(new BitrateVideoCodecModifier());
+	addChild(new CompressModeVideoCodecModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {
