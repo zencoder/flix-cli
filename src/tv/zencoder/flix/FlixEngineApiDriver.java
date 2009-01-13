@@ -10,6 +10,7 @@ import org.apache.commons.cli.HelpFormatter;
 import tv.zencoder.flix.cli.FlixBuilder;
 import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.LogWrapper;
+import tv.zencoder.flix.util.StringUtil;
 
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
@@ -83,6 +84,7 @@ public class FlixEngineApiDriver {
 	    flix.Destroy();
 	} catch (FlixException e) {
 	    log.error("FlixEngineApiDriver.main(): Caught a Flix exception. e=" + e.getLocalizedMessage());
+	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): " + StringUtil.getStackTraceAsString(e));
 	}
     }
 
@@ -179,5 +181,5 @@ public class FlixEngineApiDriver {
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Flix Engine client library v" + FlixEngine2.Version());
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
     }
-
+    
 }

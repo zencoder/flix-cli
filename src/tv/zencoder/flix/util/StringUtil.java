@@ -1,5 +1,7 @@
 package tv.zencoder.flix.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -23,5 +25,22 @@ public class StringUtil {
 	}
 	return b.toString();
     }
+    
+    /**
+     * Turns an exception's stack trace into a string.
+     * @param exception
+     * @return String
+     */
+    public static String getStackTraceAsString(Exception exception) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        pw.print(" [ ");
+        pw.print(exception.getClass().getName());
+        pw.print(" ] ");
+        pw.print(exception.getMessage());
+        exception.printStackTrace(pw);
+        return sw.toString();
+    }
+ 
     
 }
