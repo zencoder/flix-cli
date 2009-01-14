@@ -1,5 +1,6 @@
 package tv.zencoder.flix.muxer;
 
+import tv.zencoder.flix.cli.FlixModifier;
 import tv.zencoder.flix.cli.OptionHandler;
 
 import com.on2.flix.FlixException;
@@ -11,7 +12,7 @@ import com.on2.flix.Muxer;
  * @author jdl
  *
  */
-public interface MuxerModifier extends OptionHandler {
+public interface MuxerModifier extends FlixModifier, OptionHandler {
 
     /**
      * If we already have the Muxer built, and just want to add a param to it, this

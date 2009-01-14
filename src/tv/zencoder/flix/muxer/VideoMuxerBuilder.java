@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
+import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.StringUtil;
 import tv.zencoder.flix.util.VideoMuxerConfig;
 
@@ -27,17 +28,23 @@ public class VideoMuxerBuilder extends MuxerBuilderBase {
         map.put("flv",  VideoMuxerConfig.FLV);
         map.put("mov",  VideoMuxerConfig.MOV);
         map.put("mp4",  VideoMuxerConfig.MP4);
+        map.put("3g2",  VideoMuxerConfig._3G2);
+        map.put("3gp",  VideoMuxerConfig._3GP);
         muxerConfigs = Collections.unmodifiableMap(map);
     }
     
     
     public VideoMuxerBuilder() {
 	super();
+	addChild(new FaststartVideoMuxerModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {
 	try {
 	    VideoMuxerConfig videoMuxerConfig = muxerConfigs.get(options);
+	    
+	    // Stash the chosen muxer for later use by any modifiers.
+	    BuilderCache.getInstance().setChosenVideoMuxer(videoMuxerConfig);
 	    
 	    // Grab the String constant that Flix uses for this codec type.
 	    String flixMuxerName = videoMuxerConfig.getFlixMuxerName();

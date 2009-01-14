@@ -40,6 +40,10 @@ public class BuilderCache {
     // need to know which codec they're dealing with.
     private AudioCodecConfig chosenAudioCodec;
     
+    // Stores the choice of video muxers.  This is here, because the muxer modifiers
+    // need to know which muxer they're dealing with.
+    private VideoMuxerConfig chosenVideoMuxer;
+    
     
     private static BuilderCache instance;
     
@@ -131,7 +135,7 @@ public class BuilderCache {
     }
     
     /**
-     * Returns the audio codec that we're workign with.
+     * Returns the audio codec that we're working with.
      * 
      * @return AudioCodecConfig
      */
@@ -147,6 +151,26 @@ public class BuilderCache {
      */
     public void setChosenAudioCodec(AudioCodecConfig chosenAudioCodec) {
         this.chosenAudioCodec = chosenAudioCodec;
+    }
+
+    /**
+     * Returns the video muxer that we're working on.  Video muxer modifiers
+     * need to know which specific muxer they're trying to configure.
+     * 
+     * @return VideoMuxerConfig
+     */
+    public VideoMuxerConfig getChosenVideoMuxer() {
+        return chosenVideoMuxer;
+    }
+
+    /**
+     * When a VideoMuxerBuilder decides on a particular muxer, it should set that
+     * value here, so that muxer modifiers will behave properly.
+     * 
+     * @param chosenVideoMuxer
+     */
+    public void setChosenVideoMuxer(VideoMuxerConfig chosenVideoMuxer) {
+        this.chosenVideoMuxer = chosenVideoMuxer;
     }
 
 

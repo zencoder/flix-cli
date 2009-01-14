@@ -11,6 +11,7 @@ import org.junit.Test;
 import tv.zencoder.flix.BuilderTestHelper;
 import tv.zencoder.flix.codec.CodecBuilderBase;
 import tv.zencoder.flix.util.AudioCodecConfig;
+import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.CommandLineHelper;
 
 import com.on2.flix.Codec;
@@ -57,6 +58,8 @@ public class AudioCodecBuilderTest {
 	builderTestHelper.apply(options);
 	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
 	try {
+	    assertEquals(audioCodecConfig, BuilderCache.getInstance().getChosenAudioCodec());
+	    
 	    // Check bitrate
 	    assertEquals(new Double(128), new Double(codec.getParam(audioCodecConfig.getFlixBitrateParamName())));
 	    

@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import tv.zencoder.flix.BuilderTestHelper;
 import tv.zencoder.flix.codec.CodecBuilderBase;
+import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
@@ -81,6 +82,8 @@ public class VideoCodecBuilderTest {
 	builderTestHelper.apply(options);
 	Codec codec = ((CodecBuilderBase) builderTestHelper.getFlixBuilder()).getCodec();
 	try {
+	    assertEquals(videoCodecConfig, BuilderCache.getInstance().getChosenVideoCodec());
+	    
 	    // Check bitrate
 	    assertEquals(new Double(400), new Double(codec.getParam(videoCodecConfig.getFlixBitrateParamName())));
 	    

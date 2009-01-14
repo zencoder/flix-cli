@@ -31,6 +31,7 @@ public class FlixEngineApiDriver {
      * @param args
      */
     public static void main(String[] args) {
+	
 	clHelper.setArgs(args);
 	CommandLine line = clHelper.getLine();
 	if (args == null || args.length == 0 || line.hasOption("help")) {
