@@ -22,6 +22,7 @@ public class ParametricSteroAudioCodecModifier implements CodecModifier {
     LogWrapper log = LogWrapper.getInstance();
     
     public ParametricSteroAudioCodecModifier() {
+	super();
     }
 
     public void modifyCodec(Codec codec, String options) throws FlixException {

@@ -24,6 +24,7 @@ public class ProfileVideoCodecModifier implements CodecModifier {
     LogWrapper log = LogWrapper.getInstance();
     
     public ProfileVideoCodecModifier() {
+	super();
     }
 
     public void modifyCodec(Codec codec, String options) throws FlixException {

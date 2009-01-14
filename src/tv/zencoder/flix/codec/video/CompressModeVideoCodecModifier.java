@@ -27,6 +27,7 @@ public class CompressModeVideoCodecModifier extends Object implements CodecModif
     LogWrapper log = LogWrapper.getInstance();
     
     public CompressModeVideoCodecModifier() {
+	super();
     }
 
     public void modifyCodec(Codec codec, String options) throws FlixException {

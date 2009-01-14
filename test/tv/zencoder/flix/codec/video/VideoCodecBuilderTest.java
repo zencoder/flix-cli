@@ -16,7 +16,9 @@ import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FE2_CompressMode;
+import com.on2.flix.FE2_VideoKeyframeTypes;
 import com.on2.flix.FlixException;
+import com.on2.flix.flixengine2_internalConstants;
 import com.on2.flix.h264profile_t;
 import com.on2.flix.vp6profile_t;
 
@@ -57,16 +59,16 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testH264() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5"});
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
 	    
 	try {
 	    assertEquals(new Double(h264profile_t.HIGH_H264PROFILE.swigValue()), new Double(codec.getParam(VideoCodecConfig.H264.getFlixProfileParamName())));
+	    assertEquals(new Double(5), new Double(codec.getParam(flixengine2_internalConstants.FE2_H264_B_FRAME_RATE)));
 	} catch (FlixException e) {
 	    fail(e.getMessage());
 	    e.printStackTrace();
 	}
-
     }
 
     private Codec checkCodecParams(String options, VideoCodecConfig videoCodecConfig) {
