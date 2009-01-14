@@ -57,6 +57,12 @@ public class VideoCodecBuilderTest {
     }
     
     @Test
+    public void testH263() {
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed"});
+	checkCodecParams("h263", VideoCodecConfig.H263);
+    }
+    
+    @Test
     public void testH264() {
 	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed"});
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
