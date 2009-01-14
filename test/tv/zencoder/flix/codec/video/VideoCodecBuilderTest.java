@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import tv.zencoder.flix.BuilderTestHelper;
 import tv.zencoder.flix.codec.CodecBuilderBase;
-import tv.zencoder.flix.codec.video.VideoCodecBuilder;
 import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
@@ -40,7 +39,7 @@ public class VideoCodecBuilderTest {
 
     @Test
     public void testVp6() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s", "-vkftype", "fixed"});
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
 	try {
@@ -53,13 +52,13 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testVp6a() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed"});
 	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
     }
     
     @Test
     public void testH264() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed"});
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
 	    
 	try {
@@ -82,6 +81,9 @@ public class VideoCodecBuilderTest {
 	    if (videoCodecConfig.getFlixCompressModeParamName() != null) {
 		assertEquals(new Double(FE2_CompressMode.COMPRESSMODE_BEST.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixCompressModeParamName())));
 	    }
+	    
+	    // Check keyframe type
+	    assertEquals(new Double(FE2_VideoKeyframeTypes.FIXED_KEYFRAMES.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixKeyframeTypeParamName())));
 	    
 	} catch (Exception e) {
 	    fail(e.getMessage());
