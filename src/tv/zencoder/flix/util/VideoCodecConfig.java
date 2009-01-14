@@ -15,28 +15,32 @@ public enum VideoCodecConfig {
 	flixengine2_internalConstants.FE2_VP6_CXMODE,
 	flixengine2_internalConstants.FE2_VP6_PROFILE,
 	flixengine2_internalConstants.FE2_VP6_KFINTTYPE,
-	flixengine2_internalConstants.FE2_VP6_KFFREQ),
+	flixengine2_internalConstants.FE2_VP6_KFFREQ,
+	flixengine2_internalConstants.FE2_VP6_RC_MODE),
 	
     VP6A(flixengine2_internalConstants.FE2_CODEC_VP6ALPHA,
 	 flixengine2_internalConstants.FE2_VP6A_ALPHA_BITRATE,
 	 flixengine2_internalConstants.FE2_VP6A_CXMODE,
 	 null,
 	 flixengine2_internalConstants.FE2_VP6A_KFINTTYPE,
-	 flixengine2_internalConstants.FE2_VP6A_KFFREQ),
+	 flixengine2_internalConstants.FE2_VP6A_KFFREQ,
+	 flixengine2_internalConstants.FE2_VP6A_RC_MODE),
     
     H263(flixengine2_internalConstants.FE2_CODEC_H263,
 	 flixengine2_internalConstants.FE2_H263_BITRATE,
 	 null,
 	 null,
 	 flixengine2_internalConstants.FE2_H263_KFINTTYPE,
-	 flixengine2_internalConstants.FE2_H263_KFFREQ),
+	 flixengine2_internalConstants.FE2_H263_KFFREQ,
+	 flixengine2_internalConstants.FE2_H263_RC_MODE),
     
     H264(flixengine2_internalConstants.FE2_CODEC_H264,
 	 flixengine2_internalConstants.FE2_H264_BITRATE,
 	 null,
 	 flixengine2_internalConstants.FE2_H264_PROFILE,
 	 flixengine2_internalConstants.FE2_H264_KFINTTYPE,
-	 flixengine2_internalConstants.FE2_H264_KFFREQ);
+	 flixengine2_internalConstants.FE2_H264_KFFREQ,
+	 null); // Removed rate control for H264, because it doesn't seem to work.  ??
     
     
     private final String flixCodecName;
@@ -45,14 +49,15 @@ public enum VideoCodecConfig {
     private final String flixProfileParamName;
     private final String flixKeyframeTypeParamName;
     private final String flixKeyframeFreqParamName;
-    
+    private final String flixRateControlParamName;
     
     private VideoCodecConfig(String flixCodecName, 
 	    		     String flixBitmapParamName, 
 	    		     String flixCompressModeParamName, 
 	    		     String flixProfileParamName, 
 	    		     String flixKeyframeTypeParamName,
-	    		     String flixKeyframeFreqParamName) {
+	    		     String flixKeyframeFreqParamName,
+	    		     String flixRateControlParamName) {
 	
 	this.flixCodecName = flixCodecName;
 	this.flixBitrateParamName = flixBitmapParamName;
@@ -60,6 +65,7 @@ public enum VideoCodecConfig {
 	this.flixProfileParamName = flixProfileParamName;
 	this.flixKeyframeTypeParamName = flixKeyframeTypeParamName;
 	this.flixKeyframeFreqParamName = flixKeyframeFreqParamName;
+	this.flixRateControlParamName = flixRateControlParamName;
     }
     
     public String getFlixBitrateParamName() {
@@ -82,6 +88,10 @@ public enum VideoCodecConfig {
 
     public String getFlixKeyframeFreqParamName() {
         return flixKeyframeFreqParamName;
+    }
+
+    public String getFlixRateControlParamName() {
+        return flixRateControlParamName;
     }
     
 }

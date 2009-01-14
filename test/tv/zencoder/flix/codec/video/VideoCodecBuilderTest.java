@@ -15,6 +15,7 @@ import tv.zencoder.flix.util.VideoCodecConfig;
 
 import com.on2.flix.Codec;
 import com.on2.flix.FE2_CompressMode;
+import com.on2.flix.FE2_VideoBitrateControls;
 import com.on2.flix.FE2_VideoKeyframeTypes;
 import com.on2.flix.FlixException;
 import com.on2.flix.flixengine2_internalConstants;
@@ -39,7 +40,7 @@ public class VideoCodecBuilderTest {
 
     @Test
     public void testVp6() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s", "-vkftype", "fixed"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s", "-vkftype", "fixed", "-vrc", "vbr2"});
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
 	try {
@@ -52,19 +53,19 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testVp6a() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr2"});
 	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
     }
     
     @Test
     public void testH263() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr2"});
 	checkCodecParams("h263", VideoCodecConfig.H263);
     }
     
     @Test
     public void testH264() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed", "-vrc", "vbr2"});
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
 	    
 	try {
@@ -90,6 +91,11 @@ public class VideoCodecBuilderTest {
 	    
 	    // Check keyframe type
 	    assertEquals(new Double(FE2_VideoKeyframeTypes.FIXED_KEYFRAMES.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixKeyframeTypeParamName())));
+	    
+	    // Check rate control
+	    if (videoCodecConfig.getFlixRateControlParamName() != null) {
+		assertEquals(new Double(FE2_VideoBitrateControls.VBR_2PASSControl.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixRateControlParamName())));
+	    }
 	    
 	} catch (Exception e) {
 	    fail(e.getMessage());
