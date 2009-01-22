@@ -1,0 +1,46 @@
+From: flixsupport@on2.com <flixsupport@on2.com>
+Date: Oct 9, 2008 1:35 PM
+Subject: Thank you for your On2 Flix purchase.
+To: jon@slantwisedesign.com
+
+Transaction Number: 118183
+
+PLEASE PRINT AND SAVE THIS EMAIL MESSAGE
+========================================
+
+This email contains important instructions and license key information for your product.
+
+Thank you for your purchase of On2 Flix Engine featuring TrueCore(TM) technology, allowing parallel encoding on up to 4 processors, and TrueMotion VP6 video, delivering broadcast quality video playable on over 98% of all desktops worldwide.
+
+
+LICENSE INFORMATION, Flix Engine for Linux
+============================================
+
+  Download link:  http://flix.on2.com/flix/download/
+
+  Username:         Jon Dahl
+  Serial number(s): FLIXENGINE8LNX 2125 2790 3085 7743 8431 9162
+
+
+Your username and serial number are required for:
+
+  * Downloading and installing Flix Engine for Linux onto
+    your computer
+  * Accessing customer-only areas of the On2.com website
+  * Requesting support
+
+After downloading, you must remain connected to the Internet to complete
+the installation.
+
+
+UPDATES
+=======
+
+Updates to Flix Engine will be announced on our website:
+http://support.on2.com/blog/.  You can subscribe to the RSS feed
+to be notified: http://support.on2.com/blog?feed=rss2
+
+
+Thank you again,
+
+On2 Technologies
