@@ -27,7 +27,7 @@ public class ScaleFilterBuilder extends FilterBuilderBase {
     /**
      * Pattern to recognize "wxh" such as "240x160".
      */
-    protected static final Pattern widthHeightPattern = Pattern.compile("(\\d+)x(\\d+)");
+    protected static final Pattern widthHeightPattern = Pattern.compile("(-?\\d+)x(-?\\d+)");
     
     /**
      * Shortcuts for sizes that can be set on the command line.  If we see any of these, we simply
@@ -128,6 +128,7 @@ public class ScaleFilterBuilder extends FilterBuilderBase {
 	    msg.append("  " + key + ":\t" + scaleShortcuts.get(key) + "\n");
 	}
 	msg.append("\n");
+	msg.append("You may also specify the special values of 0, -1, -2, or -3 as well.  See the Flix documentation for their meanings.");
 	
 	return OptionBuilder.withArgName("wxh")
 			    .hasArg()
