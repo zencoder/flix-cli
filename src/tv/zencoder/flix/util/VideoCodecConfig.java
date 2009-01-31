@@ -34,6 +34,14 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_H263_KFFREQ,
 	 flixengine2_internalConstants.FE2_H263_RC_MODE),
     
+    H263_BASELINE(flixengine2_internalConstants.FE2_CODEC_H263_BASELINE,
+	          null,
+	          null,
+	          null,
+	          null,
+	          null,
+	          null),
+    
     H264(flixengine2_internalConstants.FE2_CODEC_H264,
 	 flixengine2_internalConstants.FE2_H264_BITRATE,
 	 null,

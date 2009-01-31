@@ -37,6 +37,7 @@ public class VideoCodecBuilder extends CodecBuilderBase {
         map.put("vp6",  VideoCodecConfig.VP6);
         map.put("vp6a", VideoCodecConfig.VP6A);
         map.put("h263", VideoCodecConfig.H263);
+        map.put("h263_base", VideoCodecConfig.H263_BASELINE);
         map.put("h264", VideoCodecConfig.H264);
         codecConfigs = Collections.unmodifiableMap(map);
     }

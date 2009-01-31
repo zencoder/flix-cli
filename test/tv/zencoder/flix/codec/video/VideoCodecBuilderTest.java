@@ -65,6 +65,12 @@ public class VideoCodecBuilderTest {
     }
     
     @Test
+    public void testH263Base() {
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr1"});
+	checkCodecParams("h263_base", VideoCodecConfig.H263_BASELINE);
+    }
+    
+    @Test
     public void testH264() {
 	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed", "-vrc", "vbr1"});
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
@@ -85,7 +91,9 @@ public class VideoCodecBuilderTest {
 	    assertEquals(videoCodecConfig, BuilderCache.getInstance().getChosenVideoCodec());
 	    
 	    // Check bitrate
-	    assertEquals(new Double(400), new Double(codec.getParam(videoCodecConfig.getFlixBitrateParamName())));
+	    if (videoCodecConfig.getFlixBitrateParamName() != null) {
+	        assertEquals(new Double(400), new Double(codec.getParam(videoCodecConfig.getFlixBitrateParamName())));
+	    }
 	    
 	    // Check compress mode
 	    if (videoCodecConfig.getFlixCompressModeParamName() != null) {
@@ -93,7 +101,9 @@ public class VideoCodecBuilderTest {
 	    }
 	    
 	    // Check keyframe type
-	    assertEquals(new Double(FE2_VideoKeyframeTypes.FIXED_KEYFRAMES.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixKeyframeTypeParamName())));
+	    if (videoCodecConfig.getFlixKeyframeTypeParamName() != null) {
+		assertEquals(new Double(FE2_VideoKeyframeTypes.FIXED_KEYFRAMES.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixKeyframeTypeParamName())));
+	    }
 	    
 	    // Check rate control
 	    if (videoCodecConfig.getFlixRateControlParamName() != null) {
