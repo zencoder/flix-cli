@@ -41,7 +41,7 @@ public class VideoCodecBuilderTest {
 
     @Test
     public void testVp6() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s", "-vkftype", "fixed", "-vrc", "vbr2"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s", "-vkftype", "fixed", "-vrc", "vbr1"});
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
 	try {
@@ -54,19 +54,19 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testVp6a() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr2"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr1"});
 	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
     }
     
     @Test
     public void testH263() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr2"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr1"});
 	checkCodecParams("h263", VideoCodecConfig.H263);
     }
     
     @Test
     public void testH264() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed", "-vrc", "vbr2"});
+	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed", "-vrc", "vbr1"});
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
 	    
 	try {
@@ -97,7 +97,7 @@ public class VideoCodecBuilderTest {
 	    
 	    // Check rate control
 	    if (videoCodecConfig.getFlixRateControlParamName() != null) {
-		assertEquals(new Double(FE2_VideoBitrateControls.VBR_2PASSControl.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixRateControlParamName())));
+		assertEquals(new Double(FE2_VideoBitrateControls.VBR_1PASSControl.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixRateControlParamName())));
 	    }
 	    
 	} catch (Exception e) {

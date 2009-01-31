@@ -46,7 +46,7 @@ public class RateControlVideoCodecModifier implements CodecModifier {
     public Option getOption() {
 	return OptionBuilder.withArgName("cbr1|cbr2|vbr1|vbr2")
 	    		    .hasArg()
-	    		    .withDescription("Sets the rate control type.")
+	    		    .withDescription("Sets the rate control type. (Note: h264 only supports cbr1 or vbr1.)")
 	    		    .create(getSwitch());
     }
 
@@ -78,6 +78,7 @@ public class RateControlVideoCodecModifier implements CodecModifier {
 		value = FE2_VideoBitrateControls.VBR_2PASSControl.swigValue();
 		log.debug("RateControlVideoCodecModifier.getRateControlConstantFromOptions(): Setting rate control to VBR 2 pass");
 	    }
+	    log.debug("RateControlVideoCodecModifier.getRateControlConstantFromOptions(): value=" + value);
 	}
 	return new Double(value);
     }

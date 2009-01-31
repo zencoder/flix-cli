@@ -40,7 +40,7 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_H264_PROFILE,
 	 flixengine2_internalConstants.FE2_H264_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_H264_KFFREQ,
-	 null); // Removed rate control for H264, because it doesn't seem to work.  ??
+	 flixengine2_internalConstants.FE2_H264_RC_MODE); 
     
     
     private final String flixCodecName;
