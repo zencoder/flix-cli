@@ -9,6 +9,7 @@ import org.apache.commons.cli.HelpFormatter;
 
 import tv.zencoder.flix.cli.FlixBuilder;
 import tv.zencoder.flix.util.CommandLineHelper;
+import tv.zencoder.flix.util.FlixUtil;
 import tv.zencoder.flix.util.LogWrapper;
 import tv.zencoder.flix.util.StringUtil;
 
@@ -65,7 +66,7 @@ public class FlixEngineApiDriver {
 
 	    // debug
 	    printFlixEngineInfo();
-
+	    
 	    /* Process the file */
 	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Starting the transcode.");
 	    flix.Encode();
@@ -163,7 +164,7 @@ public class FlixEngineApiDriver {
 	    System.out.println("\nEncoder Status");
 	    System.out.println(" FlixEngine2.GetEncoderState:" + flix.GetEncoderState());
 	    long[] flixerr = flix.Errno();
-	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " syserrno:" + flixerr[1]);
+	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " (" + FlixUtil.lookupError(new Long(flixerr[0])) + ") syserrno:" + flixerr[1]);
 	    
 	    if(flixerr[0] == 0 && flixerr[1] == 0) {
 		log.info("--SUCCESS--");
