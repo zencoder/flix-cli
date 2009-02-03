@@ -25,11 +25,12 @@ public class VideoMuxerBuilder extends MuxerBuilderBase {
     protected static Map<String, VideoMuxerConfig> muxerConfigs;
     static {
         Map<String, VideoMuxerConfig> map = new TreeMap<String, VideoMuxerConfig>();
-        map.put("flv",  VideoMuxerConfig.FLV);
-        map.put("mov",  VideoMuxerConfig.MOV);
-        map.put("mp4",  VideoMuxerConfig.MP4);
-        map.put("3g2",  VideoMuxerConfig._3G2);
-        map.put("3gp",  VideoMuxerConfig._3GP);
+        map.put("flv", VideoMuxerConfig.FLV);
+        map.put("mov", VideoMuxerConfig.MOV);
+        map.put("mp4", VideoMuxerConfig.MP4);
+        map.put("3g2", VideoMuxerConfig._3G2);
+        map.put("3gp", VideoMuxerConfig._3GP);
+        map.put("fxm", VideoMuxerConfig.FXM);
         muxerConfigs = Collections.unmodifiableMap(map);
     }
     

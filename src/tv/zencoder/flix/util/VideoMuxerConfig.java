@@ -21,8 +21,10 @@ public enum VideoMuxerConfig {
 	flixengine2_internalConstants.FE2_3GP_FASTSTART),
 
     _3G2(flixengine2_internalConstants.FE2_MUXER_3G2,
-        flixengine2_internalConstants.FE2_3G2_FASTSTART);
+        flixengine2_internalConstants.FE2_3G2_FASTSTART),
     
+    FXM(flixengine2_internalConstants.FE2_MUXER_FXM,
+	null);
     
     private final String flixMuxerName;
     private final String flixFaststartParamName;

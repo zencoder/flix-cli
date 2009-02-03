@@ -60,6 +60,11 @@ public class VideoMuxerBuilderTest {
 	checkMuxerParams("3g2", VideoMuxerConfig._3G2);
     }
 
+    @Test
+    public void testFxm() {
+	CommandLineHelper.getInstance().setArgs(new String[] {"-faststart"});
+	checkMuxerParams("fxm", VideoMuxerConfig.FXM);
+    }
     
     private Muxer checkMuxerParams(String options, VideoMuxerConfig videoMuxerConfig) {
 	builderTestHelper.apply(options);

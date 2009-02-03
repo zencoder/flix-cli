@@ -39,7 +39,7 @@ public class FaststartVideoMuxerModifier implements MuxerModifier {
 
     @SuppressWarnings("static-access")
     public Option getOption() {
-	return OptionBuilder.withDescription("Enables faststart muxers that support it.")
+	return OptionBuilder.withDescription("Enables faststart muxers that support it (all except FLV and FXM).")
                             .create(getSwitch());
     }
 
