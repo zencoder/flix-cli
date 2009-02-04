@@ -20,7 +20,7 @@ public class StringUtil {
 	while (keyIter.hasNext()) {
 	    b.append((String) keyIter.next().toString());
 	    if (keyIter.hasNext()) {
-		b.append(", ");
+		b.append(separator);
 	    }
 	}
 	return b.toString();

@@ -43,6 +43,7 @@ public class AudioCodecBuilder extends CodecBuilderBase {
 	super();
 	addChild(new BitrateAudioCodecModifier());
 	addChild(new ParametricSteroAudioCodecModifier());
+	addChild(new LameRcModeAudioCodecModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {
@@ -76,7 +77,7 @@ public class AudioCodecBuilder extends CodecBuilderBase {
     public Option getOption() {
 	return OptionBuilder.withArgName("codec_name")
         		    .hasArg()
-                            .withDescription("Sets the audio codec. Valid values include: " + StringUtil.mapKeysToString(codecConfigs, ","))
+                            .withDescription("Sets the audio codec. Valid values include: " + StringUtil.mapKeysToString(codecConfigs, ", "))
                             .create(getSwitch());
     }
 

@@ -71,7 +71,7 @@ public class VideoMuxerBuilder extends MuxerBuilderBase {
     public Option getOption() {
 	return OptionBuilder.withArgName("muxer")
 	                    .hasArg()
-                            .withDescription("Sets the video muxer. Valid values include: " + StringUtil.mapKeysToString(muxerConfigs, ","))
+                            .withDescription("Sets the video muxer. Valid values include: " + StringUtil.mapKeysToString(muxerConfigs, ", "))
                             .create(getSwitch());
     }
 

@@ -83,7 +83,7 @@ public class VideoCodecBuilder extends CodecBuilderBase {
     public Option getOption() {
 	return OptionBuilder.withArgName("codec_name")
         		    .hasArg()
-                            .withDescription("Sets the video codec. Valid values include: " + StringUtil.mapKeysToString(codecConfigs, ","))
+                            .withDescription("Sets the video codec. Valid values include: " + StringUtil.mapKeysToString(codecConfigs, ", "))
                             .create(getSwitch());
     }
 
