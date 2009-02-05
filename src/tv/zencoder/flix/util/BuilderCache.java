@@ -3,6 +3,7 @@ package tv.zencoder.flix.util;
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleFilterBuilder;
 
 import com.on2.flix.FlixEngine2;
@@ -21,7 +22,6 @@ public class BuilderCache {
     // to be built first.  They should fetch it from here when needed, so that we only 
     // have one BCHS filter created.
     private BchsFilterBuilder bchsFilterBuilder;
-
     
     // Top, Bottom, Left, and Right Crop filters all use this parent filter.
     private CropFilterBuilder cropFilterBuilder;
@@ -31,6 +31,9 @@ public class BuilderCache {
     
     // Parent for the AudioResample filter builders.
     private AudioResampleFilterBuilder audioResampleFilterBuilder;
+    
+    // Stores the overlay filter builder (a.k.a. watermark options)
+    private OverlayFilterBuilder overlayFilterBuilder;
     
     // Stores the choice of video codecs.  This is here, because the codec modifiers
     // need to know which codec they're dealing with.
@@ -43,8 +46,7 @@ public class BuilderCache {
     // Stores the choice of video muxers.  This is here, because the muxer modifiers
     // need to know which muxer they're dealing with.
     private VideoMuxerConfig chosenVideoMuxer;
-    
-    
+       
     private static BuilderCache instance;
     
     public static BuilderCache getInstance() {
@@ -112,7 +114,17 @@ public class BuilderCache {
     }
 
  
-    
+    /**
+     * Returns the parent OverlayFilterBuild.
+     * @return OverlayFilterBuilder 
+     */
+    public OverlayFilterBuilder getOverlayFilterBuilder(FlixEngine2 flix) {
+	if (overlayFilterBuilder == null) {
+	    overlayFilterBuilder = new OverlayFilterBuilder();
+	    overlayFilterBuilder.apply(flix, "");
+	}
+	return overlayFilterBuilder;
+    }
     
     /**
      * Returns the video codec that we're working on.  Video codec modifiers

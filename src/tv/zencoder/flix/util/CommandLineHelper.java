@@ -32,6 +32,14 @@ import tv.zencoder.flix.filter.crop.CropRightFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropTopFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutStartFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutStopFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayFilePathFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayMaskBFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayMaskGFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayMaskRFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayMaskXFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayMaskYFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayPositionXFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayPositionYFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleChannelsFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleRateFilterBuilder;
 import tv.zencoder.flix.muxer.VideoMuxerBuilder;
@@ -120,6 +128,16 @@ public class CommandLineHelper {
 	// Cut
 	filterBuilders.add(new CutStartFilterBuilder());
 	filterBuilders.add(new CutStopFilterBuilder());
+	
+	// Overlay (watermark)
+	filterBuilders.add(new OverlayFilePathFilterBuilder());
+	filterBuilders.add(new OverlayMaskXFilterBuilder());
+	filterBuilders.add(new OverlayMaskYFilterBuilder());
+	filterBuilders.add(new OverlayMaskRFilterBuilder());
+	filterBuilders.add(new OverlayMaskGFilterBuilder());
+	filterBuilders.add(new OverlayMaskBFilterBuilder());
+	filterBuilders.add(new OverlayPositionXFilterBuilder());
+	filterBuilders.add(new OverlayPositionYFilterBuilder());
 	
 	// Audio Filters
 	filterBuilders.add(new HighpassFilterBuilder());

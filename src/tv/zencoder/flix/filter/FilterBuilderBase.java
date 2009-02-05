@@ -66,7 +66,7 @@ public abstract class FilterBuilderBase implements FlixBuilder, OptionHandler {
 	} catch (NumberFormatException e) {
 	    log.debug("FilterBuilderBase.modifyFilter(): Failed to parse options into a Double. e=" + e.getLocalizedMessage());
 	} catch (FlixException e) {
-	    log.debug("FilterBuilderBase.modifyFilter(): Failed to modify the BCHS filter. e=" + e.getLocalizedMessage());
+	    log.debug("FilterBuilderBase.modifyFilter(): Failed to modify the filter. e=" + e.getLocalizedMessage());
 	}
     }
     
