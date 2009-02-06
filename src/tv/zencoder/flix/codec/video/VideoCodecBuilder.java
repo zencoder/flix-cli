@@ -50,6 +50,13 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	addChild(new KeyframeTypeVideoCodecModifier());
 	addChild(new ProfileVideoCodecModifier());
 	addChild(new RateControlVideoCodecModifier());
+	addChild(new MinQVideoCodecModifier());
+	addChild(new MaxQVideoCodecModifier());
+	addChild(new NoiseReductionVideoCodecModifier());
+	addChild(new TemporalResamplingVideoCodecModifer());
+	addChild(new StreamOptimalBufferVideoCodecModifier());
+	addChild(new StreamPreBufferVideoCodecModifier());
+	
     }
 
     public void apply(FlixEngine2 flix, String options) {

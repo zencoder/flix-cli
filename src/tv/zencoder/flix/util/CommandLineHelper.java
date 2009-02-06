@@ -304,11 +304,23 @@ public class CommandLineHelper {
      * <p>
      * Calling this will also cause the command line to be re-parsed.
      * 
-     * @param args
+     * @param String[] args
      */
     public void setArgs(String[] args) {
         this.args = args;
         parseCommandLine();
+    }
+    
+    /**
+     * The command line args that were passed into the main() method for the app.
+     * <p>
+     * Calling this will also cause the command line to be re-parsed.
+     * 
+     * @param List<String> args
+     */
+    public void setArgs(List<String> argList) {
+        String [] argArray = new String[argList.size()];
+        setArgs(argList.toArray(argArray));
     }
     
     /** 

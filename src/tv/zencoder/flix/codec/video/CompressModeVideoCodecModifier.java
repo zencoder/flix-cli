@@ -16,8 +16,8 @@ import tv.zencoder.flix.util.LogWrapper;
 import tv.zencoder.flix.util.VideoCodecConfig;
 
 /**
- * Sets the compress mode for the VP6 codec.  If you're using a different codec, then this
- * won't do anything.
+ * Sets the compress mode codecs that support this option.  Currently, these 
+ * are VP6 and VP6A.
  * 
  * @author jdl
  *

@@ -34,7 +34,7 @@ public class RateControlVideoCodecModifier implements CodecModifier {
 	if (rateControlParamName != null) {
 	    codec.setParam(rateControlParamName, getRateControlConstantFromOptions(options));
 	} else {
-	    log.debug("RateControlVideoCodecModifier.getFriendlyName(): This codec does not support rate control.  Ignoring.");
+	    log.debug("RateControlVideoCodecModifier.modifyCodec(): This codec does not support rate control.  Ignoring.");
 	}
     }
 

@@ -4,6 +4,9 @@ package tv.zencoder.flix.codec.video;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,11 +29,35 @@ import com.on2.flix.vp6profile_t;
 public class VideoCodecBuilderTest {
 
     private BuilderTestHelper builderTestHelper;
-
+    private List<String> commandLineArgs;
+    
+    
     @Before
     public void setUp() throws Exception {
 	builderTestHelper = new BuilderTestHelper();
 	builderTestHelper.setUp(new VideoCodecBuilder());
+	
+	commandLineArgs = new ArrayList<String>();
+	commandLineArgs.add("-b");
+	commandLineArgs.add("400");
+	commandLineArgs.add("-vcompress");
+	commandLineArgs.add("best");
+	commandLineArgs.add("-vkftype");
+	commandLineArgs.add("fixed");
+	commandLineArgs.add("-vrc");
+	commandLineArgs.add("vbr1");
+	commandLineArgs.add("-vminq");
+	commandLineArgs.add("4");
+	commandLineArgs.add("-vmaxq");
+	commandLineArgs.add("5");
+	commandLineArgs.add("-vnoisereduce");
+	commandLineArgs.add("0");
+	commandLineArgs.add("-vtemporalresample");
+	commandLineArgs.add("1");
+	commandLineArgs.add("-vstream_pre_buffer");
+	commandLineArgs.add("5");
+	commandLineArgs.add("-vstream_optimal_buffer");
+	commandLineArgs.add("6");	
     }
 
     @After
@@ -41,7 +68,9 @@ public class VideoCodecBuilderTest {
 
     @Test
     public void testVp6() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vprofile", "vp6s", "-vkftype", "fixed", "-vrc", "vbr1"});
+	commandLineArgs.add("-vprofile");
+	commandLineArgs.add("vp6s");
+	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
 	try {
@@ -54,25 +83,30 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testVp6a() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr1"});
+	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
     }
     
     @Test
     public void testH263() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr1"});
+	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	checkCodecParams("h263", VideoCodecConfig.H263);
     }
     
     @Test
     public void testH263Base() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vcompress", "best", "-vkftype", "fixed", "-vrc", "vbr1"});
+	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	checkCodecParams("h263_base", VideoCodecConfig.H263_BASELINE);
     }
     
     @Test
     public void testH264() {
-	CommandLineHelper.getInstance().setArgs(new String[] {"-b", "400", "-vprofile", "h264high", "-r_h264b", "5", "-vkftype", "fixed", "-vrc", "vbr1"});
+	commandLineArgs.add("-vprofile");
+	commandLineArgs.add("h264high");
+	commandLineArgs.add("-r_h264b");
+	commandLineArgs.add("5");
+
+	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("h264", VideoCodecConfig.H264);
 	    
 	try {
@@ -109,6 +143,37 @@ public class VideoCodecBuilderTest {
 	    if (videoCodecConfig.getFlixRateControlParamName() != null) {
 		assertEquals(new Double(FE2_VideoBitrateControls.VBR_1PASSControl.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixRateControlParamName())));
 	    }
+	    
+	    // Check Min Q
+	    if (videoCodecConfig.getFlixMinQParamName() != null) {
+		assertEquals(new Double(4), new Double(codec.getParam(videoCodecConfig.getFlixMinQParamName())));
+	    }
+
+	    // Check Max Q
+	    if (videoCodecConfig.getFlixMaxQParamName() != null) {
+		assertEquals(new Double(5), new Double(codec.getParam(videoCodecConfig.getFlixMaxQParamName())));
+	    }
+	    
+	    // Check Noise Reduction
+	    if (videoCodecConfig.getFlixNoiseReductionParamName() != null) {
+		assertEquals(new Double(0), new Double(codec.getParam(videoCodecConfig.getFlixNoiseReductionParamName())));
+	    }
+	    
+	    // Check Temporal Resampling
+	    if (videoCodecConfig.getFlixTemporalResamplingParamName() != null) {
+		assertEquals(new Double(1), new Double(codec.getParam(videoCodecConfig.getFlixTemporalResamplingParamName())));
+	    }
+	    
+	    // Check Stream Pre Buffer
+	    if (videoCodecConfig.getFlixStreamPrebufferParamName() != null) {
+		assertEquals(new Double(5), new Double(codec.getParam(videoCodecConfig.getFlixStreamPrebufferParamName())));
+	    }
+	   
+	    // Check Stream Optimal Buffer
+	    if (videoCodecConfig.getFlixStreamOptimalBufferParamName() != null) {
+		assertEquals(new Double(6), new Double(codec.getParam(videoCodecConfig.getFlixStreamOptimalBufferParamName())));
+	    }
+
 	    
 	} catch (Exception e) {
 	    fail(e.getMessage());

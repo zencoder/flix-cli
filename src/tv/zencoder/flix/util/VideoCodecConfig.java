@@ -16,7 +16,13 @@ public enum VideoCodecConfig {
 	flixengine2_internalConstants.FE2_VP6_PROFILE,
 	flixengine2_internalConstants.FE2_VP6_KFINTTYPE,
 	flixengine2_internalConstants.FE2_VP6_KFFREQ,
-	flixengine2_internalConstants.FE2_VP6_RC_MODE),
+	flixengine2_internalConstants.FE2_VP6_RC_MODE,
+	flixengine2_internalConstants.FE2_VP6_MIN_Q,
+	flixengine2_internalConstants.FE2_VP6_MAX_Q,
+	flixengine2_internalConstants.FE2_VP6_NOISE_REDUCTION,
+	flixengine2_internalConstants.FE2_VP6_TEMPORAL_RESAMPLING,
+	flixengine2_internalConstants.FE2_VP6_STREAM_PREBUFFER,
+	flixengine2_internalConstants.FE2_VP6_STREAM_OPTIMAL_BUFFER),
 	
     VP6A(flixengine2_internalConstants.FE2_CODEC_VP6ALPHA,
 	 flixengine2_internalConstants.FE2_VP6A_ALPHA_BITRATE,
@@ -24,7 +30,14 @@ public enum VideoCodecConfig {
 	 null,
 	 flixengine2_internalConstants.FE2_VP6A_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_VP6A_KFFREQ,
-	 flixengine2_internalConstants.FE2_VP6A_RC_MODE),
+	 flixengine2_internalConstants.FE2_VP6A_RC_MODE,
+	 flixengine2_internalConstants.FE2_VP6A_MIN_Q,
+         flixengine2_internalConstants.FE2_VP6A_MAX_Q,
+         flixengine2_internalConstants.FE2_VP6A_NOISE_REDUCTION,
+         flixengine2_internalConstants.FE2_VP6A_TEMPORAL_RESAMPLING,
+         flixengine2_internalConstants.FE2_VP6A_STREAM_PREBUFFER,
+         flixengine2_internalConstants.FE2_VP6A_STREAM_OPTIMAL_BUFFER),
+         
     
     H263(flixengine2_internalConstants.FE2_CODEC_H263,
 	 flixengine2_internalConstants.FE2_H263_BITRATE,
@@ -32,9 +45,21 @@ public enum VideoCodecConfig {
 	 null,
 	 flixengine2_internalConstants.FE2_H263_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_H263_KFFREQ,
-	 flixengine2_internalConstants.FE2_H263_RC_MODE),
+	 flixengine2_internalConstants.FE2_H263_RC_MODE,
+	 flixengine2_internalConstants.FE2_H263_MIN_Q,
+	 flixengine2_internalConstants.FE2_H263_MAX_Q,
+	 null,
+	 null,
+	 null,
+	 null),
     
     H263_BASELINE(flixengine2_internalConstants.FE2_CODEC_H263_BASELINE,
+	          null,
+	          null,
+	          null,
+	          null,
+	          null,
+	          null,
 	          null,
 	          null,
 	          null,
@@ -48,7 +73,13 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_H264_PROFILE,
 	 flixengine2_internalConstants.FE2_H264_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_H264_KFFREQ,
-	 flixengine2_internalConstants.FE2_H264_RC_MODE); 
+	 flixengine2_internalConstants.FE2_H264_RC_MODE,
+	 null,
+	 null,
+	 null,
+	 null,
+	 null,
+	 null); 
     
     
     private final String flixCodecName;
@@ -58,6 +89,12 @@ public enum VideoCodecConfig {
     private final String flixKeyframeTypeParamName;
     private final String flixKeyframeFreqParamName;
     private final String flixRateControlParamName;
+    private final String flixMinQParamName;
+    private final String flixMaxQParamName;
+    private final String flixNoiseReductionParamName;
+    private final String flixTemporalResamplingParamName;
+    private final String flixStreamPrebufferParamName;
+    private final String flixStreamOptimalBufferParamName;
     
     private VideoCodecConfig(String flixCodecName, 
 	    		     String flixBitmapParamName, 
@@ -65,7 +102,13 @@ public enum VideoCodecConfig {
 	    		     String flixProfileParamName, 
 	    		     String flixKeyframeTypeParamName,
 	    		     String flixKeyframeFreqParamName,
-	    		     String flixRateControlParamName) {
+	    		     String flixRateControlParamName,
+	    		     String flixMinQParamName,
+                             String flixMaxQParamName,
+                             String flixNoiseReductionParamName,
+                             String flixTemporalResamplingParamName,
+                             String flixStreamPrebufferParamName,
+                             String flixStreamOptimalBufferParamName) {
 	
 	this.flixCodecName = flixCodecName;
 	this.flixBitrateParamName = flixBitmapParamName;
@@ -74,6 +117,12 @@ public enum VideoCodecConfig {
 	this.flixKeyframeTypeParamName = flixKeyframeTypeParamName;
 	this.flixKeyframeFreqParamName = flixKeyframeFreqParamName;
 	this.flixRateControlParamName = flixRateControlParamName;
+	this.flixMinQParamName = flixMinQParamName;
+        this.flixMaxQParamName = flixMaxQParamName;
+        this.flixNoiseReductionParamName = flixNoiseReductionParamName;
+        this.flixTemporalResamplingParamName = flixTemporalResamplingParamName;
+        this.flixStreamPrebufferParamName = flixStreamPrebufferParamName;
+        this.flixStreamOptimalBufferParamName = flixStreamOptimalBufferParamName;
     }
     
     public String getFlixBitrateParamName() {
@@ -100,6 +149,30 @@ public enum VideoCodecConfig {
 
     public String getFlixRateControlParamName() {
         return flixRateControlParamName;
+    }
+
+    public String getFlixMaxQParamName() {
+        return flixMaxQParamName;
+    }
+
+    public String getFlixMinQParamName() {
+        return flixMinQParamName;
+    }
+
+    public String getFlixNoiseReductionParamName() {
+        return flixNoiseReductionParamName;
+    }
+
+    public String getFlixStreamOptimalBufferParamName() {
+        return flixStreamOptimalBufferParamName;
+    }
+
+    public String getFlixStreamPrebufferParamName() {
+        return flixStreamPrebufferParamName;
+    }
+
+    public String getFlixTemporalResamplingParamName() {
+        return flixTemporalResamplingParamName;
     }
     
 }
