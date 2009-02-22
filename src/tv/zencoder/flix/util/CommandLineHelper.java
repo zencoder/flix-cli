@@ -38,6 +38,7 @@ import tv.zencoder.flix.filter.overlay.OverlayMaskGFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayMaskRFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayMaskXFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayMaskYFilterBuilder;
+import tv.zencoder.flix.filter.overlay.OverlayPositionModeFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayPositionXFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayPositionYFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleChannelsFilterBuilder;
@@ -138,6 +139,7 @@ public class CommandLineHelper {
 	filterBuilders.add(new OverlayMaskBFilterBuilder());
 	filterBuilders.add(new OverlayPositionXFilterBuilder());
 	filterBuilders.add(new OverlayPositionYFilterBuilder());
+	filterBuilders.add(new OverlayPositionModeFilterBuilder());
 	
 	// Audio Filters
 	filterBuilders.add(new HighpassFilterBuilder());
