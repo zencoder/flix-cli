@@ -53,6 +53,13 @@ public class AudioCodecBuilderTest {
 	CommandLineHelper.getInstance().setArgs(new String[] {"-ab", "128"});
 	checkCodecParams("mp3", AudioCodecConfig.MP3);
     }
+    
+    @Test
+    public void testAmrNB() {
+	// Set up a command line so that a bitrate is also set.
+	CommandLineHelper.getInstance().setArgs(new String[] {"-ab", "128"});
+	checkCodecParams("amr_nb", AudioCodecConfig.AMR_NB);
+    }
 
     private void checkCodecParams(String options, AudioCodecConfig audioCodecConfig) {
 	builderTestHelper.apply(options);
