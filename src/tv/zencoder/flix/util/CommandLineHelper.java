@@ -36,6 +36,8 @@ import tv.zencoder.flix.filter.crop.CropRightFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropTopFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutStartFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutStopFilterBuilder;
+import tv.zencoder.flix.filter.mirror.MirrorHorizontalFilterBuilder;
+import tv.zencoder.flix.filter.mirror.MirrorVerticalFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayFilePathFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayMaskBFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayMaskGFilterBuilder;
@@ -151,6 +153,11 @@ public class CommandLineHelper {
 	filterBuilders.add(new OverlayPositionXFilterBuilder());
 	filterBuilders.add(new OverlayPositionYFilterBuilder());
 	filterBuilders.add(new OverlayPositionModeFilterBuilder());
+	
+	// Mirror
+	filterBuilders.add(new MirrorHorizontalFilterBuilder());
+	filterBuilders.add(new MirrorVerticalFilterBuilder());
+	
 	
 	// Audio Filters
 	filterBuilders.add(new HighpassFilterBuilder());

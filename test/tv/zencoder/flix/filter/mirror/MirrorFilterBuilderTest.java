@@ -1,4 +1,4 @@
-package tv.zencoder.flix.filter.blur;
+package tv.zencoder.flix.filter.mirror;
 
 
 import static org.junit.Assert.assertEquals;
@@ -15,11 +15,10 @@ import tv.zencoder.flix.util.CommandLineHelper;
 
 import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
-import com.on2.flix.blurfilter_t;
+import com.on2.flix._on2bool;
 import com.on2.flix.flixengine2_internalConstants;
-import com.on2.flix.masksiz_t;
 
-public class BlurFilterBuilderTest {
+public class MirrorFilterBuilderTest {
     private BuilderTestHelper btHelper;
     
 
@@ -37,11 +36,11 @@ public class BlurFilterBuilderTest {
 
     @Test
     public void testApply() {
-	// Set up a command line that should trigger children of the BlurFilterBuilder to also be executed.
+	// Set up a command line that should trigger children of the MirrorFilterBuilder to also be executed.
 	CommandLineHelper clHelper = CommandLineHelper.getInstance();
-	clHelper.setArgs(new String[] {"-blurtype", "gauss", "-blurmasksize", "5x5"});
+	clHelper.setArgs(new String[] {"-mirror_h", "-mirror_v"});
 	
-	FlixBuilder[] builders = {new BlurTypeFilterBuilder(), new BlurMasksizeFilterBuilder()};
+	FlixBuilder[] builders = {new MirrorHorizontalFilterBuilder(), new MirrorVerticalFilterBuilder()};
 	
 	for (int i = 0; i < builders.length; i++) {
 	    if (clHelper.isOptionInUse(builders[i])) {
@@ -50,15 +49,16 @@ public class BlurFilterBuilderTest {
     	    }
 	}
 	
-	Filter filter = BuilderCache.getInstance().getBlurFilterBuilder(btHelper.getFlix()).getFilter();
+	Filter filter = BuilderCache.getInstance().getMirrorFilterBuilder(btHelper.getFlix()).getFilter();
 	
 	try {
 	    // Check the values that should have come from the child builders 
-	    assertEquals(new Double(blurfilter_t.BLUR_GAUSS.swigValue()),  new Double(filter.getParam(flixengine2_internalConstants.FE2_BLUR_FILTER)));
-	    assertEquals(new Double(masksiz_t.MASK_5x5.swigValue()),  new Double(filter.getParam(flixengine2_internalConstants.FE2_BLUR_MASKSIZE)));
+	    assertEquals(new Double(_on2bool.on2true.swigValue()), new Double(filter.getParam(flixengine2_internalConstants.FE2_MIRROR_HORIZONTAL)));
+	    assertEquals(new Double(_on2bool.on2true.swigValue()), new Double(filter.getParam(flixengine2_internalConstants.FE2_MIRROR_VERTICAL)));
 	} catch (FlixException e) {
 	    fail();
 	    e.printStackTrace();
 	}
     }
+
 }

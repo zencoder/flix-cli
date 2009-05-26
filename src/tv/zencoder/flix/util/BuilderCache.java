@@ -4,6 +4,7 @@ import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
 import tv.zencoder.flix.filter.blur.BlurFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutFilterBuilder;
+import tv.zencoder.flix.filter.mirror.MirrorFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleFilterBuilder;
 
@@ -32,6 +33,9 @@ public class BuilderCache {
     
     // Parent for CutStart and CutStop filter builders
     private CutFilterBuilder cutFilterBuilder;
+    
+    // Parent for MirrorHorizontal and MirrorVertical filter builders.
+    private MirrorFilterBuilder mirrorFilterBuilder;
     
     // Parent for the AudioResample filter builders.
     private AudioResampleFilterBuilder audioResampleFilterBuilder;
@@ -118,6 +122,20 @@ public class BuilderCache {
         return cutFilterBuilder;
     }
 
+    
+    /**
+     * Returns the parent MirrorFilterBuilder.
+     * @return MirrorFilterBuilder
+     */
+    public MirrorFilterBuilder getMirrorFilterBuilder(FlixEngine2 flix) {
+        if (mirrorFilterBuilder == null) {
+            mirrorFilterBuilder = new MirrorFilterBuilder();
+            mirrorFilterBuilder.apply(flix, "");
+        }
+	return mirrorFilterBuilder;
+    }
+
+    
     /**
      * Returns the parent AudioResampleFilterBuilder.
      * @return AudioResampleFilterBuilder
@@ -202,5 +220,6 @@ public class BuilderCache {
         this.chosenVideoMuxer = chosenVideoMuxer;
     }
 
+ 
 
 }
