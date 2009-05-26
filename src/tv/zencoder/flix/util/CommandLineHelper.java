@@ -23,6 +23,7 @@ import tv.zencoder.flix.filter.HighpassFilterBuilder;
 import tv.zencoder.flix.filter.LowpassFilterBuilder;
 import tv.zencoder.flix.filter.RotateFilterBuilder;
 import tv.zencoder.flix.filter.ScaleFilterBuilder;
+import tv.zencoder.flix.filter.SharpenFilterBuilder;
 import tv.zencoder.flix.filter.bchs.BrightnessFilterBuilder;
 import tv.zencoder.flix.filter.bchs.ContrastFilterBuilder;
 import tv.zencoder.flix.filter.bchs.HueFilterBuilder;
@@ -113,8 +114,10 @@ public class CommandLineHelper {
 	filterBuilders.add(new DeinterlaceFilterBuilder());
 	filterBuilders.add(new DenoiseFilterBuilder());
 	filterBuilders.add(new FramerateFilterBuilder());
-	filterBuilders.add(new ScaleFilterBuilder());
 	filterBuilders.add(new RotateFilterBuilder());
+	filterBuilders.add(new ScaleFilterBuilder());
+	filterBuilders.add(new SharpenFilterBuilder());
+	
 
 	// BCHS
 	filterBuilders.add(new BrightnessFilterBuilder());
