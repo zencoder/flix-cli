@@ -1,4 +1,4 @@
-package tv.zencoder.flix.filter.crop;
+package tv.zencoder.flix.filter.blur;
 
 
 import static org.junit.Assert.assertEquals;
@@ -15,9 +15,11 @@ import tv.zencoder.flix.util.CommandLineHelper;
 
 import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
+import com.on2.flix.blurfilter_t;
 import com.on2.flix.flixengine2_internalConstants;
+import com.on2.flix.masksiz_t;
 
-public class CropFilterBuilderTest {
+public class BlurFilterBuilderTest {
     private BuilderTestHelper btHelper;
     
 
@@ -37,10 +39,9 @@ public class CropFilterBuilderTest {
     public void testApply() {
 	// Set up a command line that should trigger children of the CropFilterBuilder to also be executed.
 	CommandLineHelper clHelper = CommandLineHelper.getInstance();
-	clHelper.setArgs(new String[] {"-croptop", "200", "-cropright", "100", "-cropbottom", "400", "-cropleft", "50"});
+	clHelper.setArgs(new String[] {"-blurtype", "gauss", "-blurmasksize", "5x5"});
 	
-	
-	FlixBuilder[] builders = {new CropTopFilterBuilder(), new CropRightFilterBuilder(), new CropBottomFilterBuilder(), new CropLeftFilterBuilder()};
+	FlixBuilder[] builders = {new BlurTypeFilterBuilder(), new BlurMasksizeFilterBuilder()};
 	
 	for (int i = 0; i < builders.length; i++) {
 	    if (clHelper.isOptionInUse(builders[i])) {
@@ -49,18 +50,15 @@ public class CropFilterBuilderTest {
     	    }
 	}
 	
-	Filter filter = BuilderCache.getInstance().getCropFilterBuilder(btHelper.getFlix()).getFilter();
+	Filter filter = BuilderCache.getInstance().getBlurFilterBuilder(btHelper.getFlix()).getFilter();
 	
 	try {
 	    // Check the values that should have come from the child builders 
-	    assertEquals(new Double(200),  new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_TOP)));
-	    assertEquals(new Double(100),  new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_RIGHT)));
-	    assertEquals(new Double(400),  new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_BOTTOM)));
-	    assertEquals(new Double(50),   new Double(filter.getParam(flixengine2_internalConstants.FE2_CROP_LEFT)));
+	    assertEquals(new Double(blurfilter_t.BLUR_GAUSS.swigValue()),  new Double(filter.getParam(flixengine2_internalConstants.FE2_BLUR_FILTER)));
+	    assertEquals(new Double(masksiz_t.MASK_5x5.swigValue()),  new Double(filter.getParam(flixengine2_internalConstants.FE2_BLUR_MASKSIZE)));
 	} catch (FlixException e) {
 	    fail();
 	    e.printStackTrace();
 	}
     }
-    
 }

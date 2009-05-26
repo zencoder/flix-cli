@@ -28,6 +28,8 @@ import tv.zencoder.flix.filter.bchs.BrightnessFilterBuilder;
 import tv.zencoder.flix.filter.bchs.ContrastFilterBuilder;
 import tv.zencoder.flix.filter.bchs.HueFilterBuilder;
 import tv.zencoder.flix.filter.bchs.SaturationFilterBuilder;
+import tv.zencoder.flix.filter.blur.BlurMasksizeFilterBuilder;
+import tv.zencoder.flix.filter.blur.BlurTypeFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropBottomFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropLeftFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropRightFilterBuilder;
@@ -124,6 +126,10 @@ public class CommandLineHelper {
 	filterBuilders.add(new ContrastFilterBuilder());
 	filterBuilders.add(new HueFilterBuilder());
 	filterBuilders.add(new SaturationFilterBuilder());
+	
+	// Blur
+	filterBuilders.add(new BlurTypeFilterBuilder());
+	filterBuilders.add(new BlurMasksizeFilterBuilder());
 	
 	// Crop
 	filterBuilders.add(new CropTopFilterBuilder());

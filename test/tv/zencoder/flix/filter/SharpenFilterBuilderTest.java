@@ -1,17 +1,11 @@
 package tv.zencoder.flix.filter;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import tv.zencoder.flix.BuilderTestHelper;
-
-import com.on2.flix.Filter;
-import com.on2.flix.flixengine2_internalConstants;
 
 public class SharpenFilterBuilderTest {
     private BuilderTestHelper btHelper;

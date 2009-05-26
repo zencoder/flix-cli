@@ -1,6 +1,7 @@
 package tv.zencoder.flix.util;
 
 import tv.zencoder.flix.filter.bchs.BchsFilterBuilder;
+import tv.zencoder.flix.filter.blur.BlurFilterBuilder;
 import tv.zencoder.flix.filter.crop.CropFilterBuilder;
 import tv.zencoder.flix.filter.cut.CutFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayFilterBuilder;
@@ -18,6 +19,9 @@ import com.on2.flix.FlixEngine2;
  */
 public class BuilderCache {
 
+    // BlurType and BlurMasksize filters use this as a parent.
+    private BlurFilterBuilder blurFilterBuilder;
+    
     // The brightness, contrast, hue, and sturation filters all need this parent filter
     // to be built first.  They should fetch it from here when needed, so that we only 
     // have one BCHS filter created.
@@ -64,6 +68,19 @@ public class BuilderCache {
 	super();
     }
 
+    
+    /**
+     * Returns the parent BlurFilterBuilder.
+     * @return BlurFilterBuilder
+     */
+    public BlurFilterBuilder getBlurFilterBuilder(FlixEngine2 flix) {
+	if (blurFilterBuilder == null) {
+	    blurFilterBuilder = new BlurFilterBuilder();
+	    blurFilterBuilder.apply(flix, "");
+	}
+        return blurFilterBuilder;
+    }
+    
     /**
      * When the brightness, contrast, hue, and saturation filter builders need the BCHS filter
      * builder, they should fetch it from here so that we only have one created.
