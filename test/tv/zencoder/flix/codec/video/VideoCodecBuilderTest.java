@@ -44,6 +44,8 @@ public class VideoCodecBuilderTest {
 	commandLineArgs.add("best");
 	commandLineArgs.add("-vkftype");
 	commandLineArgs.add("fixed");
+	commandLineArgs.add("-vkffreq");
+	commandLineArgs.add("1000");
 	commandLineArgs.add("-vrc");
 	commandLineArgs.add("vbr1");
 	commandLineArgs.add("-vminq");
@@ -137,6 +139,11 @@ public class VideoCodecBuilderTest {
 	    // Check keyframe type
 	    if (videoCodecConfig.getFlixKeyframeTypeParamName() != null) {
 		assertEquals(new Double(FE2_VideoKeyframeTypes.FIXED_KEYFRAMES.swigValue()), new Double(codec.getParam(videoCodecConfig.getFlixKeyframeTypeParamName())));
+	    }
+	    
+	    // Check keyframe frequency
+	    if (videoCodecConfig.getFlixKeyframeFreqParamName() != null) {
+		assertEquals(new Double(1000), new Double(codec.getParam(videoCodecConfig.getFlixKeyframeFreqParamName())));
 	    }
 	    
 	    // Check rate control

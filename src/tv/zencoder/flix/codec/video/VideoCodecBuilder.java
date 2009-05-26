@@ -48,6 +48,7 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	addChild(new CompressModeVideoCodecModifier());
 	addChild(new H264BFramerateVideoCodecModifier());
 	addChild(new KeyframeTypeVideoCodecModifier());
+	addChild(new KeyframeFrequencyVideoCodecModifier());
 	addChild(new ProfileVideoCodecModifier());
 	addChild(new RateControlVideoCodecModifier());
 	addChild(new MinQVideoCodecModifier());
