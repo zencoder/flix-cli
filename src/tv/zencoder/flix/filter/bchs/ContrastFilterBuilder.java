@@ -19,7 +19,7 @@ public class ContrastFilterBuilder extends FilterBuilderBase {
      * Modifies the BCHS Filter.
      */
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getBchsFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_BCHS_CONTRAST);
+	modifyFilter(BuilderCache.getInstance().getBchsFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_BCHS_CONTRAST, "double");
     }
 
 

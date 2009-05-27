@@ -21,7 +21,7 @@ public class AudioResampleChannelsFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getAudioResampleFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_RESAMPLE_CHANNELS);
+	modifyFilter(BuilderCache.getInstance().getAudioResampleFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_RESAMPLE_CHANNELS, "double");
     }
 
     public String getFriendlyName() {

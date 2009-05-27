@@ -16,7 +16,7 @@ public class CropLeftFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getCropFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_CROP_LEFT);
+	modifyFilter(BuilderCache.getInstance().getCropFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_CROP_LEFT, "double");
     }
 
     public String getFriendlyName() {

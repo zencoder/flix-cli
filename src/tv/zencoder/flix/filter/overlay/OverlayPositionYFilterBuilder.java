@@ -24,7 +24,7 @@ public class OverlayPositionYFilterBuilder extends FilterBuilderBase {
 
     public void apply(FlixEngine2 flix, String options) {
 	Filter f = BuilderCache.getInstance().getOverlayFilterBuilder(flix).getFilter();
-	modifyFilter(f, options, flixengine2_internalConstants.FE2_OVERLAY_POS_Y);
+	modifyFilter(f, options, flixengine2_internalConstants.FE2_OVERLAY_POS_Y, "double");
 	try {
 	    f.setParam(flixengine2_internalConstants.FE2_OVERLAY_POS, new Double(FE2_OverlayPositionMode.FE2_OVERLAY_POS_MODE_XY.swigValue()));
 	} catch (FlixException e) {

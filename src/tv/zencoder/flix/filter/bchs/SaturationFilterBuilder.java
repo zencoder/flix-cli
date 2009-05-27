@@ -19,7 +19,7 @@ public class SaturationFilterBuilder extends FilterBuilderBase {
      * Modifies the BCHS Filter.
      */
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getBchsFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_BCHS_SATURATION);
+	modifyFilter(BuilderCache.getInstance().getBchsFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_BCHS_SATURATION, "double");
     }
 
     

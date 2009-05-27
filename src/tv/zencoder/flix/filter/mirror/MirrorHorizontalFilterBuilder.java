@@ -6,10 +6,7 @@ import org.apache.commons.cli.OptionBuilder;
 import tv.zencoder.flix.filter.FilterBuilderBase;
 import tv.zencoder.flix.util.BuilderCache;
 
-import com.on2.flix.Filter;
 import com.on2.flix.FlixEngine2;
-import com.on2.flix.FlixException;
-import com.on2.flix._on2bool;
 import com.on2.flix.flixengine2_internalConstants;
 
 /**
@@ -24,12 +21,7 @@ public class MirrorHorizontalFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	Filter f = BuilderCache.getInstance().getMirrorFilterBuilder(flix).getFilter();
-	try {
-	    f.setParam(flixengine2_internalConstants.FE2_MIRROR_HORIZONTAL, new Double(_on2bool.on2true.swigValue()));
-	} catch (FlixException e) {
-	    log.error("MirrorHorizontalFilterBuilder.apply(): e=" + e.getLocalizedMessage());
-	}
+	modifyFilter(BuilderCache.getInstance().getMirrorFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_MIRROR_HORIZONTAL, "true");
     }
 
     public String getFriendlyName() {

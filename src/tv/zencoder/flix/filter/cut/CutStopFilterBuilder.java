@@ -16,7 +16,7 @@ public class CutStopFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getCutFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_CUT_STOP_SEC);
+	modifyFilter(BuilderCache.getInstance().getCutFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_CUT_STOP_SEC, "double");
     }
 
     public String getFriendlyName() {

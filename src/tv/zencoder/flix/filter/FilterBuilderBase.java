@@ -12,6 +12,7 @@ import tv.zencoder.flix.util.LogWrapper;
 
 import com.on2.flix.Filter;
 import com.on2.flix.FlixException;
+import com.on2.flix._on2bool;
 
 /**
  * Base class for filter builders that handles common methods, like children.
@@ -59,10 +60,28 @@ public abstract class FilterBuilderBase implements FlixBuilder, OptionHandler {
      * @param filter
      * @param options
      * @param paramName
+     * @param paramValueType TODO
      */
-    protected void modifyFilter(Filter filter, String options, String paramName) {
+    protected void modifyFilter(Filter filter, String options, String paramName, String paramValueType) {
 	try {
-	    filter.setParam(paramName, Double.parseDouble(options));
+	    if (paramValueType.equals("double")) {
+		// The most common case, where some text from the command line needs to be
+		// converted into a double in the filter.
+		filter.setParam(paramName, Double.parseDouble(options));
+		
+	    } else if (paramValueType.equals("string")) {
+		// Passes whatever is on the command line as an option directly into the filter.
+		filter.setParamAsStr(paramName, options);
+		
+	    } else if (paramValueType.equals("true")) {
+		// Sets the double value for an "On2 True".
+		filter.setParam(paramName, new Double(_on2bool.on2true.swigValue()));
+		
+	    } else if (paramValueType.equals("false")) {
+		// Sets the double value for an "On2 False".
+		filter.setParam(paramName, new Double(_on2bool.on2false.swigValue()));
+	    }
+	    
 	} catch (NumberFormatException e) {
 	    log.debug("FilterBuilderBase.modifyFilter(): Failed to parse options into a Double. e=" + e.getLocalizedMessage());
 	} catch (FlixException e) {

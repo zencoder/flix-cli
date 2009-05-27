@@ -25,7 +25,7 @@ public class OverlayMaskXFilterBuilder extends FilterBuilderBase {
 
     public void apply(FlixEngine2 flix, String options) {
 	Filter f = BuilderCache.getInstance().getOverlayFilterBuilder(flix).getFilter();
-	modifyFilter(f, options, flixengine2_internalConstants.FE2_OVERLAY_MASK_X);
+	modifyFilter(f, options, flixengine2_internalConstants.FE2_OVERLAY_MASK_X, "double");
 	try {
 	    f.setParam(flixengine2_internalConstants.FE2_OVERLAY_MASK_XY, new Double(_on2bool.on2true.swigValue()));
 	} catch (FlixException e) {

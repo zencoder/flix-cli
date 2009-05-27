@@ -3,14 +3,11 @@ package tv.zencoder.flix.filter.mirror;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
-import com.on2.flix.Filter;
-import com.on2.flix.FlixEngine2;
-import com.on2.flix.FlixException;
-import com.on2.flix._on2bool;
-import com.on2.flix.flixengine2_internalConstants;
-
 import tv.zencoder.flix.filter.FilterBuilderBase;
 import tv.zencoder.flix.util.BuilderCache;
+
+import com.on2.flix.FlixEngine2;
+import com.on2.flix.flixengine2_internalConstants;
 
 /**
  * Flips the video along the vertical axis.
@@ -24,12 +21,7 @@ public class MirrorVerticalFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	Filter f = BuilderCache.getInstance().getMirrorFilterBuilder(flix).getFilter();
-	try {
-	    f.setParam(flixengine2_internalConstants.FE2_MIRROR_VERTICAL, new Double(_on2bool.on2true.swigValue()));
-	} catch (FlixException e) {
-	    log.error("MirrorVerticalFilterBuilder.apply(): e=" + e.getLocalizedMessage());
-	}
+	modifyFilter(BuilderCache.getInstance().getMirrorFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_MIRROR_VERTICAL, "true");
     }
 
     public String getFriendlyName() {

@@ -17,7 +17,7 @@ public class BlurMasksizeFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getBlurFilterBuilder(flix).getFilter(), getBlurFilterMasksizeFromOptions(options), flixengine2_internalConstants.FE2_BLUR_MASKSIZE);
+	modifyFilter(BuilderCache.getInstance().getBlurFilterBuilder(flix).getFilter(), getBlurFilterMasksizeFromOptions(options), flixengine2_internalConstants.FE2_BLUR_MASKSIZE, "double");
     }
 
     public String getFriendlyName() {

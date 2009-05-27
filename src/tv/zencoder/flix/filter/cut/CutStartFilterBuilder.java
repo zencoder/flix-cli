@@ -22,7 +22,7 @@ public class CutStartFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getCutFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_CUT_START_SEC);
+	modifyFilter(BuilderCache.getInstance().getCutFilterBuilder(flix).getFilter(), options, flixengine2_internalConstants.FE2_CUT_START_SEC, "double");
     }
 
     public String getFriendlyName() {

@@ -22,7 +22,7 @@ public class BlurTypeFilterBuilder extends FilterBuilderBase {
     }
 
     public void apply(FlixEngine2 flix, String options) {
-	modifyFilter(BuilderCache.getInstance().getBlurFilterBuilder(flix).getFilter(), getBlurFilterTypeFromOptions(options), flixengine2_internalConstants.FE2_BLUR_FILTER);
+	modifyFilter(BuilderCache.getInstance().getBlurFilterBuilder(flix).getFilter(), getBlurFilterTypeFromOptions(options), flixengine2_internalConstants.FE2_BLUR_FILTER, "double");
     }
 
     public String getFriendlyName() {
