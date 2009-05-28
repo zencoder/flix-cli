@@ -49,6 +49,21 @@ import tv.zencoder.flix.filter.overlay.OverlayPositionXFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayPositionYFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleChannelsFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleRateFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailAutoEndTimeFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailAutoRandomPeriodFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailAutoStartTimeFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailCompressionFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailEnableAlphaFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailAutoCountFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailExportCuePointsFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailExportFirstFrameFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailExportIntervalFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailExportTimeStringFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailFilenamePrefixFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailFilenameSuffixFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailHeightFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailOutputDirectoryFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailWidthFilterBuilder;
 import tv.zencoder.flix.muxer.VideoMuxerBuilder;
 
 /**
@@ -143,6 +158,10 @@ public class CommandLineHelper {
 	filterBuilders.add(new CutStartFilterBuilder());
 	filterBuilders.add(new CutStopFilterBuilder());
 	
+	// Mirror
+	filterBuilders.add(new MirrorHorizontalFilterBuilder());
+	filterBuilders.add(new MirrorVerticalFilterBuilder());
+	
 	// Overlay (watermark)
 	filterBuilders.add(new OverlayFilePathFilterBuilder());
 	filterBuilders.add(new OverlayMaskXFilterBuilder());
@@ -154,10 +173,22 @@ public class CommandLineHelper {
 	filterBuilders.add(new OverlayPositionYFilterBuilder());
 	filterBuilders.add(new OverlayPositionModeFilterBuilder());
 	
-	// Mirror
-	filterBuilders.add(new MirrorHorizontalFilterBuilder());
-	filterBuilders.add(new MirrorVerticalFilterBuilder());
-	
+	// Thumbnails (PNG Export)
+	filterBuilders.add(new ThumbnailEnableAlphaFilterBuilder());
+	filterBuilders.add(new ThumbnailAutoCountFilterBuilder());
+	filterBuilders.add(new ThumbnailAutoEndTimeFilterBuilder());
+	filterBuilders.add(new ThumbnailAutoRandomPeriodFilterBuilder());
+	filterBuilders.add(new ThumbnailAutoStartTimeFilterBuilder());
+	filterBuilders.add(new ThumbnailCompressionFilterBuilder());
+	filterBuilders.add(new ThumbnailExportCuePointsFilterBuilder());
+	filterBuilders.add(new ThumbnailExportFirstFrameFilterBuilder());
+	filterBuilders.add(new ThumbnailExportIntervalFilterBuilder());
+	filterBuilders.add(new ThumbnailExportTimeStringFilterBuilder());
+	filterBuilders.add(new ThumbnailFilenamePrefixFilterBuilder());
+	filterBuilders.add(new ThumbnailFilenameSuffixFilterBuilder());
+	filterBuilders.add(new ThumbnailHeightFilterBuilder());
+	filterBuilders.add(new ThumbnailOutputDirectoryFilterBuilder());
+	filterBuilders.add(new ThumbnailWidthFilterBuilder());
 	
 	// Audio Filters
 	filterBuilders.add(new HighpassFilterBuilder());

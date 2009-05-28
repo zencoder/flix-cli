@@ -7,6 +7,7 @@ import tv.zencoder.flix.filter.cut.CutFilterBuilder;
 import tv.zencoder.flix.filter.mirror.MirrorFilterBuilder;
 import tv.zencoder.flix.filter.overlay.OverlayFilterBuilder;
 import tv.zencoder.flix.filter.resample.AudioResampleFilterBuilder;
+import tv.zencoder.flix.filter.thumbnail.ThumbnailFilterBuilder;
 
 import com.on2.flix.FlixEngine2;
 
@@ -19,6 +20,13 @@ import com.on2.flix.FlixEngine2;
  *
  */
 public class BuilderCache {
+
+    // Stores the choice of audio codecs.  This is here, because the codec modifiers
+    // need to know which codec they're dealing with.
+    private AudioCodecConfig chosenAudioCodec;
+    
+    // Parent for the AudioResample filter builders.
+    private AudioResampleFilterBuilder audioResampleFilterBuilder;
 
     // BlurType and BlurMasksize filters use this as a parent.
     private BlurFilterBuilder blurFilterBuilder;
@@ -37,19 +45,15 @@ public class BuilderCache {
     // Parent for MirrorHorizontal and MirrorVertical filter builders.
     private MirrorFilterBuilder mirrorFilterBuilder;
     
-    // Parent for the AudioResample filter builders.
-    private AudioResampleFilterBuilder audioResampleFilterBuilder;
-    
     // Stores the overlay filter builder (a.k.a. watermark options)
     private OverlayFilterBuilder overlayFilterBuilder;
+
+    // Parent for the Thumbnail filter builders.
+    private ThumbnailFilterBuilder thumbnailFilterBuilder;
     
     // Stores the choice of video codecs.  This is here, because the codec modifiers
     // need to know which codec they're dealing with.
     private VideoCodecConfig chosenVideoCodec;
-    
-    // Stores the choice of audio codecs.  This is here, because the codec modifiers
-    // need to know which codec they're dealing with.
-    private AudioCodecConfig chosenAudioCodec;
     
     // Stores the choice of video muxers.  This is here, because the muxer modifiers
     // need to know which muxer they're dealing with.
@@ -161,6 +165,21 @@ public class BuilderCache {
 	return overlayFilterBuilder;
     }
     
+    
+    /**
+     * Parent thumbnail filter builder.
+     * @return ThumbnailFilterBuilder
+     */
+    public ThumbnailFilterBuilder getThumbnailFilterBuilder(FlixEngine2 flix) {
+        if (thumbnailFilterBuilder == null) {
+            thumbnailFilterBuilder = new ThumbnailFilterBuilder();
+            thumbnailFilterBuilder.apply(flix, "");
+        }
+	return thumbnailFilterBuilder;
+    }
+
+    
+    
     /**
      * Returns the video codec that we're working on.  Video codec modifiers
      * need to know which specific codec they're trying to configure.
@@ -220,6 +239,7 @@ public class BuilderCache {
         this.chosenVideoMuxer = chosenVideoMuxer;
     }
 
+ 
  
 
 }
