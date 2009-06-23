@@ -15,6 +15,7 @@ import tv.zencoder.flix.util.StringUtil;
 
 import com.on2.flix.FlixEngine2;
 import com.on2.flix.FlixException;
+import com.on2.flix.on2sc;
 
 /**
  * Main access point to the app.  Parses the command line, configures flix engine, and
@@ -160,6 +161,7 @@ public class FlixEngineApiDriver {
      */
     private static void printEncoderStatus(final FlixEngine2 flix)
     {
+	boolean success = false;
 	try {
 	    System.out.println("\nEncoder Status");
 	    System.out.println(" FlixEngine2.GetEncoderState:" + flix.GetEncoderState());
@@ -167,11 +169,23 @@ public class FlixEngineApiDriver {
 	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " (" + FlixUtil.lookupError(new Long(flixerr[0])) + ") syserrno:" + flixerr[1]);
 	    
 	    if(flixerr[0] == 0 && flixerr[1] == 0) {
-		log.info("--SUCCESS--");
-	    } else {
-		log.info("--FAIL--");
+		success = true;
 	    }
-	} catch (FlixException e) {}
+	} catch (FlixException e) {
+	    // If e == ON2_NET_ERROR Flix2_Errno will return the specific
+	    // rpc error encountered as flixerrno along with the client
+	    // lib's errno value
+	    try {
+		long[] flixerr = flix.Errno();
+		System.out.println("\nFlixEngine2.Errno: " + (e.equals(on2sc.ON2_NET_ERROR)? "rpcerr":"flixerrno") + ": " + flixerr[0] + " syserrno:" + flixerr[1]);
+	    } catch (Exception ex) {}
+	}
+
+	if (success) {
+	    log.info("--SUCCESS--");
+	} else {
+	    log.info("--FAIL--");
+	}	
     }
 
     /**
