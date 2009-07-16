@@ -10,12 +10,14 @@ import org.junit.Test;
 import tv.zencoder.flix.BuilderTestHelper;
 import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.CommandLineHelper;
+import tv.zencoder.flix.util.LogWrapper;
 import tv.zencoder.flix.util.VideoMuxerConfig;
 
 import com.on2.flix.Muxer;
 import com.on2.flix._on2bool;
 
 public class VideoMuxerBuilderTest {
+    LogWrapper log = LogWrapper.getInstance();
     private BuilderTestHelper builderTestHelper;
 
     @Before
@@ -32,7 +34,10 @@ public class VideoMuxerBuilderTest {
 
     @Test
     public void testFlv() {
-	CommandLineHelper.getInstance().setArgs(new String[] {});
+	// TODO: The -cp_foo switches are here, but we don't have a good way to test them
+	// yet.  muxer.getParam() blows up on these; I suspect because there might be a list
+	// rather than a single param. [JDL]
+	CommandLineHelper.getInstance().setArgs(new String[] {"-cp_nav foo=5.1,bar=10.0 -cp_event fred=2.0,barney=3.3"});
 	checkMuxerParams("flv", VideoMuxerConfig.FLV);
     }
 

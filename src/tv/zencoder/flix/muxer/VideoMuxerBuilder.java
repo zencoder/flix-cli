@@ -7,6 +7,9 @@ import java.util.TreeMap;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
+import tv.zencoder.flix.muxer.cuepoint.CuepointEventVideoMuxerModifier;
+import tv.zencoder.flix.muxer.cuepoint.CuepointNavVideoMuxerModifier;
+import tv.zencoder.flix.muxer.cuepoint.CuepointParamsVideoMuxerModifier;
 import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.StringUtil;
 import tv.zencoder.flix.util.VideoMuxerConfig;
@@ -38,6 +41,9 @@ public class VideoMuxerBuilder extends MuxerBuilderBase {
     public VideoMuxerBuilder() {
 	super();
 	addChild(new FaststartVideoMuxerModifier());
+	addChild(new CuepointNavVideoMuxerModifier());
+	addChild(new CuepointEventVideoMuxerModifier());
+	addChild(new CuepointParamsVideoMuxerModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {
