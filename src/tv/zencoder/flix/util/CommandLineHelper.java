@@ -236,7 +236,7 @@ public class CommandLineHelper {
     @SuppressWarnings("static-access")
     private Options defineCommandLineOptions() {
 	options = new Options();
-	options.addOption(new Option( "help", "print this message"));
+	options.addOption(new Option("help", "print this message"));
 
 	// i
 	options.addOption(OptionBuilder.withArgName("filename")
@@ -249,7 +249,12 @@ public class CommandLineHelper {
 		.hasArg()
 		.withDescription("sets the output file (use an absolute path)")
 		.create("o"));
-
+	
+	// job_id
+	options.addOption(OptionBuilder.withArgName("ID")
+		.hasArg()
+		.withDescription("Sets an external ID for this job. If set, you can kill this encode by touching the file '/tmp/kill_job_ID.txt'.")
+		.create("job_id"));
 	
 	/*  Add the command line Options from the Filter, Codec, and Muxer builders. */
 	addBuilderOptions(options, getFilterBuilders());

@@ -8,6 +8,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 
 import tv.zencoder.flix.cli.FlixBuilder;
+import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.FlixUtil;
 import tv.zencoder.flix.util.LogWrapper;
@@ -75,6 +76,17 @@ public class FlixEngineApiDriver {
 	    do {
 		ier = flix.IsEncoderRunning();
 		log.info("FlixEngineApiDriver.main(): Encoding..." + flix.encoding_status_PercentComplete() + "%  ");
+		if (shouldStopEncode()) {
+		    log.info("FlixEngineApiDriver.main(): Stopping the encode");
+		    flix.StopEncoding();
+		    
+		    log.info("FlixEngineApiDriver.main(): Deleting the kill file marker.");
+		    if (cleanUpKillFile()) {
+			log.info("FlixEngineApiDriver.main(): Delete succeeded.");
+		    } else {
+			log.info("FlixEngineApiDriver.main(): Delete failed.");
+		    }
+		}
 		try {Thread.sleep(1000);}
 		catch(InterruptedException e) {}
 	    } while(ier);
@@ -128,6 +140,13 @@ public class FlixEngineApiDriver {
 		log.warn("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
 	    }
 	    flix.SetOutputFile(value);
+	}
+	
+	/* Job ID (optional) */
+	if (line.hasOption("job_id")) {
+	    String jobId = line.getOptionValue("job_id");
+	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: " + jobId);
+	    BuilderCache.getInstance().setJobId(jobId);
 	}
 	
 	/* Filters, Codecs, and Muxers */
@@ -198,4 +217,44 @@ public class FlixEngineApiDriver {
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
     }
     
+    
+    /**
+     * If a job_id was set on the command line, and the kill file marker exists, this 
+     * will return true.
+     */
+    private static boolean shouldStopEncode() {
+	boolean result = false;
+	
+	String jobId = BuilderCache.getInstance().getJobId();
+	if (jobId != null) {
+	    File f = jobIdToKillFile(jobId);
+	    if (f.exists()) {
+		result = true;
+	    }
+	}
+	return result;
+    }
+    
+    /**
+     * Generates the File that should be used to kill this encode.
+     */
+    private static File jobIdToKillFile(String jobId) {
+	File f = new File("/tmp/kill_job_" + jobId + ".txt");
+	return f;
+    }
+    
+    /**
+     * Erases the kill file marker, if it exists.
+     */
+    private static boolean cleanUpKillFile() {
+	boolean success = false;
+	String jobId = BuilderCache.getInstance().getJobId();
+	if (jobId != null) {
+    	    File f = jobIdToKillFile(jobId);
+    	    if (f.exists()) {
+    	        success = f.delete();
+    	    }
+	}
+	return success;
+    }
 }

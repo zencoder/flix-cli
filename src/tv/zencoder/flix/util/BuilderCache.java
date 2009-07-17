@@ -58,7 +58,11 @@ public class BuilderCache {
     // Stores the choice of video muxers.  This is here, because the muxer modifiers
     // need to know which muxer they're dealing with.
     private VideoMuxerConfig chosenVideoMuxer;
-       
+    
+    // Stores an external identifier for the current job.
+    private String jobId;
+    
+    
     private static BuilderCache instance;
     
     public static BuilderCache getInstance() {
@@ -239,7 +243,18 @@ public class BuilderCache {
         this.chosenVideoMuxer = chosenVideoMuxer;
     }
 
- 
- 
+    /**
+     * Returns the external ID of the job that is being worked on.
+     */
+    public String getJobId() {
+	return jobId;
+    }
+    
+    /**
+     * Sets the external ID of the job that is being worked on.
+     */
+    public void setJobId(String jobId) {
+	this.jobId = jobId;
+    }
 
 }
