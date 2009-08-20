@@ -12,6 +12,7 @@ import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.CommandLineHelper;
 import tv.zencoder.flix.util.FlixUtil;
 import tv.zencoder.flix.util.LogWrapper;
+import tv.zencoder.flix.util.MailUtil;
 import tv.zencoder.flix.util.StringUtil;
 
 import com.on2.flix.FlixEngine2;
@@ -28,13 +29,14 @@ import com.on2.flix.on2sc;
 public class FlixEngineApiDriver {
     private static LogWrapper log = LogWrapper.getInstance();
     private static CommandLineHelper clHelper = CommandLineHelper.getInstance();
+    private static StringBuffer errorMsgBuffer;
     
     /**
      * Main app entry point.
      * @param args
      */
     public static void main(String[] args) {
-	
+	errorMsgBuffer = new StringBuffer();
 	clHelper.setArgs(args);
 	CommandLine line = clHelper.getLine();
 	if (args == null || args.length == 0 || line.hasOption("help")) {
@@ -100,7 +102,10 @@ public class FlixEngineApiDriver {
 	} catch (FlixException e) {
 	    log.error("FlixEngineApiDriver.main(): Caught a Flix exception. e=" + e.getLocalizedMessage());
 	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): " + StringUtil.getStackTraceAsString(e));
+	    
+	    errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
 	}
+	emailErrors();
     }
 
     /**
@@ -115,29 +120,29 @@ public class FlixEngineApiDriver {
 	/* Input file */
 	if (line.hasOption("i")) {
 	    String value = line.getOptionValue("i");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting input file: " + value);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting input file: " + value);
 	    File f = new File(value);
 	    if(!f.isAbsolute()) {
-		log.warn("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
+		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
 	    }
 
 	    flix.SetInputFile(value);
 
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Input File");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions():   Width: " + flix.video_options_GetSourceWidth());
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions():   Height:   " + flix.video_options_GetSourceHeight());
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions():   Duration: " + flix.GetSourceDuration());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Input File");
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Width: " + flix.video_options_GetSourceWidth());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Height:   " + flix.video_options_GetSourceHeight());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Duration: " + flix.GetSourceDuration());
 	}
 
 	/* Output File */
 	if (line.hasOption("o")) {
 	    String value = line.getOptionValue("o");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting output file: " + value);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting output file: " + value);
 
 	    File f = new File(value);
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + value);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + value);
 	    if(!f.isAbsolute()) {
-		log.warn("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
+		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
 	    }
 	    flix.SetOutputFile(value);
 	}
@@ -145,7 +150,7 @@ public class FlixEngineApiDriver {
 	/* Job ID (optional) */
 	if (line.hasOption("job_id")) {
 	    String jobId = line.getOptionValue("job_id");
-	    log.debug("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: " + jobId);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: " + jobId);
 	    BuilderCache.getInstance().setJobId(jobId);
 	}
 	
@@ -167,7 +172,7 @@ public class FlixEngineApiDriver {
 	    FlixBuilder fb = fbIter.next();
 	    if (fb.isPrimaryOption() && line.hasOption(fb.getSwitch())) {
 		String optionArgument = line.getOptionValue(fb.getSwitch());
-		log.debug("FlixEngineApiDriver.applyBuilders(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
+		clHelper.logOptionsMessage("FlixEngineApiDriver.applyBuilders(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
 		fb.apply(flix, optionArgument);
 	    }
 	}
@@ -180,6 +185,7 @@ public class FlixEngineApiDriver {
      */
     private static void printEncoderStatus(final FlixEngine2 flix)
     {
+	
 	boolean success = false;
 	try {
 	    System.out.println("\nEncoder Status");
@@ -189,6 +195,9 @@ public class FlixEngineApiDriver {
 	    
 	    if(flixerr[0] == 0 && flixerr[1] == 0) {
 		success = true;
+	    } else {
+		errorMsgBuffer.append("flixerrno:" + flixerr[0] + "\n");
+		errorMsgBuffer.append("syserrno:" + flixerr[1] + "\n");
 	    }
 	} catch (FlixException e) {
 	    // If e == ON2_NET_ERROR Flix2_Errno will return the specific
@@ -197,14 +206,18 @@ public class FlixEngineApiDriver {
 	    try {
 		long[] flixerr = flix.Errno();
 		System.out.println("\nFlixEngine2.Errno: " + (e.equals(on2sc.ON2_NET_ERROR)? "rpcerr":"flixerrno") + ": " + flixerr[0] + " syserrno:" + flixerr[1]);
+		
+		errorMsgBuffer.append("flixerrno:" + flixerr[0] + "\n");
+		errorMsgBuffer.append("syserrno:" + flixerr[1] + "\n");
+		errorMsgBuffer.append("Exception: " + e.getMessage());
+		errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
 	    } catch (Exception ex) {}
 	}
-
 	if (success) {
 	    log.info("--SUCCESS--");
 	} else {
-	    log.info("--FAIL--");
-	}	
+	    log.info("--FAIL--");    
+	}
     }
 
     /**
@@ -217,6 +230,12 @@ public class FlixEngineApiDriver {
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
     }
     
+    
+    private static void emailErrors() {
+	if (errorMsgBuffer.length() > 0) {
+	    MailUtil.emailDebugMessage(clHelper.getOptionsMsgBuffer().toString() + "\n\n\n" + errorMsgBuffer.toString());
+	}
+    }
     
     /**
      * If a job_id was set on the command line, and the kill file marker exists, this 
@@ -257,4 +276,5 @@ public class FlixEngineApiDriver {
 	}
 	return success;
     }
+
 }

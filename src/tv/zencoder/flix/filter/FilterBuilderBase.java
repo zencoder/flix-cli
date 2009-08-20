@@ -46,7 +46,7 @@ public abstract class FilterBuilderBase implements FlixBuilder, OptionHandler {
         	// Was this particular child called for on the command line?
         	if (clHelper.isOptionInUse(child)) {
         	    String optionArgument = clHelper.getLine().getOptionValue(child.getSwitch());
-        	    log.debug("FilterBuilderBase.applyChildBuilders(): Modifying filter with " + child.getFriendlyName() + " and option: " + optionArgument);
+        	    clHelper.logOptionsMessage("FilterBuilderBase.applyChildBuilders(): Modifying filter with " + child.getFriendlyName() + " and option: " + optionArgument);
         	    child.apply(filter, optionArgument);
         	}
             }

@@ -13,6 +13,13 @@
 
 	<path id="classpath.base">
 		<pathelement location="${lib.dir}/commons-cli-1.1.jar" />
+		<pathelement location="${lib.dir}/commons-email-1.1.jar" />
+		<pathelement location="${lib.dir}/dsn.jar" />
+		<pathelement location="${lib.dir}/imap.jar" />
+		<pathelement location="${lib.dir}/mailapi.jar" />
+		<pathelement location="${lib.dir}/mail.jar" />
+		<pathelement location="${lib.dir}/pop3.jar" />
+		<pathelement location="${lib.dir}/smtp.jar" />
 	</path>
 	<path id="classpath.test">
 		<pathelement location="${ant.home}/lib/junit.jar" />

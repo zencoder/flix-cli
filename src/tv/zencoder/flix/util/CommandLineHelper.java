@@ -97,10 +97,13 @@ public class CommandLineHelper {
     // Handles building of the Flix Muxers.
     private List<FlixBuilder> muxerBuilders;
     
+    private StringBuffer optionsMsgBuffer;
+
     private static CommandLineHelper instance;
     
     private CommandLineHelper() {
 	super();
+	optionsMsgBuffer = new StringBuffer();
 	populateParentFilterBuilders();
 	populateParentCodecBuilders();
 	populateParentMuxerBuilders();
@@ -387,5 +390,15 @@ public class CommandLineHelper {
     public String[] getArgs() {
         return args;
     }
+    
+    public StringBuffer getOptionsMsgBuffer() {
+        return optionsMsgBuffer;
+    }
+    
+    public void logOptionsMessage(String msg) {
+	log.debug(msg);
+	getOptionsMsgBuffer().append(msg + "\n");
+    }
+
     
 }

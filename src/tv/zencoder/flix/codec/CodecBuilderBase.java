@@ -39,7 +39,7 @@ public abstract class CodecBuilderBase implements FlixBuilder {
         	// Was this particular child called for on the command line?
         	if (clHelper.isOptionInUse(child)) {
         	    String optionArgument = clHelper.getLine().getOptionValue(child.getSwitch());
-        	    log.debug("CodecBuilderBase.applyChildBuilders(): Modifying codec with " + child.getFriendlyName() + " and option: " + optionArgument);
+        	    clHelper.logOptionsMessage("CodecBuilderBase.applyChildBuilders(): Modifying codec with " + child.getFriendlyName() + " and option: " + optionArgument);
         	    child.modifyCodec(codec, optionArgument);
         	}
             }
