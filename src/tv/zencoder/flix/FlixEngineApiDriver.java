@@ -39,12 +39,23 @@ public class FlixEngineApiDriver {
 	errorMsgBuffer = new StringBuffer();
 	clHelper.setArgs(args);
 	CommandLine line = clHelper.getLine();
+	
 	if (args == null || args.length == 0 || line.hasOption("help")) {
 	    /* Help */
             HelpFormatter formatter = new HelpFormatter();
             formatter.setWidth(200);
             formatter.printHelp("zencoder_flixengine.sh [options]", clHelper.getOptions());	    
 	} else {
+	    
+	    // Echo back the args 
+	    StringBuffer sb = new StringBuffer();
+	    for (int i=0; i < args.length; i++) {
+	      sb.append(args[i]);
+	      sb.append(" ");
+	    }
+	    clHelper.logOptionsMessage("args: " + sb.toString());
+	    
+	    
 	    configureFlixAndEncode();
 	}
     }
@@ -185,7 +196,6 @@ public class FlixEngineApiDriver {
      */
     private static void printEncoderStatus(final FlixEngine2 flix)
     {
-	
 	boolean success = false;
 	try {
 	    System.out.println("\nEncoder Status");
