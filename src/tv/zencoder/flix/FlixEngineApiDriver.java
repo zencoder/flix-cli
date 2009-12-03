@@ -77,35 +77,40 @@ public class FlixEngineApiDriver {
 	    flix.Connect();
 
 	    /* Setup the flix object, based on the passed in options. */
-	    applyCommandLineOptions(flix);
+	    if (applyCommandLineOptions(flix)) {
+		// debug
+		printFlixEngineInfo();
 
-	    // debug
-	    printFlixEngineInfo();
-	    
-	    /* Process the file */
-	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Starting the transcode.");
-	    flix.Encode();
-	    boolean ier;
-	    do {
-		ier = flix.IsEncoderRunning();
-		log.info("FlixEngineApiDriver.main(): Encoding..." + flix.encoding_status_PercentComplete() + "%  ");
-		if (shouldStopEncode()) {
-		    log.info("FlixEngineApiDriver.main(): Stopping the encode");
-		    flix.StopEncoding();
-		    
-		    log.info("FlixEngineApiDriver.main(): Deleting the kill file marker.");
-		    if (cleanUpKillFile()) {
-			log.info("FlixEngineApiDriver.main(): Delete succeeded.");
-		    } else {
-			log.info("FlixEngineApiDriver.main(): Delete failed.");
+		/* Process the file */
+		log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Starting the transcode.");
+		flix.Encode();
+		boolean ier;
+		do {
+		    ier = flix.IsEncoderRunning();
+		    log
+			    .info("FlixEngineApiDriver.main(): Encoding..." + flix.encoding_status_PercentComplete()
+				    + "%  ");
+		    if (shouldStopEncode()) {
+			log.info("FlixEngineApiDriver.main(): Stopping the encode");
+			flix.StopEncoding();
+
+			log.info("FlixEngineApiDriver.main(): Deleting the kill file marker.");
+			if (cleanUpKillFile()) {
+			    log.info("FlixEngineApiDriver.main(): Delete succeeded.");
+			} else {
+			    log.info("FlixEngineApiDriver.main(): Delete failed.");
+			}
 		    }
-		}
-		try {Thread.sleep(1000);}
-		catch(InterruptedException e) {}
-	    } while(ier);
-	    log.info("FlixEngineApiDriver.main(): Done!");
-
-	    printEncoderStatus(flix);
+		    try {
+			Thread.sleep(1000);
+		    } catch (InterruptedException e) {
+		    }
+		} while (ier);
+		log.info("FlixEngineApiDriver.main(): Done!");
+    	        printEncoderStatus(flix);
+	    } else {
+		log.info("--FAIL--");
+	    }
 
 	    /* Cleanup */
 	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Cleanup");
@@ -125,7 +130,7 @@ public class FlixEngineApiDriver {
      * 
      * @param flix
      */
-    private static void applyCommandLineOptions(FlixEngine2 flix) throws FlixException {
+    private static boolean applyCommandLineOptions(FlixEngine2 flix) throws FlixException {
 	CommandLine line = clHelper.getLine();
 	
 	/* Input file */
@@ -135,6 +140,13 @@ public class FlixEngineApiDriver {
 	    File f = new File(value);
 	    if(!f.isAbsolute()) {
 		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
+	    }
+	    
+	    if(f.length() < 1000) {
+		String msg = "Input file doesn't not appear to be valid. Size=" + f.length() + " bytes.";
+		errorMsgBuffer.append(msg);
+		log.info(msg);
+		return false;
 	    }
 
 	    flix.SetInputFile(value);
@@ -169,6 +181,8 @@ public class FlixEngineApiDriver {
 	applyBuilders(flix, clHelper.getFilterBuilders());
 	applyBuilders(flix, clHelper.getCodecBuilders());
 	applyBuilders(flix, clHelper.getMuxerBuilders());
+	
+	return true;
     }
  
     /**
