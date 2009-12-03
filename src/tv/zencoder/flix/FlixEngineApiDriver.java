@@ -146,6 +146,7 @@ public class FlixEngineApiDriver {
 		String msg = "Input file doesn't not appear to be valid. Size=" + f.length() + " bytes.";
 		errorMsgBuffer.append(msg);
 		log.info(msg);
+		log.info("--INPUTFAIL--");
 		return false;
 	    }
 
