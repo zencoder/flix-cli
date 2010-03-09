@@ -131,10 +131,12 @@ public class FlixEngineApiDriver {
 
 		// If this is the last try, store the exception for mailing.
 		if (curTry == maxRetries) {
-		    errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
+		    errorMsgBuffer.append("Failed on last retry.");
 		} else {
+		    errorMsgBuffer.append("Failed on try #" + curTry);
 		    sleepBeforeRetry();
 		}
+		errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
 	    }
 	    
 	    curTry = curTry + 1;
