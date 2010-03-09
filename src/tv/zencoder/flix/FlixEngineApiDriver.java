@@ -20,42 +20,43 @@ import com.on2.flix.FlixException;
 import com.on2.flix.on2sc;
 
 /**
- * Main access point to the app.  Parses the command line, configures flix engine, and
- * triggers the video transcode.
+ * Main access point to the app. Parses the command line, configures flix engine, and triggers the video transcode.
  * 
  * @author jdl
- *
+ * 
  */
 public class FlixEngineApiDriver {
     private static LogWrapper log = LogWrapper.getInstance();
+
     private static CommandLineHelper clHelper = CommandLineHelper.getInstance();
+
     private static StringBuffer errorMsgBuffer;
-    
+
     /**
      * Main app entry point.
+     * 
      * @param args
      */
     public static void main(String[] args) {
 	errorMsgBuffer = new StringBuffer();
 	clHelper.setArgs(args);
 	CommandLine line = clHelper.getLine();
-	
+
 	if (args == null || args.length == 0 || line.hasOption("help")) {
 	    /* Help */
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.setWidth(200);
-            formatter.printHelp("zencoder_flixengine.sh [options]", clHelper.getOptions());	    
+	    HelpFormatter formatter = new HelpFormatter();
+	    formatter.setWidth(200);
+	    formatter.printHelp("zencoder_flixengine.sh [options]", clHelper.getOptions());
 	} else {
-	    
-	    // Echo back the args 
+
+	    // Echo back the args
 	    StringBuffer sb = new StringBuffer();
-	    for (int i=0; i < args.length; i++) {
-	      sb.append(args[i]);
-	      sb.append(" ");
+	    for (int i = 0; i < args.length; i++) {
+		sb.append(args[i]);
+		sb.append(" ");
 	    }
 	    clHelper.logOptionsMessage("args: " + sb.toString());
-	    
-	    
+
 	    configureFlixAndEncode();
 	}
     }
@@ -64,85 +65,116 @@ public class FlixEngineApiDriver {
      * Triggers the encoding in the flix engine service.
      */
     private static void configureFlixAndEncode() {
-	/* Connect to Flix Engine and perform encoding. */
-	FlixEngine2 flix;
-	log.debug("FlixEngineApiDriver.main(): Connecting to Flix...");
+	int maxRetries = 3;
+	int curTry = 1;
 
-	// rpc timeout in seconds,
-	// 0=use default (25s)
-	final int timeout_s = 0; 
-	flix = new FlixEngine2("localhost", timeout_s);
-	try {
-	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Connecting to Flix Engine");
-	    flix.Connect();
+	while (curTry <= maxRetries) {
+	    /* Connect to Flix Engine and perform encoding. */
+	    FlixEngine2 flix;
+	    log.debug("FlixEngineApiDriver.main(): Connecting to Flix...");
 
-	    /* Setup the flix object, based on the passed in options. */
-	    if (applyCommandLineOptions(flix)) {
-		// debug
-		printFlixEngineInfo();
+	    // rpc timeout in seconds,
+	    // 0=use default (25s)
+	    final int timeout_s = 0;
+	    flix = new FlixEngine2("localhost", timeout_s);
+	    try {
+		log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Connecting to Flix Engine");
+		flix.Connect();
 
-		/* Process the file */
-		log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Starting the transcode.");
-		flix.Encode();
-		boolean ier;
-		do {
-		    ier = flix.IsEncoderRunning();
-		    log
-			    .info("FlixEngineApiDriver.main(): Encoding..." + flix.encoding_status_PercentComplete()
-				    + "%  ");
-		    if (shouldStopEncode()) {
-			log.info("FlixEngineApiDriver.main(): Stopping the encode");
-			flix.StopEncoding();
+		/* Setup the flix object, based on the passed in options. */
+		if (applyCommandLineOptions(flix)) {
+		    // debug
+		    printFlixEngineInfo();
 
-			log.info("FlixEngineApiDriver.main(): Deleting the kill file marker.");
-			if (cleanUpKillFile()) {
-			    log.info("FlixEngineApiDriver.main(): Delete succeeded.");
-			} else {
-			    log.info("FlixEngineApiDriver.main(): Delete failed.");
+		    /* Process the file */
+		    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Starting the transcode.");
+		    flix.Encode();
+		    boolean ier;
+		    do {
+			ier = flix.IsEncoderRunning();
+			log.info("FlixEngineApiDriver.main(): Encoding..." + flix.encoding_status_PercentComplete() + "%  ");
+			if (shouldStopEncode()) {
+			    log.info("FlixEngineApiDriver.main(): Stopping the encode");
+			    flix.StopEncoding();
+
+			    log.info("FlixEngineApiDriver.main(): Deleting the kill file marker.");
+			    if (cleanUpKillFile()) {
+				log.info("FlixEngineApiDriver.main(): Delete succeeded.");
+			    } else {
+				log.info("FlixEngineApiDriver.main(): Delete failed.");
+			    }
 			}
-		    }
-		    try {
-			Thread.sleep(1000);
-		    } catch (InterruptedException e) {
-		    }
-		} while (ier);
-		log.info("FlixEngineApiDriver.main(): Done!");
-    	        printEncoderStatus(flix);
-	    } else {
-		log.info("--FAIL--");
-	    }
+			try {
+			    Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+		    } while (ier);
+		    log.info("FlixEngineApiDriver.main(): Done!");
+		    printEncoderStatus(flix);
+		} else {
+		    log.info("--FAIL--");
+		}
 
-	    /* Cleanup */
-	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Cleanup");
-	    flix.Destroy();
-	} catch (FlixException e) {
-	    log.error("FlixEngineApiDriver.main(): Caught a Flix exception. e=" + e.getLocalizedMessage());
-	    log.debug("FlixEngineApiDriver.configureFlixAndEncode(): " + StringUtil.getStackTraceAsString(e));
+		/* Cleanup */
+		log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Cleanup");
+		flix.Destroy();
+		
+		// Get out of this while loop, because even if we found an error, at this point 
+		// it's not an exception-worthy error and it's doubtful that retrying would 
+		// make any difference.
+		break;
+	    } catch (FlixException e) {
+		log.error("FlixEngineApiDriver.main(): Caught a Flix exception. e=" + e.getLocalizedMessage());
+		log.error("type: " + e.getClass());
+		log.error("msg:" + e.getLocalizedMessage());
+		log.debug("FlixEngineApiDriver.configureFlixAndEncode(): " + StringUtil.getStackTraceAsString(e));
+
+		// If this is the last try, store the exception for mailing.
+		if (curTry == maxRetries) {
+		    errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
+		} else {
+		    sleepBeforeRetry();
+		}
+	    }
 	    
-	    errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
+	    curTry = curTry + 1;
 	}
+	
 	emailErrors();
     }
 
+    @SuppressWarnings("static-access")
+    private static void sleepBeforeRetry() {
+      log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Sleeping before we try this again.");
+      try {
+	  // This is a long sleep, because we want to give monit time to restart 
+	  // the flix engine daemon, in case that's the reason why we're seeing 
+	  // exceptions.
+	  Thread.currentThread().sleep(60000);
+      } catch (InterruptedException e2) {
+      }
+    }
+    
+    
     /**
-     * Once the command line has been parsed, we need to configure the flix object based on the
-     * desired options.
+     * Once the command line has been parsed, we need to configure the flix object based on the desired options.
      * 
      * @param flix
      */
     private static boolean applyCommandLineOptions(FlixEngine2 flix) throws FlixException {
 	CommandLine line = clHelper.getLine();
-	
+
 	/* Input file */
 	if (line.hasOption("i")) {
 	    String value = line.getOptionValue("i");
 	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting input file: " + value);
 	    File f = new File(value);
-	    if(!f.isAbsolute()) {
-		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
+	    if (!f.isAbsolute()) {
+		clHelper
+			.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
 	    }
-	    
-	    if(f.length() < 1000) {
+
+	    if (f.length() < 1000) {
 		String msg = "Input file does not appear to be valid. Size=" + f.length() + " bytes.";
 		errorMsgBuffer.append(msg);
 		log.error(msg);
@@ -152,9 +184,12 @@ public class FlixEngineApiDriver {
 	    flix.SetInputFile(value);
 
 	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Input File");
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Width: " + flix.video_options_GetSourceWidth());
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Height:   " + flix.video_options_GetSourceHeight());
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Duration: " + flix.GetSourceDuration());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Width: "
+		    + flix.video_options_GetSourceWidth());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Height:   "
+		    + flix.video_options_GetSourceHeight());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Duration: "
+		    + flix.GetSourceDuration());
 	}
 
 	/* Output File */
@@ -164,29 +199,32 @@ public class FlixEngineApiDriver {
 
 	    File f = new File(value);
 	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + value);
-	    if(!f.isAbsolute()) {
-		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
+	    if (!f.isAbsolute()) {
+		clHelper
+			.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
 	    }
 	    flix.SetOutputFile(value);
 	}
-	
+
 	/* Job ID (optional) */
 	if (line.hasOption("job_id")) {
 	    String jobId = line.getOptionValue("job_id");
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: " + jobId);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: "
+		    + jobId);
 	    BuilderCache.getInstance().setJobId(jobId);
 	}
-	
+
 	/* Filters, Codecs, and Muxers */
 	applyBuilders(flix, clHelper.getFilterBuilders());
 	applyBuilders(flix, clHelper.getCodecBuilders());
 	applyBuilders(flix, clHelper.getMuxerBuilders());
-	
+
 	return true;
     }
- 
+
     /**
      * Calls the apply() method for a list of builders.
+     * 
      * @param flix
      * @param builderList
      */
@@ -197,27 +235,28 @@ public class FlixEngineApiDriver {
 	    FlixBuilder fb = fbIter.next();
 	    if (fb.isPrimaryOption() && line.hasOption(fb.getSwitch())) {
 		String optionArgument = line.getOptionValue(fb.getSwitch());
-		clHelper.logOptionsMessage("FlixEngineApiDriver.applyBuilders(): Applying filter builder '" + fb.getFriendlyName() + "' with option argument: " + optionArgument);
+		clHelper.logOptionsMessage("FlixEngineApiDriver.applyBuilders(): Applying filter builder '"
+			+ fb.getFriendlyName() + "' with option argument: " + optionArgument);
 		fb.apply(flix, optionArgument);
 	    }
 	}
     }
-    
-    
+
     /**
      * Dumps basic info about the Flix encoder.
+     * 
      * @param flix
      */
-    private static void printEncoderStatus(final FlixEngine2 flix)
-    {
+    private static void printEncoderStatus(final FlixEngine2 flix) {
 	boolean success = false;
 	try {
 	    System.out.println("\nEncoder Status");
 	    System.out.println(" FlixEngine2.GetEncoderState:" + flix.GetEncoderState());
 	    long[] flixerr = flix.Errno();
-	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " (" + FlixUtil.lookupError(new Long(flixerr[0])) + ") syserrno:" + flixerr[1]);
-	    
-	    if(flixerr[0] == 0 && flixerr[1] == 0) {
+	    System.out.println(" FlixEngine2.Errno: flixerrno:" + flixerr[0] + " ("
+		    + FlixUtil.lookupError(new Long(flixerr[0])) + ") syserrno:" + flixerr[1]);
+
+	    if (flixerr[0] == 0 && flixerr[1] == 0) {
 		success = true;
 	    } else {
 		errorMsgBuffer.append("flixerrno:" + flixerr[0] + "\n");
@@ -229,45 +268,47 @@ public class FlixEngineApiDriver {
 	    // lib's errno value
 	    try {
 		long[] flixerr = flix.Errno();
-		System.out.println("\nFlixEngine2.Errno: " + (e.equals(on2sc.ON2_NET_ERROR)? "rpcerr":"flixerrno") + ": " + flixerr[0] + " syserrno:" + flixerr[1]);
-		
+		System.out.println("\nFlixEngine2.Errno: " + (e.equals(on2sc.ON2_NET_ERROR) ? "rpcerr" : "flixerrno")
+			+ ": " + flixerr[0] + " syserrno:" + flixerr[1]);
+
 		errorMsgBuffer.append("flixerrno:" + flixerr[0] + "\n");
 		errorMsgBuffer.append("syserrno:" + flixerr[1] + "\n");
 		errorMsgBuffer.append("Exception: " + e.getMessage());
 		errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
-	    } catch (Exception ex) {}
+	    } catch (Exception ex) {
+	    }
 	}
 	if (success) {
 	    log.info("--SUCCESS--");
 	} else {
-	    log.info("--FAIL--");    
+	    log.info("--FAIL--");
 	}
     }
 
     /**
      * Dumps out some basic info about the Flix Engine installation.
-     *
+     * 
      */
     private static void printFlixEngineInfo() {
-	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Using library path: " + System.getProperty("java.library.path"));
+	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Using library path: "
+		+ System.getProperty("java.library.path"));
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): Flix Engine client library v" + FlixEngine2.Version());
 	log.debug("FlixEngineApiDriver.printFlixEngineInfo(): " + FlixEngine2.Copyright());
     }
-    
-    
+
     private static void emailErrors() {
 	if (errorMsgBuffer.length() > 0) {
-	    MailUtil.emailDebugMessage(clHelper.getOptionsMsgBuffer().toString() + "\n\n\n" + errorMsgBuffer.toString());
+	    MailUtil
+		    .emailDebugMessage(clHelper.getOptionsMsgBuffer().toString() + "\n\n\n" + errorMsgBuffer.toString());
 	}
     }
-    
+
     /**
-     * If a job_id was set on the command line, and the kill file marker exists, this 
-     * will return true.
+     * If a job_id was set on the command line, and the kill file marker exists, this will return true.
      */
     private static boolean shouldStopEncode() {
 	boolean result = false;
-	
+
 	String jobId = BuilderCache.getInstance().getJobId();
 	if (jobId != null) {
 	    File f = jobIdToKillFile(jobId);
@@ -277,7 +318,7 @@ public class FlixEngineApiDriver {
 	}
 	return result;
     }
-    
+
     /**
      * Generates the File that should be used to kill this encode.
      */
@@ -285,7 +326,7 @@ public class FlixEngineApiDriver {
 	File f = new File("/tmp/kill_job_" + jobId + ".txt");
 	return f;
     }
-    
+
     /**
      * Erases the kill file marker, if it exists.
      */
@@ -293,10 +334,10 @@ public class FlixEngineApiDriver {
 	boolean success = false;
 	String jobId = BuilderCache.getInstance().getJobId();
 	if (jobId != null) {
-    	    File f = jobIdToKillFile(jobId);
-    	    if (f.exists()) {
-    	        success = f.delete();
-    	    }
+	    File f = jobIdToKillFile(jobId);
+	    if (f.exists()) {
+		success = f.delete();
+	    }
 	}
 	return success;
     }
