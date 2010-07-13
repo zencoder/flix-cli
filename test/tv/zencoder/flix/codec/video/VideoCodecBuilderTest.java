@@ -74,12 +74,18 @@ public class VideoCodecBuilderTest {
 	commandLineArgs.add("vp6s");
 	commandLineArgs.add("-undershoot_pct");
 	commandLineArgs.add("50");
+	commandLineArgs.add("-2pass_min_section");
+	commandLineArgs.add("60");
+	commandLineArgs.add("-2pass_max_section");
+	commandLineArgs.add("350");
 	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
 	try {
 	    assertEquals(new Double(vp6profile_t.VP6_S.swigValue()), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixProfileParamName())));
 	    assertEquals(new Double(50), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixUndershootPctParamName())));
+	    assertEquals(new Double(60), new Double(codec.getParam(VideoCodecConfig.VP6.getFlix2PassMinSectionParamName())));
+	    assertEquals(new Double(350), new Double(codec.getParam(VideoCodecConfig.VP6.getFlix2PassMaxSectionParamName())));
 	} catch (FlixException e) {
 	    fail(e.getMessage());
 	    e.printStackTrace();
@@ -90,10 +96,16 @@ public class VideoCodecBuilderTest {
     public void testVp6a() {
 	commandLineArgs.add("-undershoot_pct");
 	commandLineArgs.add("50");
+	commandLineArgs.add("-2pass_min_section");
+	commandLineArgs.add("60");
+	commandLineArgs.add("-2pass_max_section");
+	commandLineArgs.add("350");
 	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("vp6a", VideoCodecConfig.VP6A);
 	try {
-	    assertEquals(new Double(50), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixUndershootPctParamName())));
+	    assertEquals(new Double(50), new Double(codec.getParam(VideoCodecConfig.VP6A.getFlixUndershootPctParamName())));
+	    assertEquals(new Double(60), new Double(codec.getParam(VideoCodecConfig.VP6A.getFlix2PassMinSectionParamName())));
+	    assertEquals(new Double(350), new Double(codec.getParam(VideoCodecConfig.VP6A.getFlix2PassMaxSectionParamName())));
 	} catch (FlixException e) {
 	    fail(e.getMessage());
 	    e.printStackTrace();

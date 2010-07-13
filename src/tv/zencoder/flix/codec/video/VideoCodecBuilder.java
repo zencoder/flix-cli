@@ -58,7 +58,8 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	addChild(new StreamOptimalBufferVideoCodecModifier());
 	addChild(new StreamPreBufferVideoCodecModifier());
 	addChild(new UndershootPctVideoCodecModifier());
-	
+	addChild(new TwoPassMinSectionVideoCodecModifier());
+	addChild(new TwoPassMaxSectionVideoCodecModifier());
     }
 
     public void apply(FlixEngine2 flix, String options) {
