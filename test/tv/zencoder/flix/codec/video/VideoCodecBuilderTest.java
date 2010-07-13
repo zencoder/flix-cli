@@ -88,8 +88,16 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testVp6a() {
+	commandLineArgs.add("-undershoot_pct");
+	commandLineArgs.add("50");
 	CommandLineHelper.getInstance().setArgs(commandLineArgs);
-	checkCodecParams("vp6a", VideoCodecConfig.VP6A);
+	Codec codec = checkCodecParams("vp6a", VideoCodecConfig.VP6A);
+	try {
+	    assertEquals(new Double(50), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixUndershootPctParamName())));
+	} catch (FlixException e) {
+	    fail(e.getMessage());
+	    e.printStackTrace();
+	}
     }
     
     @Test
