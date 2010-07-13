@@ -39,7 +39,7 @@ public class StreamPreBufferVideoCodecModifier implements CodecModifier {
     public Option getOption() {
 	return OptionBuilder.withArgName("value")
 	    		    .hasArg()
-	    		    .withDescription("Sets the Stream Pre Buffer option for codecs which support it -- currently VP6.")
+	    		    .withDescription("Sets the Stream Pre Buffer option for codecs which support it -- currently VP6 AND VP6A.")
 	    		    .create(getSwitch());
     }
 

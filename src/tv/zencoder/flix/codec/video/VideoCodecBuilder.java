@@ -57,6 +57,8 @@ public class VideoCodecBuilder extends CodecBuilderBase {
 	addChild(new TemporalResamplingVideoCodecModifer());
 	addChild(new TemporalDownWatermarkVideoCodecModifier());
 	addChild(new StreamOptimalBufferVideoCodecModifier());
+	addChild(new StreamMaxBufferVideoCodecModifier());
+	addChild(new StreamPeakBitrateVideoCodecModifier());
 	addChild(new StreamPreBufferVideoCodecModifier());
 	addChild(new UndershootPctVideoCodecModifier());
 	addChild(new TwoPassMinSectionVideoCodecModifier());

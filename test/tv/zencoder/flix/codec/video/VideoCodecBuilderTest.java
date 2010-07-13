@@ -62,6 +62,10 @@ public class VideoCodecBuilderTest {
 	commandLineArgs.add("5");
 	commandLineArgs.add("-vstream_optimal_buffer");
 	commandLineArgs.add("6");
+	commandLineArgs.add("-vstream_max_buffer");
+	commandLineArgs.add("12");
+	commandLineArgs.add("-vstream_peak_bitrate");
+	commandLineArgs.add("800");
 	commandLineArgs.add("-undershoot_pct");
 	commandLineArgs.add("50");
 	commandLineArgs.add("-2pass_min_section");
@@ -204,7 +208,16 @@ public class VideoCodecBuilderTest {
 	    if (videoCodecConfig.getFlixStreamOptimalBufferParamName() != null) {
 		assertEquals(new Double(6), new Double(codec.getParam(videoCodecConfig.getFlixStreamOptimalBufferParamName())));
 	    }
-
+	 
+	    // Check Stream Optimal Buffer
+	    if (videoCodecConfig.getFlixStreamMaxBufferParamName() != null) {
+		assertEquals(new Double(12), new Double(codec.getParam(videoCodecConfig.getFlixStreamMaxBufferParamName())));
+	    }
+	    
+	    // Check Stream Peak Bitrate
+	    if (videoCodecConfig.getFlixStreamPeakBitrateParamName() != null) {
+		assertEquals(new Double(800), new Double(codec.getParam(videoCodecConfig.getFlixStreamPeakBitrateParamName())));
+	    }
 	    
 	} catch (Exception e) {
 	    fail(e.getMessage());

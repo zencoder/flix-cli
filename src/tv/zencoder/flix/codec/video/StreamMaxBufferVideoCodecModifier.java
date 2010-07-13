@@ -11,39 +11,39 @@ import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.LogWrapper;
 
 /**
- * Sets the Stream Pre Buffer option for codecs that support it.
+ * Max stream buffer in seconds. (Only works with CBR)
  * @author jdl
  *
  */
-public class StreamOptimalBufferVideoCodecModifier implements CodecModifier {
+public class StreamMaxBufferVideoCodecModifier implements CodecModifier {
     LogWrapper log = LogWrapper.getInstance();
     
-    public StreamOptimalBufferVideoCodecModifier() {
+    public StreamMaxBufferVideoCodecModifier() {
 	super();
     }
 
     public void modifyCodec(Codec codec, String options) throws FlixException {
-	String paramName = BuilderCache.getInstance().getChosenVideoCodec().getFlixStreamOptimalBufferParamName();
+	String paramName = BuilderCache.getInstance().getChosenVideoCodec().getFlixStreamMaxBufferParamName();
 	if (paramName != null) {
 	    codec.setParam(paramName, new Double(options));
 	} else {
-	    log.debug("StreamOptimalBufferVideoCodecModifier.modifyCodec(): This codec does not support Stream Optimal Buffer.  Ignoring.");
+	    log.debug("StreamMaxBufferVideoCodecModifier.modifyCodec(): This codec does not support Stream Max Buffer.  Ignoring.");
 	}}
 
     public String getFriendlyName() {
-	return "Stream Optimal Buffer video codec modifier.";
+	return "Stream Max Buffer video codec modifier.";
     }
 
     @SuppressWarnings("static-access")
     public Option getOption() {
 	return OptionBuilder.withArgName("value")
 	    		    .hasArg()
-	    		    .withDescription("Sets the Stream Optimal Buffer option for codecs which support it -- currently VP6 and VP6A.")
+	    		    .withDescription("Sets the Stream Max Buffer option in seconds for codecs which support it -- currently VP6 and VP6A. Only valid with CBR.")
 	    		    .create(getSwitch());
     }
 
     public String getSwitch() {
-	return "vstream_optimal_buffer";
+	return "vstream_max_buffer";
     }
 
     public boolean isPrimaryOption() {
