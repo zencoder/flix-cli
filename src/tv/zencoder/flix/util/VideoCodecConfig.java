@@ -14,6 +14,7 @@ public enum VideoCodecConfig {
 	flixengine2_internalConstants.FE2_VP6_BITRATE,
 	flixengine2_internalConstants.FE2_VP6_CXMODE,
 	flixengine2_internalConstants.FE2_VP6_PROFILE,
+	flixengine2_internalConstants.FE2_VP6_UNDERSHOOT_PCT,
 	flixengine2_internalConstants.FE2_VP6_KFINTTYPE,
 	flixengine2_internalConstants.FE2_VP6_KFFREQ,
 	flixengine2_internalConstants.FE2_VP6_RC_MODE,
@@ -28,6 +29,7 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_VP6A_ALPHA_BITRATE,
 	 flixengine2_internalConstants.FE2_VP6A_CXMODE,
 	 null,
+	 flixengine2_internalConstants.FE2_VP6A_UNDERSHOOT_PCT,
 	 flixengine2_internalConstants.FE2_VP6A_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_VP6A_KFFREQ,
 	 flixengine2_internalConstants.FE2_VP6A_RC_MODE,
@@ -41,6 +43,7 @@ public enum VideoCodecConfig {
     
     H263(flixengine2_internalConstants.FE2_CODEC_H263,
 	 flixengine2_internalConstants.FE2_H263_BITRATE,
+	 null,
 	 null,
 	 null,
 	 flixengine2_internalConstants.FE2_H263_KFINTTYPE,
@@ -59,6 +62,7 @@ public enum VideoCodecConfig {
 	          flixengine2_internalConstants.FE2_H263_BITRATE,
 		  null,
 		  null,
+		  null,
 		  flixengine2_internalConstants.FE2_H263_KFINTTYPE,
 		  flixengine2_internalConstants.FE2_H263_KFFREQ,
 		  flixengine2_internalConstants.FE2_H263_RC_MODE,
@@ -73,6 +77,7 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_H264_BITRATE,
 	 null,
 	 flixengine2_internalConstants.FE2_H264_PROFILE,
+	 null,
 	 flixengine2_internalConstants.FE2_H264_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_H264_KFFREQ,
 	 flixengine2_internalConstants.FE2_H264_RC_MODE,
@@ -88,6 +93,7 @@ public enum VideoCodecConfig {
     private final String flixBitrateParamName;
     private final String flixCompressModeParamName;
     private final String flixProfileParamName;
+    private final String flixUndershootPctParamName;
     private final String flixKeyframeTypeParamName;
     private final String flixKeyframeFreqParamName;
     private final String flixRateControlParamName;
@@ -102,6 +108,7 @@ public enum VideoCodecConfig {
 	    		     String flixBitmapParamName, 
 	    		     String flixCompressModeParamName, 
 	    		     String flixProfileParamName, 
+	    		     String flixUndershootPctParamName,
 	    		     String flixKeyframeTypeParamName,
 	    		     String flixKeyframeFreqParamName,
 	    		     String flixRateControlParamName,
@@ -116,6 +123,7 @@ public enum VideoCodecConfig {
 	this.flixBitrateParamName = flixBitmapParamName;
 	this.flixCompressModeParamName = flixCompressModeParamName;
 	this.flixProfileParamName = flixProfileParamName;
+	this.flixUndershootPctParamName = flixUndershootPctParamName;
 	this.flixKeyframeTypeParamName = flixKeyframeTypeParamName;
 	this.flixKeyframeFreqParamName = flixKeyframeFreqParamName;
 	this.flixRateControlParamName = flixRateControlParamName;
@@ -139,6 +147,10 @@ public enum VideoCodecConfig {
 
     public String getFlixProfileParamName() {
         return flixProfileParamName;
+    }
+    
+    public String getFlixUndershootPctParamName() {
+        return flixUndershootPctParamName;
     }
 
     public String getFlixKeyframeTypeParamName() {

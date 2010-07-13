@@ -59,7 +59,7 @@ public class VideoCodecBuilderTest {
 	commandLineArgs.add("-vstream_pre_buffer");
 	commandLineArgs.add("5");
 	commandLineArgs.add("-vstream_optimal_buffer");
-	commandLineArgs.add("6");	
+	commandLineArgs.add("6");
     }
 
     @After
@@ -72,11 +72,14 @@ public class VideoCodecBuilderTest {
     public void testVp6() {
 	commandLineArgs.add("-vprofile");
 	commandLineArgs.add("vp6s");
+	commandLineArgs.add("-undershoot_pct");
+	commandLineArgs.add("50");
 	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
 	try {
 	    assertEquals(new Double(vp6profile_t.VP6_S.swigValue()), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixProfileParamName())));
+	    assertEquals(new Double(50), new Double(codec.getParam(VideoCodecConfig.VP6.getFlixUndershootPctParamName())));
 	} catch (FlixException e) {
 	    fail(e.getMessage());
 	    e.printStackTrace();
