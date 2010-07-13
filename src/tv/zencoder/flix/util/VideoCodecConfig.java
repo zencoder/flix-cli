@@ -24,6 +24,7 @@ public enum VideoCodecConfig {
 	flixengine2_internalConstants.FE2_VP6_MAX_Q,
 	flixengine2_internalConstants.FE2_VP6_NOISE_REDUCTION,
 	flixengine2_internalConstants.FE2_VP6_TEMPORAL_RESAMPLING,
+	flixengine2_internalConstants.FE2_VP6_TEMPORAL_DOWN_WATERMARK,
 	flixengine2_internalConstants.FE2_VP6_STREAM_PREBUFFER,
 	flixengine2_internalConstants.FE2_VP6_STREAM_OPTIMAL_BUFFER),
 	
@@ -41,6 +42,7 @@ public enum VideoCodecConfig {
          flixengine2_internalConstants.FE2_VP6A_MAX_Q,
          flixengine2_internalConstants.FE2_VP6A_NOISE_REDUCTION,
          flixengine2_internalConstants.FE2_VP6A_TEMPORAL_RESAMPLING,
+         flixengine2_internalConstants.FE2_VP6A_TEMPORAL_DOWN_WATERMARK,
          flixengine2_internalConstants.FE2_VP6A_STREAM_PREBUFFER,
          flixengine2_internalConstants.FE2_VP6A_STREAM_OPTIMAL_BUFFER),
          
@@ -57,6 +59,7 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_H263_RC_MODE,
 	 flixengine2_internalConstants.FE2_H263_MIN_Q,
 	 flixengine2_internalConstants.FE2_H263_MAX_Q,
+	 null,
 	 null,
 	 null,
 	 null,
@@ -79,6 +82,7 @@ public enum VideoCodecConfig {
 	          null,
 	          null,
 	          null,
+	          null,
 	          null),
     
     H264(flixengine2_internalConstants.FE2_CODEC_H264,
@@ -91,6 +95,7 @@ public enum VideoCodecConfig {
 	 flixengine2_internalConstants.FE2_H264_KFINTTYPE,
 	 flixengine2_internalConstants.FE2_H264_KFFREQ,
 	 flixengine2_internalConstants.FE2_H264_RC_MODE,
+	 null,
 	 null,
 	 null,
 	 null,
@@ -113,6 +118,7 @@ public enum VideoCodecConfig {
     private final String flixMaxQParamName;
     private final String flixNoiseReductionParamName;
     private final String flixTemporalResamplingParamName;
+    private final String flixTemporalDownWatermarkParamName;
     private final String flixStreamPrebufferParamName;
     private final String flixStreamOptimalBufferParamName;
     
@@ -130,6 +136,7 @@ public enum VideoCodecConfig {
                              String flixMaxQParamName,
                              String flixNoiseReductionParamName,
                              String flixTemporalResamplingParamName,
+                             String flixTemporalDownWatermarkParamName,
                              String flixStreamPrebufferParamName,
                              String flixStreamOptimalBufferParamName) {
 	
@@ -147,6 +154,7 @@ public enum VideoCodecConfig {
         this.flixMaxQParamName = flixMaxQParamName;
         this.flixNoiseReductionParamName = flixNoiseReductionParamName;
         this.flixTemporalResamplingParamName = flixTemporalResamplingParamName;
+        this.flixTemporalDownWatermarkParamName = flixTemporalDownWatermarkParamName;
         this.flixStreamPrebufferParamName = flixStreamPrebufferParamName;
         this.flixStreamOptimalBufferParamName = flixStreamOptimalBufferParamName;
     }
@@ -211,6 +219,10 @@ public enum VideoCodecConfig {
 
     public String getFlixTemporalResamplingParamName() {
         return flixTemporalResamplingParamName;
+    }
+
+    public String getFlixTemporalDownWatermarkParamName() {
+        return flixTemporalDownWatermarkParamName;
     }
     
 }

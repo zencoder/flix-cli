@@ -56,10 +56,18 @@ public class VideoCodecBuilderTest {
 	commandLineArgs.add("0");
 	commandLineArgs.add("-vtemporalresample");
 	commandLineArgs.add("1");
+	commandLineArgs.add("-vtemporal_down_watermark");
+	commandLineArgs.add("75");
 	commandLineArgs.add("-vstream_pre_buffer");
 	commandLineArgs.add("5");
 	commandLineArgs.add("-vstream_optimal_buffer");
 	commandLineArgs.add("6");
+	commandLineArgs.add("-undershoot_pct");
+	commandLineArgs.add("50");
+	commandLineArgs.add("-2pass_min_section");
+	commandLineArgs.add("60");
+	commandLineArgs.add("-2pass_max_section");
+	commandLineArgs.add("350");
     }
 
     @After
@@ -72,12 +80,6 @@ public class VideoCodecBuilderTest {
     public void testVp6() {
 	commandLineArgs.add("-vprofile");
 	commandLineArgs.add("vp6s");
-	commandLineArgs.add("-undershoot_pct");
-	commandLineArgs.add("50");
-	commandLineArgs.add("-2pass_min_section");
-	commandLineArgs.add("60");
-	commandLineArgs.add("-2pass_max_section");
-	commandLineArgs.add("350");
 	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("vp6", VideoCodecConfig.VP6);
 	
@@ -94,12 +96,6 @@ public class VideoCodecBuilderTest {
     
     @Test
     public void testVp6a() {
-	commandLineArgs.add("-undershoot_pct");
-	commandLineArgs.add("50");
-	commandLineArgs.add("-2pass_min_section");
-	commandLineArgs.add("60");
-	commandLineArgs.add("-2pass_max_section");
-	commandLineArgs.add("350");
 	CommandLineHelper.getInstance().setArgs(commandLineArgs);
 	Codec codec = checkCodecParams("vp6a", VideoCodecConfig.VP6A);
 	try {
@@ -192,6 +188,11 @@ public class VideoCodecBuilderTest {
 	    // Check Temporal Resampling
 	    if (videoCodecConfig.getFlixTemporalResamplingParamName() != null) {
 		assertEquals(new Double(1), new Double(codec.getParam(videoCodecConfig.getFlixTemporalResamplingParamName())));
+	    }
+	    
+	    // Check Temporal Down Watermark
+	    if (videoCodecConfig.getFlixTemporalDownWatermarkParamName() != null) {
+		assertEquals(new Double(75), new Double(codec.getParam(videoCodecConfig.getFlixTemporalDownWatermarkParamName())));
 	    }
 	    
 	    // Check Stream Pre Buffer
