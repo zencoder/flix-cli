@@ -80,7 +80,7 @@ public class FlixEngineApiDriver {
 	    try {
 		log.debug("FlixEngineApiDriver.configureFlixAndEncode(): Connecting to Flix Engine");
 		flix.Connect();
-
+		
 		/* Setup the flix object, based on the passed in options. */
 		if (applyCommandLineOptions(flix)) {
 		    // debug
@@ -172,8 +172,7 @@ public class FlixEngineApiDriver {
 	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting input file: " + value);
 	    File f = new File(value);
 	    if (!f.isAbsolute()) {
-		clHelper
-			.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
+		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to input file is not absolute");
 	    }
 
 	    if (f.length() < 1000) {
@@ -186,12 +185,9 @@ public class FlixEngineApiDriver {
 	    flix.SetInputFile(value);
 
 	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Input File");
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Width: "
-		    + flix.video_options_GetSourceWidth());
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Height:   "
-		    + flix.video_options_GetSourceHeight());
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Duration: "
-		    + flix.GetSourceDuration());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Width: " + flix.video_options_GetSourceWidth());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Height:   " + flix.video_options_GetSourceHeight());
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions():   Duration: " + flix.GetSourceDuration());
 	}
 
 	/* Output File */
@@ -202,8 +198,7 @@ public class FlixEngineApiDriver {
 	    File f = new File(value);
 	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + value);
 	    if (!f.isAbsolute()) {
-		clHelper
-			.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
+		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
 	    }
 	    flix.SetOutputFile(value);
 	}
@@ -211,11 +206,22 @@ public class FlixEngineApiDriver {
 	/* Job ID (optional) */
 	if (line.hasOption("job_id")) {
 	    String jobId = line.getOptionValue("job_id");
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: "
-		    + jobId);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting external job ID: " + jobId);
 	    BuilderCache.getInstance().setJobId(jobId);
 	}
 
+	/* No Audio (optional) */
+	if (line.hasOption("no_audio")) {
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Disabling Audio");
+	    flix.SetExportAudio(false);
+	}
+	
+	/* No Video (optional) */
+	if (line.hasOption("no_video")) {
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Disabling Video");
+	    flix.SetExportVideo(false);
+	}
+	
 	/* Filters, Codecs, and Muxers */
 	applyBuilders(flix, clHelper.getFilterBuilders());
 	applyBuilders(flix, clHelper.getCodecBuilders());

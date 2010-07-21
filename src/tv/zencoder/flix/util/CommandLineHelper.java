@@ -259,6 +259,12 @@ public class CommandLineHelper {
 		.withDescription("Sets an external ID for this job. If set, you can kill this encode by touching the file '/tmp/kill_job_ID.txt'.")
 		.create("job_id"));
 	
+	// disable audio
+	options.addOption(OptionBuilder.withDescription("If present, the output file will not contain audio. (Don't set both this and -no_video. Flix Engine crashes if you combine these.)").create("no_audio"));
+	
+	// disable vidio
+	options.addOption(OptionBuilder.withDescription("If present, the output file will not contain video. (This also disables thumbnails, even if you set other switches asking for them.)").create("no_video"));
+	
 	/*  Add the command line Options from the Filter, Codec, and Muxer builders. */
 	addBuilderOptions(options, getFilterBuilders());
 	addBuilderOptions(options, getCodecBuilders());
