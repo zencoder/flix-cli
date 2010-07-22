@@ -60,6 +60,11 @@ public class AudioCodecBuilderTest {
 	CommandLineHelper.getInstance().setArgs(new String[] {"-ab", "128"});
 	checkCodecParams("amr_nb", AudioCodecConfig.AMR_NB);
     }
+    
+    @Test
+    public void testPcm() {
+	checkCodecParams("pcm", AudioCodecConfig.PCM);
+    }
 
     private void checkCodecParams(String options, AudioCodecConfig audioCodecConfig) {
 	builderTestHelper.apply(options);
@@ -67,8 +72,10 @@ public class AudioCodecBuilderTest {
 	try {
 	    assertEquals(audioCodecConfig, BuilderCache.getInstance().getChosenAudioCodec());
 	    
-	    // Check bitrate
-	    assertEquals(new Double(128), new Double(codec.getParam(audioCodecConfig.getFlixBitrateParamName())));
+	    if (audioCodecConfig.getFlixBitrateParamName() != null) {
+	      // Check bitrate
+	      assertEquals(new Double(128), new Double(codec.getParam(audioCodecConfig.getFlixBitrateParamName())));
+	    }
 	    
 	    // Check parametric stereo
 	    if (audioCodecConfig.getFlixParametricStereoParamName() != null) {

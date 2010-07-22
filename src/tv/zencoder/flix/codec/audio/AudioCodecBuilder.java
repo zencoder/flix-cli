@@ -36,6 +36,7 @@ public class AudioCodecBuilder extends CodecBuilderBase {
         map.put("aacplus", AudioCodecConfig.AACPLUS);
         map.put("amr_nb",  AudioCodecConfig.AMR_NB);
         map.put("mp3",     AudioCodecConfig.MP3);
+        map.put("pcm",     AudioCodecConfig.PCM);
         codecConfigs = Collections.unmodifiableMap(map);
     }
     

@@ -22,7 +22,11 @@ public enum AudioCodecConfig {
     
     AMR_NB(flixengine2_internalConstants.FE2_CODEC_AMR_NB,
 	   flixengine2_internalConstants.FE2_AMR_BITRATE,
-	   null);
+	   null),
+	   
+    PCM(flixengine2_internalConstants.FE2_CODEC_PCM,
+	null,
+	null);
     
     private final String flixCodecName;
     private final String flixBitrateParamName;
