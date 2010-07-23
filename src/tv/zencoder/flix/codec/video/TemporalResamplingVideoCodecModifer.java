@@ -11,7 +11,7 @@ import tv.zencoder.flix.util.BuilderCache;
 import tv.zencoder.flix.util.LogWrapper;
 
 /**
- * Sets the Temporal Resampling option for codecs which support it.
+ * Enables Temporal Resampling option for codecs which support it.
  * @author jdl
  *
  */
@@ -25,7 +25,7 @@ public class TemporalResamplingVideoCodecModifer implements CodecModifier {
     public void modifyCodec(Codec codec, String options) throws FlixException {
 	String paramName = BuilderCache.getInstance().getChosenVideoCodec().getFlixTemporalResamplingParamName();
 	if (paramName != null) {
-	    codec.setParam(paramName, new Double(options));
+	    codec.setParam(paramName, new Double("1.0"));;
 	} else {
 	    log.debug("TemporalResamplingVideoCodecModifer.modifyCodec(): This codec does not support Temporal Resampling.  Ignoring.");
 	}
@@ -37,9 +37,7 @@ public class TemporalResamplingVideoCodecModifer implements CodecModifier {
 
     @SuppressWarnings("static-access")
     public Option getOption() {
-	return OptionBuilder.withArgName("value")
-	    		    .hasArg()
-	    		    .withDescription("Sets the Temporal Resampling option for codecs which support it -- currently VP6 and VP6A.")
+	return OptionBuilder.withDescription("Enables Temporal Resampling option for codecs which support it -- currently VP6 and VP6A.")
 	    		    .create(getSwitch());
     }
 

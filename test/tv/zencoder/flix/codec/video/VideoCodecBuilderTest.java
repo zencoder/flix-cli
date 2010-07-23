@@ -55,7 +55,6 @@ public class VideoCodecBuilderTest {
 	commandLineArgs.add("-vnoisereduce");
 	commandLineArgs.add("0");
 	commandLineArgs.add("-vtemporalresample");
-	commandLineArgs.add("1");
 	commandLineArgs.add("-vtemporal_down_watermark");
 	commandLineArgs.add("75");
 	commandLineArgs.add("-vstream_pre_buffer");
