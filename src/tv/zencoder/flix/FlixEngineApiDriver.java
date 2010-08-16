@@ -27,9 +27,7 @@ import com.on2.flix.on2sc;
  */
 public class FlixEngineApiDriver {
     private static LogWrapper log = LogWrapper.getInstance();
-
     private static CommandLineHelper clHelper = CommandLineHelper.getInstance();
-
     private static StringBuffer errorMsgBuffer;
 
     /**
@@ -138,7 +136,6 @@ public class FlixEngineApiDriver {
 		}
 		errorMsgBuffer.append(StringUtil.getStackTraceAsString(e));
 	    }
-	    
 	    curTry = curTry + 1;
 	}
 	
@@ -192,15 +189,16 @@ public class FlixEngineApiDriver {
 
 	/* Output File */
 	if (line.hasOption("o")) {
-	    String value = line.getOptionValue("o");
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting output file: " + value);
+	    String outputFileName = line.getOptionValue("o");
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Setting output file: " + outputFileName);
 
-	    File f = new File(value);
-	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + value);
+	    File f = new File(outputFileName);
+	    clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): Output file: " + outputFileName);
 	    if (!f.isAbsolute()) {
 		clHelper.logOptionsMessage("FlixEngineApiDriver.applyCommandLineOptions(): path to output file is not absolute");
 	    }
-	    flix.SetOutputFile(value);
+	    flix.SetOutputFile(outputFileName);
+	    flix.SetOverwriteExistingFiles(true);
 	}
 
 	/* Job ID (optional) */
