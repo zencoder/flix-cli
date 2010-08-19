@@ -52,20 +52,24 @@ public class AudioCodecBuilder extends CodecBuilderBase {
 	try {
 	    AudioCodecConfig audioCodecConfig = codecConfigs.get(options);
 	    
-	    // Stash the chosen codec so that any modifiers can look up which code we're using.
-	    BuilderCache.getInstance().setChosenAudioCodec(audioCodecConfig);
-	    
-	    // Grab the String constant that Flix uses for this codec type.
-	    String flixCodecName = audioCodecConfig.getFlixCodecName();
-	    log.debug("AudioCodecConfig.applyCodec(): User asked for codec: " + options);
-	    log.debug("AudioCodecConfig.applyCodec(): Using Flix codec name: " + flixCodecName);
-	    
-	    // Create the codec.
-    	    codec = new Codec(flix, flixCodecName);
-    	    codec.add();
+	    if(audioCodecConfig == null) {
+		log.debug("AudioCodecBuilder.apply(): No Audio Codec is available with name: " + options);
+	    } else {
+    	        // Stash the chosen codec so that any modifiers can look up which code we're using.
+    	        BuilderCache.getInstance().setChosenAudioCodec(audioCodecConfig);
     	    
-    	    // Trigger any child modifiers of this builder.
-    	    applyChildBuilders(codec);
+    	        // Grab the String constant that Flix uses for this codec type.
+    	        String flixCodecName = audioCodecConfig.getFlixCodecName();
+    	        log.debug("AudioCodecConfig.applyCodec(): User asked for codec: " + options);
+    	        log.debug("AudioCodecConfig.applyCodec(): Using Flix codec name: " + flixCodecName);
+    	    
+    	        // Create the codec.
+        	codec = new Codec(flix, flixCodecName);
+        	codec.add();
+        	    
+        	// Trigger any child modifiers of this builder.
+        	applyChildBuilders(codec);
+    	    }
 	} catch (FlixException e) {
 	    //
 	}
